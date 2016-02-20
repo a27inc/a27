@@ -1,5 +1,5 @@
 <?php global $env; 
-// Must set this environment variable to "development" on local!
+// Must set this environment variable to "development" on local!!!!!
 if(!$env) $env = getenv('APPLICATION_ENV'); 
 if(!$env) $env = 'production';
 $cache = $env == 'production';  
