@@ -1,0 +1,13 @@
+User-agent: *
+Disallow: /js/
+Disallow: /img/
+Disallow: /css/
+Disallow: /fonts/
+Disallow: /images/property/thumbs/
+Disallow: /portfolio*
+Disallow: /financial*
+Disallow: /tenant*
+Disallow: /admin*
+Disallow: /user*
+
+Sitemap: http://a-27inc.com/sitemap.xml

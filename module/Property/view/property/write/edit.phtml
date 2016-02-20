@@ -1,0 +1,79 @@
+<?php $title = 'Edit Property'; $this->headTitle($title); ?>
+
+<div class="row">
+    <h1 class="pull-left"><?php echo $this->escapeHtml($title); ?></h1>
+    <a href="<?php echo $this->url('property'); ?>" 
+        type="button" class="btn btn-default pull-right">
+            Cancel</a>
+</div>
+<div class="row">
+    <div class="col-sm-5">
+        <?php $form->setAttribute('action', $this->url('property/edit', array(), true));
+        $form->prepare();
+        $form->get('submit')->setValue('Update Property');
+
+        echo $this->form()->openTag($form);
+        echo $this->formCollection($form);
+        echo $this->form()->closeTag(); ?>
+    </div>
+</div>
+
+<script type="text/javascript">
+    <?php foreach($this->uploaded as $k => $f): ?>
+        $(document).ready(function(){
+            var fs_key = <?php echo $k; ?>;
+            var pimg = '<img src="'+<?php echo '\''.$f.'\''; ?>+'" class="img-thumbnail">';
+            $('#images_fieldset fieldset').slice(fs_key, parseInt(fs_key+1)).find('.form-group').first().html(pimg);    
+        }); 
+    <?php endforeach; ?>
+
+    $('[data-action="add"]').click(function(){
+        var target = $(this).attr('data-target');
+        var currentCount = $(target+' fieldset').length;
+        var template = $(target+' span').data('template');
+        template = template.replace(/__index__/g, currentCount);
+        
+        if($(target+' [data-action="remove"]').length)
+            $(target+' [data-action="remove"]').unbind('click');
+
+        $(target).append(template);
+        
+        $(target+' [data-action="remove"]').bind('click', function(){
+            $(this).parents('fieldset')[0].remove();    
+        }); return false;
+    });
+
+    $('[data-toggle]').change(function(){
+        if(typeof $(this).val() != 'undefined'){
+            $($(this).attr('data-toggle')).prop('disabled', true).hide();
+            $($(this).attr('data-toggle')+'[data-toggle-value="'+$(this).val()+'"]').prop('disabled', false).show();
+            var value = $(this).val();
+            $($(this).attr('data-toggle')+'[data-toggle-values]').each(function(){
+                var values = $(this).attr('data-toggle-values').split(',');
+                for(i=0; i<values.length; i++){
+                    if(value == values[i])
+                        $(this).prop('disabled', false).show();
+                }
+            });
+        }
+    });
+
+    $('[data-toggle]').each(function(){
+        $($(this).attr('data-toggle')).prop('disabled', true).hide();
+        if(typeof $(this).val() != 'undefined'){
+            $(this).trigger('change');
+        }   
+    });
+
+    
+    $('[data-field="remove"]').each(function(){
+        if($(this).val() == 1)
+            $(this).closest('fieldset').hide();    
+    });
+    $('[data-action="remove"]').click(function(){
+        var fs = $(this).closest('fieldset');
+        fs.hide();
+        fs.find('[data-field="remove"]').val(1);
+        return false;    
+    }); 
+ </script>

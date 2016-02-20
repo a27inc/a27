@@ -1,0 +1,67 @@
+<?php
+    $title = 'For Rent';
+    $this->headTitle($title);
+    $this->headMeta()->appendName('description', 
+        'Above the ordinary condos for rent in Wekiva Springs and Altamonte Springs.  Contact us today for available units!');
+?>
+
+<div class="row">
+    <h1><?php echo $this->escapeHtml($title); ?></h1>
+</div>
+
+<div class="row">
+
+<?php 
+$count = 1;
+$excluded = array(3);
+$now = $available = date_create(date('Y-m-d'));
+$btn = '<a href="LINK" type="button" class="btn btn-TYPE pull-right">
+            TEXT</a><div class="clearfix"></div>';
+foreach($properties as $p){
+
+    if(!in_array($p->getId(), $excluded)){
+        $rent = '';
+        $available = date_create($p->getRental_listing()->getAvailable());
+        $interval = date_diff($now, $available);
+	$leasing = !$interval->format('%y') && $interval->format('%m') <= 3; 
+
+        //$unit = !empty($p->getUnit()) ? '#'.$p->getUnit().', ' : '';
+        $street = $p->getStreet_address();
+        //$street .= empty($unit) ? ', ' : ' ';
+        //$address = $street.$unit.$p->getCity().', '.$p->getState().' '.$p->zip;
+        $address = $street.', '.$p->getCity().', '.$p->getState().' '.$p->zip; 
+        $address_url = str_replace(array(', ', ' '), '-', $address);
+        $link = $this->url('rent/details', array('action' => 'details', 'address' => $address_url, 'id' => $p->getId()));
+
+        if($leasing) 
+            $rent = str_replace(
+                array('LINK', 'TYPE', 'TEXT'), 
+                array($link, 'success', 'Available for Rent'), $btn);
+        else $rent = str_replace(
+            array('LINK', 'TYPE', 'TEXT'), 
+            array($link, 'default', 'View Property'), $btn);  
+        
+        
+        if($count%4 == 1) echo '<div class="row">';
+        echo '<div class="col-md-3">';
+            echo '<div class="well">
+                    <a href="'.$link.'"><h3 style="margin-top:0;">'.$p->getName().'</h3></a>';
+                
+            if(isset($images[$p->getId()])){
+                $i = $images[$p->getId()][0]; 
+                echo '<a href="'.$link.'"><img src="'.$i->dir.$i->file.'" style="width:100%;" /></a>';  
+            }
+                
+                echo '<p style="margin:5px 0;">'.$address.'</p>'.$rent.'
+                </div>';
+        echo '</div>';
+        $count++;
+        if($count%4 == 0) echo '</div>';
+    }
+} if($count%4 !== 0){
+    for($i=0; $i<=abs($count%4-4); $i++)
+        echo '<div class="col-md-3"></div>';
+    echo '</div>';
+} ?>
+
+</div><!-- /row -->

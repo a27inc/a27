@@ -1,0 +1,45 @@
+<?php
+    $title = 'Expenses Table';
+    $this->headTitle($title);
+?>
+
+<div class="row">
+    <h1 class="pull-left"><?php echo $this->escapeHtml($title); ?></h1>
+    <a href="<?php echo $this->url('financial/expense/add'); ?>" 
+        type="button" class="btn btn-primary pull-right">
+            Add Expense</a>
+</div>
+
+<table id="expense-table" class="table table-striped table-bordered">
+    <thead>
+        <th>Property</th>
+        <th>Category</th>
+        <th>Amount</th>
+        <th>Date</th>
+        <th>Description</th>
+        <th>Action</th>
+    </thead>
+
+<?php foreach($expenses as $e){
+    echo '<tr>';
+        echo '<td>'.$this->escapeHtml($e->property->getName()).'</td>';
+        echo '<td>'.$this->escapeHtml($e->category->getDisplay_name()).'</td>';
+        echo '<td>'.$this->escapeHtml($e->getAmount()).'</td>';
+        echo '<td>'.$this->escapeHtml($e->getDates()).'</td>';
+        echo '<td>'.$this->escapeHtml($e->getDescription()).'</td>';
+        echo '<td>
+                <a href="'.$this->url('financial/expense/edit', array('id' => $e->getId())).'">'.
+                    $this->escapeHtml('Edit').'</a>
+                &nbsp;&nbsp;&nbsp;
+                <a href="'.$this->url('financial/expense/delete', array('id' => $e->getId())).'">'.
+                    $this->escapeHtml('Delete').'</a>
+            </td>';
+    echo '</tr>'; 
+} ?>
+</table>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('#expense-table').dataTable();
+    });
+</script>

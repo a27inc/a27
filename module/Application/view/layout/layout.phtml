@@ -1,0 +1,142 @@
+<?php echo $this->doctype(); ?>
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="google-site-verification" content="qcTCmUVspq7hgXeSxr02cg1xfbmWzRVHROMSjL5ZtGo" />
+        <?php echo $this->headTitle('A-27, Inc. Rental Properties')->setSeparator(' - ')->setAutoEscape(false); ?>
+
+        <?php echo $this->headMeta()
+            ->appendName('viewport', 'width=device-width, initial-scale=1.0')
+            ->appendHttpEquiv('X-UA-Compatible', 'IE=edge');
+        ?>
+
+        <!-- Le styles -->
+        <?php echo $this->headLink(array('rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath() . '/img/favicon.ico'))
+            ->prependStylesheet($this->basePath() . '/css/style.css')
+            ->prependStylesheet($this->basePath() . '/css/dataTables.bootstrap.css')
+            ->prependStylesheet($this->basePath() . '/css/bootstrap-theme.min.css')
+            ->prependStylesheet($this->basePath() . '/css/bootstrap.min.css'); ?>
+
+        <!-- Scripts -->
+        <?php echo $this->headScript()
+            ->prependFile('//cdn.datatables.net/plug-ins/e9421181788/integration/bootstrap/3/dataTables.bootstrap.js', 'text/javascript')
+            ->prependFile($this->basePath() . '/js/jquery.dataTables.min.js', 'text/javascript')
+            ->prependFile($this->basePath() . '/js/bootstrap.min.js', 'text/javascript')
+            ->prependFile($this->basePath() . '/js/jquery.min.js', 'text/javascript')
+            ->prependFile($this->basePath() . '/js/respond.min.js', 'text/javascript', array('conditional' => 'lt IE 9',))
+            ->prependFile($this->basePath() . '/js/html5shiv.js',   'text/javascript', array('conditional' => 'lt IE 9',)); ?>
+
+    </head>
+    <body>
+        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+                <div class="container">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                        <!--<img src="<?php //echo $this->basePath('img/zf2-logo.png') ?>" alt="Zend Framework 2"/>&nbsp;-->
+                        <a class="navbar-brand" href="<?php echo $this->url('home') ?>">
+                            <?php echo $this->translate('A-27, Inc.'); ?></a>
+                    </div>
+                    <div class="collapse navbar-collapse">
+                        <?php echo $this->navigation('navigation')->menu()->setUlClass('nav navbar-nav')->render(); ?>
+                        <!-- A D M I N   N A V -->
+                        <?php if($this->hasRole(array('super_admin', 'admin', 'account'))): ?>
+                            <ul class="nav navbar-nav">
+                                <li class="dropdown">
+                                    <a rel="nofollow" href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                        Admin <b class="caret"></b></a>
+                                    <?php echo $this->navigation('admin_nav')
+                                        ->menu()->setUlClass('dropdown-menu')->render(); ?>
+                                </li>
+                            </ul>
+                        <?php endif; ?>
+                        <!-- A C C O U N T   N A V -->
+                        <?php if($this->hasRole(array('account'))): ?>
+                            <ul class="nav navbar-nav">
+                                <li class="dropdown">
+                                    <a rel="nofollow" href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                        Accounting <b class="caret"></b></a>
+                                    <?php echo $this->navigation('account_nav')
+                                        ->menu()->setUlClass('dropdown-menu')->render(); ?>
+                                </li>
+                            </ul>
+                        <?php endif; ?>
+                        <!-- I N V E S T O R   N A V -->
+                        <?php if($this->hasRole(array('investor', 'account'))): ?>
+                            <ul class="nav navbar-nav">
+                                <li class="dropdown">
+                                    <a rel="nofollow" href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                        Investor <b class="caret"></b></a>
+                                    <?php echo $this->navigation('investor_nav')
+                                        ->menu()->setUlClass('dropdown-menu')->render(); ?>
+                                </li>
+                            </ul>
+                        <?php endif; ?>
+                        <!-- L A N D L O R D   N A V -->
+                        <?php if($this->hasRole(array('landlord'))): ?>
+                            <ul class="nav navbar-nav">
+                                <li class="dropdown">
+                                    <a rel="nofollow" href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                        Landlord <b class="caret"></b></a>
+                                    <?php echo $this->navigation('landlord_nav')
+                                        ->menu()->setUlClass('dropdown-menu')->render(); ?>
+                                </li>
+                            </ul>
+                        <?php endif; ?>
+                        <!-- D E M O   N A V -->
+                        <?php if($this->hasRole(array('demo'))): ?>
+                            <ul class="nav navbar-nav">
+                                <li class="dropdown">
+                                    <a rel="nofollow" href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                        Demo <b class="caret"></b></a>
+                                    <?php echo $this->navigation('demo_nav')
+                                        ->menu()->setUlClass('dropdown-menu')->render(); ?>
+                                </li>
+                            </ul>
+                        <?php endif; ?>
+
+                        <ul class="nav navbar-nav navbar-right">
+                            <?php if(!$this->zfcUserIdentity()): ?>
+                                <li><a rel="nofollow" href="<?php echo $this->url('zfcuser/login') ?>">
+                                    <?php echo $this->translate('Login'); ?></a></li>
+                            <?php else: ?>
+                                <li><a rel="nofollow" href="<?php echo $this->url('zfcuser/logout') ?>">
+                                    <?php echo $this->translate('Sign Out'); ?></a></li>
+                            <?php endif; ?>  
+                        </ul>
+                    </div><!--/.nav-collapse -->
+                </div>
+            </nav>
+        <div class="container">
+            <?php echo $this->content; ?>
+            <hr>
+            <footer>
+                <div class="pull-left">
+                    <p><a rel="nofollow" href="<?php echo $this->url('home/terms-of-service'); ?>">Terms of Service</a></p>
+                    <p>
+                        &copy; 2014 <?php if(date('Y')>2014) echo '- '.date('Y'); ?> A-27, Inc.
+                        <?php echo $this->translate('All rights reserved.'); ?>
+                    </p>
+                </div>
+                <div class="pull-right">
+                    <a href="#" class="social-text"><span>Connect with A-27, Inc.</span></a>
+                    <a href="http://www.facebook.com/a27inc" target="_blank" title="A-27, Inc. is on Facebook" class="social-facebook"><span>A-27, Inc. is on Facebook</span></a>
+                    <a href="http://plus.google.com/103343328669049965046" target="_blank" title="A-27, Inc. is on Google Plus" class="social-googleplus"><span>A-27, Inc. is on Google Plus</span></a>
+                </div><div class="clearfix"></div>
+            </footer>
+        </div> <!-- /container -->
+        <script>
+            (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+            })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+            ga('create', 'UA-52763465-1', 'auto');
+            ga('send', 'pageview');
+        </script>
+        <?php echo $this->inlineScript() ?>
+    </body>
+</html>

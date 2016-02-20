@@ -1,0 +1,51 @@
+<?php
+    $title = 'Property Table';
+    $this->headTitle($title);
+?>
+
+<div class="row">
+    <h1 class="pull-left"><?php echo $this->escapeHtml($title); ?></h1>
+    <a href="<?php echo $this->url('property/add'); ?>" 
+        type="button" class="btn btn-primary pull-right">
+            Add Property</a>
+</div>
+
+<table id="property-table" class="table table-striped table-bordered">
+    <thead>
+        <th>Name</th>
+        <th>Status</th>
+        <th>Address</th>
+        <th>Unit #</th>
+        <th>City</th>
+        <th>State</th>
+        <th>Zip</th>
+        <th>Action</th>
+    </thead>
+
+<?php $status = array(1 => 'For Rent', 2 => 'For Sale', 3 => 'Disabled');
+
+foreach($properties as $p){
+    echo '<tr>';
+        echo '<td>'.$this->escapeHtml($p->getName()).'</td>';
+        echo '<td>'.$this->escapeHtml($status[$p->status_id]).'</td>';
+        echo '<td>'.$this->escapeHtml($p->street_address).'</td>';
+        echo '<td>'.$this->escapeHtml($p->unit).'</td>';
+        echo '<td>'.$this->escapeHtml($p->city).'</td>';
+        echo '<td>'.$this->escapeHtml($p->state).'</td>';
+        echo '<td>'.$this->escapeHtml($p->zip).'</td>';
+        echo '<td>
+                <a href="'.$this->url('property/edit', array('id' => $p->getId())).'">'.
+                    $this->escapeHtml('Edit').'</a>
+                &nbsp;&nbsp;&nbsp;
+                <a href="'.$this->url('property/delete', array('id' => $p->getId())).'">'.
+                    $this->escapeHtml('Delete').'</a>
+            </td>';
+    echo '</tr>'; 
+} ?>
+</table>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('#property-table').dataTable();
+    });
+</script>

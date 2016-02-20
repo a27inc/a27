@@ -1,0 +1,40 @@
+<?php
+	$title = 'Permission Table';
+	$this->headTitle($title);
+?>
+
+<div class="row">
+	<h1 class="pull-left"><?php echo $this->escapeHtml($title); ?></h1>
+    <a href="<?php echo $this->url('role'); ?>" 
+        type="button" class="btn btn-primary pull-right">
+            Roles</a>
+    <a href="<?php echo $this->url('permission/add'); ?>" 
+        type="button" class="btn btn-primary pull-right" style="margin-right:30px;">
+            Add Permission</a>
+</div>
+
+<table id="user-table" class="table table-striped table-bordered">
+	<thead>
+		<th>Permission</th>
+		<th>Action</th>
+	</thead>
+
+<?php foreach($permissions as $p){
+	echo '<tr>';
+	 	echo '<td>'.$this->escapeHtml($p->name).'</td>';
+	 	echo '<td>
+		 		<a href="'.$this->url('permission/edit', array('action' => 'edit', 'id' => $p->getId())).'">'.
+		 			$this->escapeHtml('Edit').'</a>
+	 			&nbsp;&nbsp;&nbsp;
+	 			<a href="'.$this->url('permission/delete', array('action' => 'delete', 'id' => $p->getId())).'">'.
+		 			$this->escapeHtml('Delete').'</a>
+			</td>';
+ 	echo '</tr>'; 
+} ?>
+</table>
+
+<script type="text/javascript">
+	$(document).ready(function(){
+		$('#user-table').dataTable();
+	});
+</script>

@@ -1,0 +1,23 @@
+<?php
+	$title = 'Delete Income';
+	$this->headTitle($title);
+?>
+
+<h1><?php echo $this->escapeHtml($title); ?></h1>
+
+<p>
+	Are you sure that you want to delete
+	'<?php echo $this->escapeHtml(($income->getDescription() ? $income->getDescription() : 'income').' for '.$income->getAmount()); ?>'?
+</p>
+
+<?php $url = $this->url('financial/income/delete', array(
+	'action' => 'delete',
+	'id'     => $income->getId())); ?>
+
+<form action="<?php echo $url; ?>" method="POST">
+	<div>
+	<input type="hidden" name="id" value="<?php echo (int) $income->getId(); ?>" />
+	<input type="submit" name="del" value="Yes" />
+	<input type="submit" name="del" value="No" />
+	</div>
+</form>

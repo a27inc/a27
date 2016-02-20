@@ -1,0 +1,186 @@
+<?php $title = '1054 Alpug Ave, Oviedo, FL 32765 is For Sale';
+$this->headMeta()->appendName('description', 
+    '3 bedroom, 2 bathroom, 1393 sqft single family pool home for sale located in Oviedo Alafaya Woods Subdivision.');
+$this->headTitle($title);
+
+$this->headLink()->appendStylesheet('http://blueimp.github.io/Gallery/css/blueimp-gallery.min.css');
+$this->headLink()->appendStylesheet('/css/bootstrap-image-gallery.min.css');
+$this->inlineScript()->appendFile('http://blueimp.github.io/Gallery/js/jquery.blueimp-gallery.min.js');
+$this->inlineScript()->appendFile('/js/bootstrap-image-gallery.js'); ?>
+
+<div class="row">
+    <div class="col-sm-10">
+        <h1><?php echo $this->escapeHtml($title); ?></h1>
+    </div>
+    <div class="col-sm-2 clearfix" style="margin-bottom:10px;">
+        <a href="#" class="btn btn-success btn-lg contact" data-toggle="modal" data-target="#contactModal">Contact Alex</a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div id="blueimp-gallery" class="blueimp-gallery blueimp-gallery-controls">
+            <!-- The container for the modal slides -->
+            <div class="slides"></div>
+            <!-- Controls for the borderless lightbox -->
+            <h3 class="title"></h3>
+            <a class="prev">‹</a>
+            <a class="next">›</a>
+            <a class="close">×</a>
+            <a class="play-pause"></a>
+            <ol class="indicator"></ol>
+            <!-- The modal dialog, which will be used to wrap the lightbox content -->
+            <div class="modal fade">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title"></h4>
+                        </div>
+                        <div class="modal-body next"></div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default pull-left prev">
+                                <i class="glyphicon glyphicon-chevron-left"></i>
+                                Previous
+                            </button>
+                            <button type="button" class="btn btn-primary next">
+                                Next
+                                <i class="glyphicon glyphicon-chevron-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="links">
+        <?php if(isset($images)): $count = 0; $gallery = array(); 
+            foreach($images as $i){
+                if(stripos($i->full, 'youtube')){
+                    // Get params
+                    $parts = parse_url($i->full);
+                    parse_str($parts['query'], $query);
+                    
+                    echo '<a href="'.$i->full.'" target="_blank" title="'.$i->description.'" index="'.$count.'">
+                        <img width="105" src="'.$i->thumb.'" /></a>';
+                    $gallery[] = array(
+                            'title' => $i->description,
+                            'href' => $i->full,
+                            'type' => 'text/html',
+                            'youtube' => $query['v'],
+                            'poster' => 'http://img.youtube.com/vi/'.$query['v'].'/0.jpg'
+                        );
+                    $count ++;
+                }
+            } 
+            foreach($images as $i){   
+                if(!stripos($i->full, 'youtube')){ 
+                    echo '<a href="'.$i->full.'" title="'.$i->description.'" index="'.$count.'">
+                        <img width="105" src="'.$i->thumb.'" /></a>';
+                    $gallery[] = array(
+                            'title' => $i->description,
+                            'href' => $i->full,
+                            'type' => 'image/jpeg'
+                        );
+                    $count ++;
+                }
+            }
+            $this->inlineScript()->prependScript('
+                window.gobject = '.json_encode($gallery).';');
+        endif; ?>
+        </div>
+        <hr />
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <h3>Basic Info</h3>
+        <table class="info-table">
+            <tr>
+                <td>Address: </td>
+                <td>1054 Alpug Ave, Oviedo, FL 32765</td>
+            </tr><tr>
+                <td>Bedrooms: </td>
+                <td>3</td>
+            </tr><tr>
+                <td>Bathrooms: </td>
+                <td>2</td>
+            </tr><tr>
+                <td>Total SqFt: </td>
+                <td>1393</td>
+            </tr><tr>
+                <td>Asking Price: </td>
+                <td>$189,000</td>
+            </tr>
+        </table>
+
+        <h3>Features</h3>
+        <p>Pool * Spa Spillover * Granite Kitchen * Vaulted Ceiling * Skylight * Bonus Room * Breakfast Bar * Breakfast Nook * Wired Speakers/Eathernet</p>
+
+        <h3>Amenities</h3>
+        <p>Basketball * Tennis * Park</p>
+
+    </div>
+
+    <div class="col-md-6">
+        
+        <h3>Included</h3>
+        <p>All Appliances * Ceiling Speakers</p>
+        
+        <h3>Property Summary</h3>
+        <p>
+            Don't miss out on this great opportunity in Alafaya Woods Pool Home!  
+            Kitchen updated with granite and new cabinets on 11/25/2014.
+            Open floor plan includes kitchen with breakfast bar, eat-in space,
+            living area with vaulted ceilings and skylights, bonus room, and a 
+            french door view of the pool!  Hallway features ample closet space 
+            and leads to common bathroom, two bedrooms and master bedroom. Master 
+            bedroom features a walk-in closet, and a bathroom with tiled walk-in 
+            shower.  This home also features a functional heated garage with kitchenette
+            and half-bath.  
+        </p>
+        
+        <!--h3>Additional Info</h3>
+        <p><?php //echo $description->notes; ?></p-->
+        
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12 clearfix" style="margin-bottom:10px;">
+        <a href="#" class="btn btn-success btn-lg contact" 
+            data-toggle="modal" data-target="#contactModal">
+            Schedule Appointment Today!</a>
+    </div>
+</div>
+
+<div class="modal fade" id="contactModal" tabindex="-1" role="dialog" 
+    aria-labelledby="contactModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h2 class="modal-title" id="contactModalLabel">Schedule an Appointment Today!</h2>
+            </div>
+        <div class="modal-body">
+            <p class="lead">Call or Text Alex @ <span id="contactNumber"></span></p>
+        </div>
+        <div class="modal-footer">
+                <h4 class="pull-left">Will work with or without a realtor!</h4>
+            <button type="button" class="btn btn-default pull-right" data-dismiss="modal">Close</button>
+        </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        $(".contact").click(function(){
+            $('#contactNumber').html('<a class="call" href="tel:321-348-4864">321-348-4864</a>');
+        });
+        $(".call").click(function(){
+            return true;
+        });
+    });
+</script>

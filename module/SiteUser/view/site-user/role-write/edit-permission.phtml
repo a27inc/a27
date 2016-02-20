@@ -1,0 +1,19 @@
+<?php $title = 'Edit Permission'; $this->headTitle($title); ?>
+
+<div class="row">
+	<h1 class="pull-left"><?php echo $this->escapeHtml($title); ?></h1>
+	<a href="<?php echo $this->url('permission'); ?>" 
+		type="button" class="btn btn-default pull-right">
+			Cancel</a>
+</div>
+<div class="row">
+	<div class="col-sm-5">
+		<?php $form->setAttribute('action', $this->url('permission/edit', array(), true));
+		$form->prepare();
+        $form->get('submit')->setValue('Update Permission');
+
+		echo $this->form()->openTag($form);
+		echo $this->formCollection($form);
+		echo $this->form()->closeTag(); ?>
+	</div>
+</div>

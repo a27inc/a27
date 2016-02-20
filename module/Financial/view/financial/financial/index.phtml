@@ -1,0 +1,77 @@
+<?php
+	$title = 'Financials Summary';
+	$this->headTitle($title);
+	setlocale(LC_MONETARY, 'en_US');
+?>
+
+<div class="row">
+	<h1 class="pull-left"><?php echo $this->escapeHtml($title); ?></h1>
+	<a href="<?php echo $this->url('financial/report'); ?>" 
+        type="button" class="btn btn-default pull-right">
+            Financial Report</a>
+</div>
+
+
+
+
+<?php $count = 1; 
+foreach($summary->getProperty_category_total() as $pid => $cat){
+	if($pid != $summary->getHead_quarter_id()){
+		$property = $summary->getProperty($pid);
+        $property_name = $property ? $property->getName() : 'Undefined';
+        $property_total = $summary->getProperty_total($pid);
+        $property_profit_total = $summary->getProperty_profit_total($pid);
+        $months_in_service = $summary->getProperty_months_in_service($pid);
+        $property_cashflow = ($months_in_service && $property_profit_total)
+            ? ($property_profit_total / $months_in_service) : 0;
+        $property_outcome = ($months_in_service && $property_total)
+            ? ($property_total / $months_in_service) : 0;
+
+		if($count%2 == 1) echo '<div class="row">';
+		echo '<div class="col-md-6">
+			<div class="panel panel-default">
+				<div class="panel-heading"><h3 class="panel-title">'.$property_name.'</h3></div>
+					<div class="panel-body">
+						<table class="table" style="margin-bottom:0;">';
+		foreach($cat as $cat_name => $cat_total){
+			echo '<tr>';
+				echo '<td>'.$cat_name.'</td>';
+				echo '<td>'.($cat_total < 0 ? '- ' : '').'$'.number_format(abs($cat_total), 2).'</td>';
+			echo '</tr>';
+		} echo '<tr><td>Average Monthly Cashflow</td><td>'.($property_cashflow < 0 ? '- ' : '').'$'.number_format(abs($property_cashflow), 2).'</td></tr>'; 
+        echo '<tr><td>Average Monthly Outcome</td><td>'.($property_outcome < 0 ? '- ' : '').'$'.number_format(abs($property_outcome), 2).'</td></tr>';
+		echo '<tr><td class="lead">Total Gain Estimate</td><td class="lead">'.($property_total < 0 ? '- ' : '').'$'.number_format(abs($property_total), 2).'</td></tr>';
+		echo '</table></div></div></div>'; 
+		if($count%2 == 0) echo '</div>';
+		$count++;
+	}
+} if(($count-1)%2 !== 0){
+		echo '<div class="col-md-6"></div>';
+	echo '</div>';
+}
+
+// Get total cash flow
+echo '<div class="row"><div class="col-md-12">
+	<div class="panel panel-default">
+		<div class="panel-heading"><h3 class="panel-title">Totals</h3></div>
+			<div class="panel-body"><table class="table" style="margin-bottom:0;">';
+
+$total = $summary->getTotal();
+$months_in_service = $summary->getProperty_months_in_service($summary->getHead_quarter_id());
+$cash_flow = $months_in_service && $total
+    ? $total / $months_in_service : 0;
+foreach($summary->getCategory_total() as $cat_name => $cat_total){	
+	echo '<tr>';
+		echo '<td>'.$cat_name.'</td>';
+		echo '<td>'.($cat_total < 0 ? '- ' : '').'$'.number_format(abs($cat_total), 2).'</td>';
+	echo '</tr>';
+}
+	echo '<tr>';
+		echo '<td>Average Monthly Outcome</td>';
+		echo '<td>'.($cash_flow < 0 ? '- ' : '').'$'.number_format(abs($cash_flow), 2).'</td>';
+	echo '</tr>';
+	echo '<tr>';
+		echo '<td class="lead">Total Gain Estimate</td>';
+		echo '<td class="lead">'.($total < 0 ? '- ' : '').'$'.number_format(abs($total), 2).'</td>';
+	echo '</tr>';
+echo '</table></div></div></div></div>'; ?>

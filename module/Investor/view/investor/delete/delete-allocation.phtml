@@ -1,0 +1,26 @@
+<?php
+	$title = 'Delete Allocation';
+	$this->headTitle($title);
+?>
+
+<h1><?php echo $this->escapeHtml($title); ?></h1>
+
+<p>
+	Are you sure that you want to delete allocation
+	'<?php echo $this->escapeHtml($allocation->getInvestor()->getDisplayName()); ?>'?
+</p>
+
+<?php
+	$url = $this->url('allocation/delete', array(
+		'action' => 'delete',
+		'id'     => $allocation->getId(),
+	));
+?>
+
+<form action="<?php echo $url; ?>" method="POST">
+	<div>
+	<input type="hidden" name="id" value="<?php echo (int) $allocation->getId(); ?>" />
+	<input type="submit" name="del" value="Yes" />
+	<input type="submit" name="del" value="No" />
+	</div>
+</form>

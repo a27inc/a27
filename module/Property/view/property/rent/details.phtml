@@ -1,0 +1,188 @@
+<?php
+    $title = 'For Rent: '.$property->street_address.', '.$property->city;
+    $this->headTitle($title);
+
+    $this->headMeta()->appendName('description', $meta_desc);
+
+    $this->headLink()->appendStylesheet('http://blueimp.github.io/Gallery/css/blueimp-gallery.min.css');
+    $this->headLink()->appendStylesheet('/css/bootstrap-image-gallery.min.css');
+    $this->inlineScript()->appendFile('http://blueimp.github.io/Gallery/js/jquery.blueimp-gallery.min.js');
+    $this->inlineScript()->appendFile('/js/bootstrap-image-gallery.js');
+
+    $now = date_create(date('Y-m-d'));
+    $available = date_create($this->property->getRental_listing()->getAvailable());
+    $interval = date_diff($now, $available);
+    $action = !$interval->format('%y') && $interval->format('%m') <= 3;
+
+?>
+
+<div class="row">
+    <div class="col-sm-10">
+        <h1><?php echo $this->escapeHtml($title); ?></h1>
+    </div>
+    <div class="col-sm-2 clearfix" style="margin-bottom:10px;">
+        <a href="#" class="btn btn-success btn-lg contact" data-toggle="modal" data-target="#contactModal">
+            Contact <?php echo $listing->contact_name; ?></a>
+    </div>
+</div>
+
+<div class="row"><div class="col-md-12">
+    <div id="blueimp-gallery" class="blueimp-gallery blueimp-gallery-controls">
+        <!-- The container for the modal slides -->
+        <div class="slides"></div>
+        <!-- Controls for the borderless lightbox -->
+        <h3 class="title"></h3>
+        <a class="prev">‹</a>
+        <a class="next">›</a>
+        <a class="close">×</a>
+        <a class="play-pause"></a>
+        <ol class="indicator"></ol>
+        <!-- The modal dialog, which will be used to wrap the lightbox content -->
+        <div class="modal fade">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title"></h4>
+                    </div>
+                    <div class="modal-body next"></div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default pull-left prev">
+                            <i class="glyphicon glyphicon-chevron-left"></i>
+                            Previous
+                        </button>
+                        <button type="button" class="btn btn-primary next">
+                            Next
+                            <i class="glyphicon glyphicon-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="links">
+    <?php $count = 0; $gallery = array(); 
+        foreach($this->images as $i){   
+            //if(!stripos($i->full, 'youtube')){ 
+            echo '<a href="'.$i->dir.$i->file.'" title="'.$i->description.'" index="'.$count.'">
+                <img src="'.$i->thumb_dir.$i->file.'" /></a>';
+            $gallery[] = array(
+                'title' => $i->description,
+                'href' => $i->dir.$i->file,
+                'type' => 'image/jpeg');
+            $count ++;
+            //}
+        }
+        $this->inlineScript()->prependScript('
+            window.gobject = '.json_encode($gallery).';'); ?>
+    </div>
+    <hr />
+</div></div>
+
+<div class="row">
+    <div class="col-md-6">
+        <h3>Basic Info</h3>
+        <table class="info-table">
+            <tr>
+                <td>Address: </td>
+                <td><?php echo $this->address; ?></td>
+            </tr><tr>
+                <td>Bedrooms: </td>
+                <td><?php echo $this->info->bedrooms; ?></td>
+            </tr><tr>
+                <td>Bathrooms: </td>
+                <td><?php echo $this->info->bathrooms; ?></td>
+            </tr><tr>
+                <td>Total SqFt: </td>
+                <td><?php echo $this->info->sqft; ?></td>
+            </tr><tr>
+                <td>Rent: </td>
+                <td>$<?php echo $this->listing->rent; ?></td>
+            </tr><tr>
+                <td>Deposit: </td>
+                <td>$<?php echo $this->listing->deposit; ?></td>
+            </tr><tr>
+                <td>Available: </td>
+                <td>
+                    <?php $date = date_create_from_format('Y-m-d', $this->listing->available); 
+                        echo date_format($date, 'l, F j, Y'); ?>
+                </td>
+            </tr>
+        </table>
+
+        <?php if($this->features){
+            echo '<h3>Features</h3>';
+            echo '<p>'.implode(' * ', $this->features).'</p>';
+        } ?>
+        <?php if($action): ?>
+            <a href="#" class="btn btn-success btn-lg contact" 
+                data-toggle="modal" data-target="#contactModal">
+                <?php if($listing->cta_button): echo $listing->cta_button; else: ?>
+                    Schedule Appointment Today!
+                <?php endif; ?>
+            </a>
+        <?php endif; ?>
+    </div>
+
+    <div class="col-md-6">
+        <?php if($this->amenities){
+            echo '<h3>Amenities</h3>';
+            echo '<p>'.implode(' * ', $this->amenities).'</p>';
+        } if($this->includes){
+            echo '<h3>Included</h3>';
+            echo '<p>'.implode(' * ', $this->includes).'</p>';
+        } ?>
+
+        <?php if($this->listing->getSummary()){
+            echo '<h3>Summary</h3>';
+            echo '<p>'.$this->listing->getSummary().'</p>';
+        } if($this->listing->getNotes()){
+            echo '<h3>Additional Information</h3>';
+            echo '<p>'.$this->listing->getNotes().'</p>';
+        } ?>
+    </div>
+</div>
+
+<div class="modal fade" id="contactModal" tabindex="-1" role="dialog" 
+    aria-labelledby="contactModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <?php if($listing->cta_title): ?>
+                    <h2 class="modal-title" id="contactModalLabel"><?php echo $listing->cta_title; ?></h2>
+                <?php else: ?>
+                    <h2 class="modal-title" id="contactModalLabel">Contact Information</h2>
+                <?php endif; ?>
+            </div>
+        <div class="modal-body">
+            <p class="lead">
+                <?php if($listing->cta_message): ?>
+                    <?php echo $listing->cta_message; ?>
+                <?php else: ?>
+                    Call <?php echo $listing->contact_name; ?> @
+                <?php endif; ?>
+                <span id="contactNumber"></span>
+            </p>
+        </div>
+        <div class="modal-footer">
+            <?php if($listing->cta_footer): ?>
+                <h4 class="pull-left"><?php echo $listing->cta_footer; ?></h4>
+            <?php endif; ?>
+            <button type="button" class="btn btn-default pull-right" data-dismiss="modal">Close</button>
+        </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        $(".contact").click(function(){
+            $('#contactNumber').html('<a class="call" href="tel:'+<?php echo '\''.$listing->contact_number.'\''; ?>+'">'+
+                <?php echo '\''.$listing->contact_number.'\''; ?>+'</a>');
+        });
+        $(".call").click(function(){
+            return true;
+        });
+    });
+</script>
