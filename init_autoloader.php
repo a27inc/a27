@@ -25,15 +25,14 @@ if (class_exists('Zend\Loader\AutoloaderFactory')) {
     return;
 }
 
-$zf2Path = false;
+// default to production
+$zf2Path = '/home2/whoalexc/zf2lib/library';
 
-if (is_dir('vendor/ZF2/library')) {
-    $zf2Path = 'vendor/ZF2/library';
-} elseif (getenv('ZF2_PATH')) {      // Support for ZF2_PATH environment variable or git submodule
+if (getenv('ZF2_PATH')) {
     $zf2Path = getenv('ZF2_PATH');
-} elseif (get_cfg_var('zf2_path')) { // Support for zf2_path directive value
-    $zf2Path = get_cfg_var('zf2_path');
-} else $zf2Path = '/home2/whoalexc/zf2lib/library';
+} elseif (getenv('APPLICATION_ENV') == 'development') {
+    $zf2Path = 'vendor/zendframework/zendframework/library';
+}
 
 if ($zf2Path) {
     if (isset($loader)) {

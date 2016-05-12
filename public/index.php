@@ -1,4 +1,4 @@
-<?php 
+<?php
 define('REQUEST_MICROTIME', microtime(true));
 if(!getenv('ZF2_PATH')) putenv('ZF2_PATH=/home2/whoalexc/zf2/library');
 if(!getenv('APPLICATION_ENV')) putenv('APPLICATION_ENV=production');
