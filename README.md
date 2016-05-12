@@ -52,6 +52,7 @@ project and you should be ready to go! It should look something like below:
         ServerName zf2-tutorial.localhost
         DocumentRoot /path/to/a27-project/public
         SetEnv APPLICATION_ENV "development"
+        SetEnv ZF2_PATH vendor/zendframework/zendframework/library
         <Directory /path/to/a27-project/public>
             DirectoryIndex index.php
             AllowOverride All
@@ -59,3 +60,8 @@ project and you should be ready to go! It should look something like below:
             Allow from all
         </Directory>
     </VirtualHost>
+
+Config Files Setup (required)
+-----------------------------
+In the `config/autoload` folder change all files with `sample` prefix to `local`.  Each of these files should be
+updated accordingly in order to connect to your database etc...
