@@ -1,14 +1,13 @@
 <?php global $env; 
-// Must set this environment variable to "development" on local!
 if(!$env) $env = getenv('APPLICATION_ENV'); 
 if(!$env) $env = 'production';
-$cache = $env == 'production';  
+$cache = $env == 'production'; 
 $configPaths = 'config/autoload/{,*.}{{,*.}global-'.$env.',{,*.}local-'.$env.',{,*.}global,{,*.}local}.php';
 
 return array(
     'modules' => array(
-        //'ZendDeveloperTools',
-        //'ZFTool',
+        'ZendDeveloperTools',
+        'ZFTool',
         'ZfcBase',
         'ZfcUser',
         'ZfcUserDoctrineORM',
@@ -24,6 +23,7 @@ return array(
         'Demo',
         'Property',
         'SiteUser',
+        'Mail',
     ),
     'module_listener_options' => array(
         'module_paths' => array(
