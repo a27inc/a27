@@ -580,6 +580,13 @@ CREATE TABLE IF NOT EXISTS `user_role` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
+-- Dumping data for table `user_role`
+--
+
+INSERT INTO `user_role` (`user_id`, `role_id`) VALUES
+(1, 9);
+
+--
 -- Constraints for dumped tables
 --
 
