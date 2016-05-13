@@ -20,10 +20,8 @@ return array(
     	'Financial',
         'Investor',
         'Landlord',
-        'Demo',
         'Property',
-        'SiteUser',
-        'Mail',
+        'SiteUser'
     ),
     'module_listener_options' => array(
         'module_paths' => array(

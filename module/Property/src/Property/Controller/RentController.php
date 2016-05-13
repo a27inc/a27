@@ -12,10 +12,10 @@ class RentController extends AbstractActionController implements PropertyService
         $this->service = $s;
     }
 
-    public function indexAction(){      
+    public function indexAction(){
         return new ViewModel(array(
-            'properties' => $this->service->findAllProperties(array('status_id' => 1)),
-            'images' => $this->service->getImagesByProperty(),
+            'properties' => array(), //$this->service->findAllProperties(array('status_id' => 1)),
+            'images' => array(), //$this->service->getImagesByProperty(),
         ));
 	}
 
