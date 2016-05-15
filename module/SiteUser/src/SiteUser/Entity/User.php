@@ -19,6 +19,11 @@ class User{
     public $displayname;
 
     /**
+     * @var int
+     */
+    public $state;
+
+    /**
      * @var UserRole
      */
     public $role;
@@ -83,14 +88,31 @@ class User{
     }
 
     /**
-     * @param UserRole
+     * @return int
+     */
+    public function getState(){
+        return $this->state;
+    }
+
+    /**
+     * @param int $state
+     * @return User
+     */
+    public function setState($state){
+        $this->state = (int) $state;
+        return $this;
+    }
+
+    /**
+     * @return  UserRole
      */
     public function getRole(){
         return $this->role;
     }
 
     /**
-     * @return UserRole $role
+     * @param UserRole $role
+     * @return User
      */
     public function setRole(UserRole $role){
         $this->role = $role;

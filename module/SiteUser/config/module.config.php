@@ -23,6 +23,7 @@ return [
     ],
     'view_manager' => [
         'template_path_stack' => [
+            'zfcuser' => __DIR__ . '/../view',
             'site-user' => __DIR__ . '/../view'
         ]
     ],
@@ -73,6 +74,16 @@ return [
                             'constraints' => [
                                 'id' => '[1-9]\d*'
                             ]  
+                        ]
+                    ],
+                    'profile' => [
+                        'type' => 'literal',
+                        'options' => [
+                            'route' => '/profile',
+                            'defaults' => [
+                                'controller' => 'UserController',
+                                'action'    => 'profile'
+                            ]
                         ]
                     ]
                 ]

@@ -207,6 +207,7 @@ class UserService{
 
         $sql    = new Sql($this->dbAdapter);
         $stmt   = $sql->prepareStatementForSqlObject($action);
+
         $result = $stmt->execute();
 
         if($result instanceof ResultInterface){ 
@@ -267,7 +268,19 @@ class UserService{
             } return $permission;
         } throw new \Exception('Database error: savePermission()');
     }
+    
+    public function addUserRole($userId, $roleId) {
+        $action = new Insert('user_role');
+        $action->values(array('user_id' => $userId, 'role_id' => $roleId));
 
+        //Execute
+        $sql    = new Sql($this->dbAdapter);
+        $stmt   = $sql->prepareStatementForSqlObject($action);
+        $result = $stmt->execute();
+        if(!$result instanceof ResultInterface)
+            throw new \Exception('Database error: user_role insert');
+    }
+    
     public function saveUserRole(UserRole $role){       
         $old = $exist = array();
         foreach($role->getRoles() as $r){

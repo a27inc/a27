@@ -5,3 +5,4 @@
 <?php if(!$this->hasRole(array('super_admin', 'admin', 'investor', 'landlord', 'demo'))): ?>
 	<p class="lead text-danger">NO ACCESS GRANTED: To complete your registration, please call Alex @ 321-348-4864</p>
 <?php endif; ?>
+<?php var_dump(get_class_methods($this->getHelperPluginManager())); ?>
