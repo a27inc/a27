@@ -14,11 +14,6 @@
         ]
     ],
     'controllers' => [
-        'invokables' => [
-            'Landlord\TenantController' => 'Landlord\Controller\TenantController',
-            'Landlord\WriteController' => 'Landlord\Controller\WriteController',
-            'Landlord\DeleteController' => 'Landlord\Controller\DeleteController'
-        ]
     ],
     'router' => [
         'routes' => [
@@ -27,7 +22,7 @@
                 'options' => [
                     'route'    => '/tenant',
                     'defaults' => [
-                        'controller' => 'Landlord\TenantController',
+                        'controller' => 'Landlord/TenantController',
                         'action'     => 'index'
                     ]
                 ],
@@ -38,7 +33,7 @@
                         'options' => [
                             'route'    => '/add',
                             'defaults' => [
-                                'controller' => 'Landlord\WriteController',
+                                'controller' => 'Landlord/WriteController',
                                 'action' => 'add'  
                             ] 
                         ]
@@ -48,7 +43,7 @@
                         'options' => [
                             'route'    => '/edit/[:id]',
                             'defaults' => [
-                                'controller' => 'Landlord\WriteController',
+                                'controller' => 'Landlord/WriteController',
                                 'action' => 'edit'  
                             ],
                             'constraints' => [
@@ -61,7 +56,7 @@
                         'options' => [
                             'route'    => '/delete/[:id]',
                             'defaults' => [
-                                'controller' => 'Landlord\DeleteController',
+                                'controller' => 'Landlord/DeleteController',
                                 'action' => 'delete'  
                             ],
                             'constraints' => [

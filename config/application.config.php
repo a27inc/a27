@@ -20,7 +20,6 @@ return array(
     	'Financial',
         'Investor',
         'Landlord',
-        'Demo',
         'Property',
         'SiteUser',
         'Mail',

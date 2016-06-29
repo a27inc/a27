@@ -22,8 +22,8 @@
 
 <?php foreach($roles as $r){
 	echo '<tr>';
-	 	echo '<td>'.$this->escapeHtml($r->name.($r->getChild() ? ' --> '.$r->getChild()->getName() : '')).'</td>';
-	 	echo '<td>'.$this->escapeHtml(implode(', ', $r->getPermission()->getNames())).'</td>';
+	 	echo '<td>'.$this->escapeHtml($r->name).'</td>';
+	 	echo '<td>'.$this->escapeHtml(implode(', ', $r->getPermissionNames())).'</td>';
 	 	if($r->getName() == 'guest') 
             echo '<td>System</td>';
         else echo '<td>

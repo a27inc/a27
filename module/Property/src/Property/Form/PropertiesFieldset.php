@@ -4,13 +4,13 @@ use Property\Model\PropertiesTableAwareInterface;
 use Property\Model\PropertiesTable;
 use Property\Entity\Property;
 use Zend\Form\Fieldset;
-use Zend\Stdlib\Hydrator\ClassMethods as ClassMethodsHydrator;
+use Zend\Hydrator\ObjectProperty;
 
 class PropertiesFieldset extends Fieldset implements PropertiesTableAwareInterface{
     public function __construct(){
         parent::__construct('properties_fieldset');
         
-        $this->setHydrator(new ClassMethodsHydrator(false))
+        $this->setHydrator(new ObjectProperty())
             ->setObject(new Property());
     }
 

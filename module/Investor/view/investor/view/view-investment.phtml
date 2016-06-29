@@ -23,9 +23,9 @@ foreach($allocations as $a){
     $in = $a->getCategory()->getSymbol() == '$';
     $is_ass = $a->getCategory()->getName() == 'assessment';
     $pid = $a->getProperty()->getId();
-    $definitions[$a->getCategory()->getDisplay_name()] = $a->getCategory()->getDescription();
+    $definitions[$a->getCategory()->getDisplayName()] = $a->getCategory()->getDescription();
     if($a->getCategory()->getNote())
-    	$definitions[$a->getCategory()->getDisplay_name()] .= '<br/>'.$a->getCategory()->getNote();
+    	$definitions[$a->getCategory()->getDisplayName()] .= '<br/>'.$a->getCategory()->getNote();
     
     switch(true){
     	case $in:
@@ -66,7 +66,7 @@ foreach($allocations as $a){
 	echo '<tr>';
         echo '<td></td>';
 	 	echo '<td>'.$this->escapeHtml($a->getProperty()->getName()).'</td>';
-        echo '<td>'.$this->escapeHtml($a->getCategory()->getDisplay_name()).'</td>';
+        echo '<td>'.$this->escapeHtml($a->getCategory()->getDisplayName()).'</td>';
         echo '<td>'.$this->escapeHtml($a->getCategory()->getSymbol().number_format($a->getAllocation(), 2, '.', ',')).'</td>';
         echo '<td>'.($in ? '' : $value).'</td>';
         echo '<td>'.$co_value.'</td>';

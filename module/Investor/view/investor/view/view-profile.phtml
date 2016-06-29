@@ -1,0 +1,9 @@
+<?php
+    $name = $name ? $name : $email;
+	$title = 'Investor Profile for '.$name;
+	$this->headTitle($title);
+?>
+
+<div class="row">
+	<h1 class="pull-left"><?php echo $this->escapeHtml($title); ?></h1>
+</div>

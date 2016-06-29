@@ -2,8 +2,9 @@
 
 use Investor\Entity\Allocation;
 use Zend\Form\Fieldset;
+use Zend\Hydrator\ClassMethods;
+use Zend\Hydrator\ObjectProperty;
 use Zend\InputFilter\InputFilterProviderInterface;
-use Zend\Stdlib\Hydrator\ClassMethods;
 
 class AllocationFieldset extends Fieldset implements InputFilterProviderInterface{
 	public function init(){
@@ -12,7 +13,7 @@ class AllocationFieldset extends Fieldset implements InputFilterProviderInterfac
             'type' => 'Hidden'));
 
         $this->add(array(
-            'name' => 'investor',
+            'name' => 'user',
             'type' => 'UsersFieldset'));
 
         $this->add(array(
@@ -40,7 +41,7 @@ class AllocationFieldset extends Fieldset implements InputFilterProviderInterfac
     public function __construct($name = 'allocation', $options = array()){
         parent::__construct($name);
 
-        $this->setHydrator(new ClassMethods(false))
+        $this->setHydrator(new ClassMethods())
             ->setObject(new Allocation());
     }
 

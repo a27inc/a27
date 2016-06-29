@@ -3,12 +3,16 @@
 use Zend\ModuleManager\Feature\AutoloaderProviderInterface;
 use Zend\ModuleManager\Feature\BootstrapListenerInterface;
 use Zend\ModuleManager\Feature\ConfigProviderInterface;
+use Zend\ModuleManager\Feature\ControllerProviderInterface;
+use Zend\ModuleManager\Feature\FormElementProviderInterface;
 use Zend\ModuleManager\Feature\ServiceProviderInterface;
 
 use Zend\EventManager\EventInterface;
+use Zend\ModuleManager\Feature\ViewHelperProviderInterface;
 use Zend\Mvc\ModuleRouteListener;
+use Financial\Model\Income;
 
-class Module implements AutoloaderProviderInterface, BootstrapListenerInterface, ConfigProviderInterface, ServiceProviderInterface{
+class Module implements AutoloaderProviderInterface, BootstrapListenerInterface, ConfigProviderInterface, ControllerProviderInterface, FormElementProviderInterface, ServiceProviderInterface, ViewHelperProviderInterface{
     
     public function getAutoloaderConfig(){
         return [
@@ -27,15 +31,46 @@ class Module implements AutoloaderProviderInterface, BootstrapListenerInterface,
         $ml->attach($em);
     }
 
-    public function getConfig(){
+    public function getConfig() {
         return include __DIR__ . '/config/module.config.php';
     }
-
-    public function getServiceConfig(){
+    
+    public function getControllerConfig() {
         return [
             'abstract_factories' => [
-                'Application\Factory\DbServiceFactoryAbstract',
+                'Application\Controller\Factory\ControllerFactoryAbstract'
+            ]
+        ];
+    }
+    
+    public function getFormElementConfig() {
+        return [
+            'abstract_factories' => [
+                'Application\Form\Factory\FieldsetFactoryAbstract'
+            ]
+        ];
+    }
+
+    public function getServiceConfig() {
+        return [
+            'abstract_factories' => [
+                'Application\Service\Factory\DbServiceFactoryAbstract',
+                'Application\Model\Factory\DbModelFactoryAbstract',
                 'Application\Factory\DbTableFactoryAbstract'
+            ],
+            'invokables' => [
+                'Financial\Model\Income'
+            ],
+            'initializers' => [
+                'Application\Model\ModelAbstractInitializer'
+            ]
+        ];
+    }
+
+    public function getViewHelperConfig() {
+        return [
+            'invokables' => [
+                'FormDate' => 'Application\Form\View\Helper\FormDate'
             ]
         ];
     }

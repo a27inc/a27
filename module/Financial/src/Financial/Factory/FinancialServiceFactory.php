@@ -1,7 +1,7 @@
 <?php namespace Financial\Factory;
 
 use Financial\Service\FinancialService;
-use Zend\Stdlib\Hydrator\ClassMethods;
+use Zend\Hydrator\ObjectProperty;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -15,6 +15,6 @@ class FinancialServiceFactory implements FactoryInterface{
     public function createService(ServiceLocatorInterface $sl){
         return new FinancialService(
             $sl->get('Zend\Db\Adapter\Adapter'),
-            new ClassMethods(FALSE));
+            new ObjectProperty());
     }
 }

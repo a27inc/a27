@@ -5,7 +5,7 @@
 
 <div class="row">
     <h1 class="pull-left"><?php echo $this->escapeHtml($title); ?></h1>
-    <a href="<?php echo $this->url('allocation/category/add'); ?>" 
+    <a href="<?php echo $this->url('investor/allocation/category/add'); ?>" 
         type="button" class="btn btn-primary pull-right">
             Add Type</a>
 </div>
@@ -19,13 +19,13 @@
 
 <?php foreach($categories as $c){
     echo '<tr>';
-        echo '<td>'.$this->escapeHtml($c->getDisplay_name()).'</td>';
+        echo '<td>'.$this->escapeHtml($c->getDisplayName()).'</td>';
         echo '<td>'.$this->escapeHtml($c->getDescription()).'</td>';
         echo '<td>
-                <a href="'.$this->url('allocation/category/edit', array('id' => $c->getId())).'">'.
+                <a href="'.$this->url('investor/allocation/category/edit', array('id' => $c->getId())).'">'.
                     $this->escapeHtml('Edit').'</a>
                 &nbsp;&nbsp;&nbsp;
-                <a href="'.$this->url('allocation/category/delete', array('id' => $c->getId())).'">'.
+                <a href="'.$this->url('investor/allocation/category/delete', array('id' => $c->getId())).'">'.
                     $this->escapeHtml('Delete').'</a>
             </td>';
     echo '</tr>'; 

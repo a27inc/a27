@@ -1,21 +1,23 @@
 <?php namespace Financial\Model;
 
-class Financial{
-    public function getDates(){
-        if($this->date_from && $this->date_to)
-            return $this->date_from.' - '.$this->date_to;
-        else return $this->date_filed;
+use Application\Entity\EntityAbstract;
+
+class Financial extends EntityAbstract{
+    
+    public function getDates($separator = ' - '){
+        if($this->dateFrom && $this->dateTo)
+            return $this->dateFrom.$separator.$this->dateTo;
+        else return $this->dateFiled;
     }
 
-    protected function getFinanceTotal($obj, $end = NULL, $start = NULL){
-        if(!$obj->getId())
-		return NULL;
-	$is_range = $end || $start;
+    protected function getFinanceTotal($obj, $end = null, $start = null){
+        if(!$obj->getId() || empty($obj->getRate()))
+		    return null;
         
-	if($obj->getRate()->getId() == 5)
+	    if($obj->getRate()->getId() == 5)
             return $obj->amount;
         
-        if($obj->getRate()->getId() && $obj->date_from && $obj->date_to){
+        if($obj->getRate()->getId() && $obj->dateFrom && $obj->dateTo){
 
             $freq_str = '';
             switch($obj->getRate()->getId()){
@@ -26,19 +28,19 @@ class Financial{
             }
 
             if(empty($start)) 
-                $start = $obj->date_from;
+                $start = $obj->dateFrom;
             if(empty($end)) 
                 $end = date('Y-m-d');
 
             $multiple = 0;
-            if($start <= $obj->date_to && $end >= $obj->date_from){
-                $inc_date = $obj->date_from;
+            if($start <= $obj->dateTo && $end >= $obj->dateFrom){
+                $inc_date = $obj->dateFrom;
                 while($inc_date <= $end){
                     if($inc_date >= $start && $inc_date <= $end)
                         $multiple++;
                     $inc_date = date('Y-m-d', strtotime($inc_date. ' + '.$freq_str));
                 }
             } return $obj->amount*$multiple;     
-        } return FALSE;    
+        } return false;    
     }
 }

@@ -27,12 +27,12 @@
 foreach($properties as $p){
     echo '<tr>';
         echo '<td>'.$this->escapeHtml($p->getName()).'</td>';
-        echo '<td>'.$this->escapeHtml($status[$p->status_id]).'</td>';
-        echo '<td>'.$this->escapeHtml($p->street_address).'</td>';
-        echo '<td>'.$this->escapeHtml($p->unit).'</td>';
-        echo '<td>'.$this->escapeHtml($p->city).'</td>';
-        echo '<td>'.$this->escapeHtml($p->state).'</td>';
-        echo '<td>'.$this->escapeHtml($p->zip).'</td>';
+        echo '<td>'.$this->escapeHtml($status[$p->getStatusId()]).'</td>';
+        echo '<td>'.$this->escapeHtml($p->getStreetAddress()).'</td>';
+        echo '<td>'.$this->escapeHtml($p->getUnit()).'</td>';
+        echo '<td>'.$this->escapeHtml($p->getCity()).'</td>';
+        echo '<td>'.$this->escapeHtml($p->getState()).'</td>';
+        echo '<td>'.$this->escapeHtml($p->getZip()).'</td>';
         echo '<td>
                 <a href="'.$this->url('property/edit', array('id' => $p->getId())).'">'.
                     $this->escapeHtml('Edit').'</a>

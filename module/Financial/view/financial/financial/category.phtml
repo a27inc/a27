@@ -19,7 +19,7 @@
 
 <?php foreach($categories as $c){
     echo '<tr>';
-        echo '<td>'.$this->escapeHtml($c->getDisplay_name()).'</td>';
+        echo '<td>'.$this->escapeHtml($c->getDisplayName()).'</td>';
         echo '<td>'.$this->escapeHtml($c->getDescription()).'</td>';
         echo '<td>
                 <a href="'.$this->url('financial/category/edit', array('id' => $c->getId())).'">'.

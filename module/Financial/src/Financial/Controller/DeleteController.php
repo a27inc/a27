@@ -21,10 +21,10 @@ class DeleteController extends AbstractActionController implements FinancialServ
         if(!$this->isGranted('delete_expense'))
             return $this->view->setTemplate('error/403');
 
-        if(!$id = (int) $this->params()->fromRoute('id', 0))
+        $id = (int) $this->params()->fromRoute('id', 0);
+        if(!$id || !$entity = $this->service->getExpense($id))
             return $this->redirect()->toRoute('financial/expense');
-        $entity = $this->service->getExpense($id);
-
+        
         $request = $this->getRequest();
         if($request->isPost()){
             $del = $request->getPost('del');
@@ -38,9 +38,9 @@ class DeleteController extends AbstractActionController implements FinancialServ
         if(!$this->isGranted('delete_income'))
             return $this->view->setTemplate('error/403');
 
-        if(!$id = (int) $this->params()->fromRoute('id', 0))
+        $id = (int) $this->params()->fromRoute('id', 0);
+        if(!$id || !$entity = $this->service->getIncome($id))
             return $this->redirect()->toRoute('financial/income');
-        $entity = $this->service->getIncome($id);
 
         $request = $this->getRequest();
         if($request->isPost()){
@@ -55,9 +55,9 @@ class DeleteController extends AbstractActionController implements FinancialServ
         if(!$this->isGranted('delete_financial_category'))
             return $this->view->setTemplate('error/403');
 
-        if(!$id = (int) $this->params()->fromRoute('id', 0))
+        $id = (int) $this->params()->fromRoute('id', 0);
+        if(!$id || !$entity = $this->service->getCategory($id))
             return $this->redirect()->toRoute('financial/category');
-        $entity = $this->service->getCategory($id);
 
         $request = $this->getRequest();
         if($request->isPost()){

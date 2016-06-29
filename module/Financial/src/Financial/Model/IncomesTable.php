@@ -6,7 +6,7 @@ use Zend\Db\TableGateway\AbstractTableGateway;
 
 //use Financial\Entity\Income as Entity;
 //use Zend\Db\Adapter\Driver\ResultInterface;
-//use Zend\Stdlib\Hydrator\ClassMethods;
+//use Zend\Hydrator\ClassMethods;
 
 class IncomesTable extends AbstractTableGateway{
     protected $table = 'incomes';

@@ -47,14 +47,12 @@ class WriteController extends AbstractActionController implements FinancialServi
         if(!$this->isGranted('edit_financial_category'))
             return $this->view->setTemplate('error/403');
 
-        if(!$id = (int) $this->params()->fromRoute('id', 0))
+        $id = (int) $this->params()->fromRoute('id', 0);
+        if(!$id || !$entity = $this->service->getCategory($id))
             return $this->redirect()->toRoute('financial/category');
-
-        $category = $this->service->getCategory($id);
-        //var_dump($category->toArray()); die;
+        
         $form = new CategoryForm();
-        $form->bind($category);
-        //var_dump($this->form); die;
+        $form->bind($entity);
         
         $request = $this->getRequest();
         if($request->isPost()){
@@ -99,15 +97,13 @@ class WriteController extends AbstractActionController implements FinancialServi
         if(!$this->isGranted('edit_expense'))
             return $this->view->setTemplate('error/403');
 
-        if(!$id = (int) $this->params()->fromRoute('id', 0))
+        $id = (int) $this->params()->fromRoute('id', 0);
+        if(!$id || !$entity = $this->service->getExpense($id))
             return $this->redirect()->toRoute('financial/expense');
-
-        $expense = $this->service->getExpense($id);
-        //var_dump($expense); die;
-
+        
         $formManager = $this->serviceLocator->get('FormElementManager');
         $form = $formManager->get('ExpenseForm');
-        $form->bind($expense);
+        $form->bind($entity);
         
         $request = $this->getRequest();
         if($request->isPost()){
@@ -151,17 +147,15 @@ class WriteController extends AbstractActionController implements FinancialServi
 
     public function editIncomeAction(){
         if(!$this->isGranted('edit_income'))
-            return $this->view->setTemplate('error/403');  
+            return $this->view->setTemplate('error/403');
 
-        if(!$id = (int) $this->params()->fromRoute('id', 0))
+        $id = (int) $this->params()->fromRoute('id', 0);
+        if(!$id || !$entity = $this->service->getIncome($id))
             return $this->redirect()->toRoute('financial/income');
-
-        $income = $this->service->getIncome($id);
-        //var_dump($expense); die;
 
         $formManager = $this->serviceLocator->get('FormElementManager');
         $form = $formManager->get('IncomeForm');
-        $form->bind($income);
+        $form->bind($entity);
         
         $request = $this->getRequest();
         if($request->isPost()){

@@ -1,14 +1,19 @@
-<?php return array(
-    'zfcuser' => array(
+<?php return [
+    'zfcuser' => [
         'user_entity_class' => 'Auth\Entity\User',
-        'enable_default_entities' => false
-    ),
-    'service_manager' => array(
-        'aliases' => array(
-            'zfcuser_zend_db_adapter' => (isset($settings['zend_db_adapter'])) ? $settings['zend_db_adapter']: 'Zend\Db\Adapter\Adapter'
-        )
-    )
-);
+        'enable_default_entities' => false,
+        'enable_display_name' => true,
+        'enable_user_state' => true,
+        'default_user_state' => 1,
+        'allowed_login_states' => [1,2],
+        'login_redirect_route' => 'site-user/profile'
+    ],
+    'service_manager' => [
+        'aliases' => [
+            'zfcuser_zend_db_adapter' => 'Zend\Db\Adapter\Adapter'
+        ]
+    ]
+];
 /**
  * ZfcUser Configuration
  *

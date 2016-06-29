@@ -2,8 +2,10 @@
 
 use Financial\Entity\Income;
 use Zend\Form\Fieldset;
+use Zend\Hydrator\ObjectProperty;
+use Zend\Validator\Between;
+use Zend\Validator\Date;
 use Zend\InputFilter\InputFilterProviderInterface;
-use Zend\Stdlib\Hydrator\ClassMethods;
 
 class IncomeFieldset extends Fieldset implements InputFilterProviderInterface{
 	public function init(){
@@ -25,15 +27,12 @@ class IncomeFieldset extends Fieldset implements InputFilterProviderInterface{
             'options' => array(
                 'label' => 'Amount: ')));
         $this->add(array(
-            'type' => 'Zend\Form\Element\Date',
-            'name' => 'date_filed',
+            'type' => 'Date',
+            'name' => 'dateFiled',
             'options' => array(
                 'label' => 'Date: '),
             'attributes' => array(
-                'value' => date('Y-m-d'),
-                'min' => '2014-01-01',
-                'max' => '2020-01-01',
-                'step' => '1')));
+                'value' => date('Y-m-d'))));
         /*$this->add(array(
             'type' => 'Zend\Form\Element\Date',
             'name' => 'date_from',
@@ -54,12 +53,12 @@ class IncomeFieldset extends Fieldset implements InputFilterProviderInterface{
                 'step' => '1')));*/
         $this->add(array(
             'name' => 'description',
-            'type' => 'Zend\Form\Element\Textarea',
+            'type' => 'Textarea',
             'options' => array(
                 'label' => 'Description: ')));
         $this->add(array(
             'name' => 'note',
-            'type' => 'Zend\Form\Element\Textarea',
+            'type' => 'Textarea',
             'options' => array(
                 'label' => 'Note: ')));
     }
@@ -67,7 +66,7 @@ class IncomeFieldset extends Fieldset implements InputFilterProviderInterface{
     public function __construct($name = 'income', $options = array()){
         parent::__construct($name);
 
-        $this->setHydrator(new ClassMethods(false))
+        $this->setHydrator(new ObjectProperty())
             ->setObject(new Income());
 	}
 
@@ -75,11 +74,42 @@ class IncomeFieldset extends Fieldset implements InputFilterProviderInterface{
      * @return array
      */
     public function getInputFilterSpecification(){
-        return array(
-            'date_from' => array(
-                'required' => false),
-            'date_to' => array(
-                'required' => false),
-        );         
+        $text_filters = [
+            ['name' => 'StringTrim'],
+            ['name' => 'StripTags']
+        ];
+
+        $dateValidator = [
+            'name' => 'Date',
+            'break_chain_on_failure' => true,
+            'options' => [
+                'format'    => 'Y-m-d',
+                'messages' => [
+                    Date::INVALID_DATE => 'The input does not fit the date format "%format%"'
+                ]
+            ]
+        ];
+
+        $betweenValidator = [
+            'name' => 'Between',
+            'options' => [
+                'min' => '2014-01-01',
+                'max' => date('Y-m-d'),
+                'messages' => [
+                    Between::NOT_BETWEEN_STRICT => 'Must be between today and 2014'
+                ]
+            ]
+        ];
+
+        return [
+            'dateFiled' => [
+                'required' => true,
+                'filters' => $text_filters,
+                'validators' => [
+                    $dateValidator,
+                    $betweenValidator
+                ]
+            ]
+        ];
     }
 }

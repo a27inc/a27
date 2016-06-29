@@ -17,6 +17,7 @@
                 'financial*'    => ['account', 'investor'],
                 'permission*'   => ['super_admin'],
                 'role*'     => ['super_admin'],
+                'site-user/profile'    => ['*'],
                 'site-user*'    => ['super_admin']
             ],
             'ZfcRbac\Guard\RoutePermissionsGuard' => [

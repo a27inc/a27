@@ -23,12 +23,12 @@ return [
     ],
     'view_manager' => [
         'template_path_stack' => [
+            'zfcuser' => __DIR__ . '/../view',
             'site-user' => __DIR__ . '/../view'
         ]
     ],
     'controllers' => [
         'invokables' => [
-            'UserController' => 'SiteUser\Controller\UserController',
             'UserWriteController' => 'SiteUser\Controller\UserWriteController',
             'UserDeleteController' => 'SiteUser\Controller\UserDeleteController',
             'RoleController' => 'SiteUser\Controller\RoleController',
@@ -43,7 +43,7 @@ return [
                 'options' => [
                     'route'    => '/site-user',
                     'defaults' => [
-                        'controller' => 'UserController',
+                        'controller' => 'SiteUser/UserController',
                         'action'     => 'index'
                     ]
                 ],
@@ -73,6 +73,16 @@ return [
                             'constraints' => [
                                 'id' => '[1-9]\d*'
                             ]  
+                        ]
+                    ],
+                    'profile' => [
+                        'type' => 'literal',
+                        'options' => [
+                            'route' => '/profile',
+                            'defaults' => [
+                                'controller' => 'SiteUser/UserController',
+                                'action'    => 'profile'
+                            ]
                         ]
                     ]
                 ]

@@ -1,20 +1,18 @@
 <?php namespace Property\Form;
 
-use Property\Entity\PropertyInfo;
+use Property\Entity\Info;
 use Zend\Form\Fieldset;
+use Zend\Hydrator\ObjectProperty;
 use Zend\InputFilter\InputFilterProviderInterface;
-use Zend\Stdlib\Hydrator\ClassMethods;
+use Zend\Validator\Callback;
+use Zend\Validator\Regex;
 
 class InfoFieldset extends Fieldset implements InputFilterProviderInterface{
 	public function __construct($name = 'info', $options = array()){
         parent::__construct($name);
         
-        $this->setHydrator(new ClassMethods(false))
-            ->setObject(new PropertyInfo());
-
-        $this->add(array(
-            'name' => 'property_id',
-            'type' => 'Hidden'));
+        $this->setHydrator(new ObjectProperty())
+            ->setObject(new Info());
 
         $this->add(array(
             'name' => 'sqft',
@@ -35,19 +33,19 @@ class InfoFieldset extends Fieldset implements InputFilterProviderInterface{
                 'label' => 'Bathrooms: ')));
 
         $this->add(array(
-            'name' => 'property_taxes',
+            'name' => 'propertyTaxes',
             'type' => 'Text',
             'options' => array(
                 'label' => 'Annual Property Taxes: ')));
 
         $this->add(array(
-            'name' => 'hoa_fees',
+            'name' => 'hoaFees',
             'type' => 'Text',
             'options' => array(
                 'label' => 'HOA Fees: ')));
 
         $this->add(array(
-            'name' => 'year_built',
+            'name' => 'yearBuilt',
             'type' => 'Text',
             'options' => array(
                 'label' => 'Year Built: ')));
@@ -69,7 +67,7 @@ class InfoFieldset extends Fieldset implements InputFilterProviderInterface{
             array('name' => 'StringToUpper')
         );
 
-        $pat1 = '/^(0|([1-9][-0-9]{0,3}|[1-9][0-9]{0,3}[.][0-9]{2}))$/';
+        $pat1 = '/^[0-9]{0,4}[.]?[0-9]{1,2}$/';
 
         return array(
             'sqft' => array(
@@ -80,24 +78,15 @@ class InfoFieldset extends Fieldset implements InputFilterProviderInterface{
                     array('name' => 'Callback',
                         'options' => array(
                             'messages' => array(
-                                \Zend\Validator\Callback::INVALID_VALUE => 'Non match: ^([0-9]{3,4})$',
+                                Callback::INVALID_VALUE => 'Non match: ^([0-9]{3,4})$',
                             ),
                             'callback' => function($value, $context = array()){
-                                var_dump($context); var_dump($value); //die;
-                                if(isset($context['status_id']) && $context['status_id'] == 3)
+                                if(isset($context['statusId']) && $context['statusId'] == 3)
                                     return TRUE;
                                 return (bool) preg_match('/^([0-9]{3,4})*$/', $value);
                             }
                         )
-                    ),
-                    /*array('name' => 'Regex',
-                        'options' => array(
-                            'pattern' => '/^([0-9]{3,4})*$/',
-                            'messages' => array(
-                                \Zend\Validator\Regex::NOT_MATCH => 'Non match: ^([0-9]{3,4})$',
-                            )
-                        )
-                    )*/
+                    )
                 )
             ),
             'bedrooms' => array(
@@ -108,7 +97,7 @@ class InfoFieldset extends Fieldset implements InputFilterProviderInterface{
                         'options' => array(
                             'pattern' => '/^[1-9]$/',
                             'messages' => array(
-                                \Zend\Validator\Regex::NOT_MATCH => 'Non match: ^[1-9]$',
+                                Regex::NOT_MATCH => 'Non match: ^[1-9]$',
                             )
                         )
                     )
@@ -120,15 +109,15 @@ class InfoFieldset extends Fieldset implements InputFilterProviderInterface{
                 'validators' => array(
                     array('name' => 'Regex',
                         'options' => array(
-                            'pattern' => '/^([1-9]|[1-9][.][5])$/',
+                            'pattern' => '/^[1-9][.]?[025]?[05]?$/',
                             'messages' => array(
-                                \Zend\Validator\Regex::NOT_MATCH => 'Non match: ^([1-9]|[1-9][.][5])$',
+                                Regex::NOT_MATCH => 'Non match: ^[1-9][.]?[025]?[05]?$',
                             )
                         )
                     )
                 ) 
             ),
-            'property_taxes' => array(
+            'propertyTaxes' => array(
                 'required' => true,
                 'filters' => $text_filters,
                 'validators' => array(
@@ -136,13 +125,13 @@ class InfoFieldset extends Fieldset implements InputFilterProviderInterface{
                         'options' => array(
                             'pattern' => $pat1,
                             'messages' => array(
-                                \Zend\Validator\Regex::NOT_MATCH => 'Non match: '.trim($pat1, '/')
+                                Regex::NOT_MATCH => 'Non match: '.trim($pat1, '/')
                             )
                         )
                     )
                 )
             ),
-            'hoa_fees' => array(
+            'hoaFees' => array(
                 'required' => false,
                 'filters' => $text_filters,
                 'validators' => array(
@@ -150,13 +139,13 @@ class InfoFieldset extends Fieldset implements InputFilterProviderInterface{
                         'options' => array(
                             'pattern' => $pat1,
                             'messages' => array(
-                                \Zend\Validator\Regex::NOT_MATCH => 'Non match: '.trim($pat1, '/')
+                                Regex::NOT_MATCH => 'Non match: '.trim($pat1, '/')
                             )
                         )
                     )
                 )
             ),
-            'year_built' => array(
+            'yearBuilt' => array(
                 'required' => true,
                 'filters' => $text_filters,
                 'validators' => array(
@@ -164,7 +153,7 @@ class InfoFieldset extends Fieldset implements InputFilterProviderInterface{
                         'options' => array(
                             'pattern' => '/^[1-2](0|[8-9])([0-9]{2})*$/',
                             'messages' => array(
-                                \Zend\Validator\Regex::NOT_MATCH => 'Non match: ^[1-2](0|[8-9])([0-9]{2})$',
+                                Regex::NOT_MATCH => 'Non match: ^[1-2](0|[8-9])([0-9]{2})$',
                             )
                         )
                     )

@@ -1,48 +1,42 @@
 <?php namespace Financial\Entity;
 
-class Category{
+use Application\Entity\EntityAbstract;
+
+class Category extends EntityAbstract{
     /**
      * @var int
      */
-    protected $id; 
+    public $id;
 
     /**
      * @var string
      */
-    protected $name;
+    public $name;
 
     /**
      * @var string
      */
-    protected $display_name;
+    public $displayName;
 
     /**
      * @var string
      */
-    protected $description;
+    public $description;
 
     /**
      * @var string
      */
-    protected $note;
-
-    /**
-     * @var int
-     */
-    protected $excl_cash_flow;
+    public $note;
 
     /**
      * @var int
      */
-    protected $excl_all;
+    public $exclCashFlow;
 
-    // prevent hydrating with similar fields from other tables
-    private $hydrator_flag = array(
-        'id' => false,
-        'name' => false,
-        'display_name' => false,
-        'description' => false,
-        'note' => false);
+    /**
+     * @var int
+     */
+    public $exclAll;
 
     /**
      * @return int
@@ -52,27 +46,11 @@ class Category{
     }
 
     /**
-     * @param int $id
+     * @param int $int
+     * @return Category
      */
-    public function setId($id){
-        if(!$this->hydrator_flag['id'])
-            $this->id = $id;
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getCategory_id(){
-        return $this->id;
-    }
-
-    /**
-     * @param int $category_id
-     */
-    public function setCategory_id($id){
-        $this->hydrator_flag['id'] = true;
-        $this->id = $id;
+    public function setId($int){
+        $this->id = (int) $int;
         return $this;
     }
 
@@ -84,46 +62,10 @@ class Category{
     }
 
     /**
-     * @param string $name
-     */
-    public function setName($name){
-        if(!$this->hydrator_flag['name'])
-            $this->name = $name;
-        return $this;
-    }
-
-    /**
-     * @param string $name
-     */
-    public function setCategory_name($name){
-        $this->hydrator_flag['name'] = true;
-        $this->name = $name;
-        return $this;
-    }
-
-    /**
      * @return string
      */
-    public function getDisplay_name(){
-        return $this->display_name;
-    }
-
-    /**
-     * @param string $display_name
-     */
-    public function setDisplay_name($display_name){
-        if(!$this->hydrator_flag['display_name'])
-            $this->display_name = $display_name;
-        return $this;
-    }
-
-    /**
-     * @param string $display_name
-     */
-    public function setCategory_display_name($display_name){
-        $this->hydrator_flag['display_name'] = true;
-        $this->display_name = $display_name;
-        return $this;
+    public function getDisplayName(){
+        return $this->displayName;
     }
 
     /**
@@ -134,24 +76,6 @@ class Category{
     }
 
     /**
-     * @param string $description
-     */
-    public function setDescription($description){
-        if(!$this->hydrator_flag['description'])
-            $this->description = $description;
-        return $this;
-    }
-
-    /**
-     * @param string $description
-     */
-    public function setCategory_description($description){
-        $this->hydrator_flag['description'] = true;
-        $this->description = $description;
-        return $this;
-    }
-
-    /**
      * @return string
      */
     public function getNote(){
@@ -159,50 +83,23 @@ class Category{
     }
 
     /**
-     * @param string $note
+     * @return int
      */
-    public function setNote($note){
-        if(!$this->hydrator_flag['note'])
-            $this->note = $note;
-        return $this;
-    }
-
-    /**
-     * @param string $note
-     */
-    public function setCategory_note($note){
-        $this->hydrator_flag['note'] = true;
-        $this->note = $note;
-        return $this;
+    public function getExclCashFlow(){
+        return $this->exclCashFlow;
     }
 
     /**
      * @return int
      */
-    public function getExcl_cash_flow(){
-        return $this->excl_cash_flow;
+    public function getExclAll(){
+        return $this->exclAll;
     }
 
     /**
-     * @param int $excl_cash_flow
+     * @return string
      */
-    public function setExcl_cash_flow($v){
-        $this->excl_cash_flow = (int) $v;
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getExcl_all(){
-        return $this->excl_all;
-    }
-
-    /**
-     * @param int $excl_all
-     */
-    public function setExcl_all($v){
-        $this->excl_all = (int) $v;
-        return $this;
+    public function __toString(){
+        return $this->getDisplayName();
     }
 }

@@ -31,7 +31,6 @@ return [
         'invokables' => [
             'PropertySellController' => 'Property\Controller\SellController',
             'PropertyRentController' => 'Property\Controller\RentController',
-            'PropertyWriteController' => 'Property\Controller\WriteController',
             'PropertyDeleteController' => 'Property\Controller\DeleteController',
             'PropertyController' => 'Property\Controller\PropertyController'
         ]
@@ -54,7 +53,7 @@ return [
                         'options' => [
                             'route'    => '/add',
                             'defaults' => [
-                                'controller' => 'PropertyWriteController',
+                                'controller' => 'Property/WriteController',
                                 'action' => 'add'  
                             ]
                         ]
@@ -64,7 +63,7 @@ return [
                         'options' => [
                             'route'    => '/edit/[:id]',
                             'defaults' => [
-                                'controller' => 'PropertyWriteController',
+                                'controller' => 'Property/WriteController',
                                 'action' => 'edit'  
                             ],
                             'constraints' => [

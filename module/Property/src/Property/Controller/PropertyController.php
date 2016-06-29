@@ -21,6 +21,6 @@ class PropertyController extends AbstractActionController implements PropertySer
         if(!$this->isGranted('view_property'))
             return $this->view->setTemplate('error/403');
 
-        return new ViewModel(array('properties' => $this->service->findAllProperties()));
+        return new ViewModel(array('properties' => $this->service->findAll()));
     }
 }

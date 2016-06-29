@@ -18,8 +18,8 @@
 <?php foreach($users as $u){
 	echo '<tr>';
 	 	echo '<td>'.$this->escapeHtml($u->email).'</td>';
-        echo '<td>'.$this->escapeHtml($u->displayname).'</td>';
-	 	echo '<td>'.$this->escapeHtml(implode(', ', $u->getRole()->getNames())).'</td>';
+        echo '<td>'.$this->escapeHtml($u->displayName).'</td>';
+	 	echo '<td>'.$this->escapeHtml(implode(', ', $u->getRoleNames())).'</td>';
 	 	echo '<td>
 		 		<a href="'.$this->url('site-user/edit', array('action' => 'edit', 'id' => $u->getId())).'">'.
 		 			$this->escapeHtml('Edit').'</a>

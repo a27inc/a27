@@ -21,15 +21,15 @@
 
 <?php foreach($tenants as $t){
 	echo '<tr>';
-	 	echo '<td>'.$this->escapeHtml($t->first_name).'</td>';
-	 	echo '<td>'.$this->escapeHtml($t->middle_initial).'</td>';
-        echo '<td>'.$this->escapeHtml($t->last_name).'</td>';
-        echo '<td>'.$this->escapeHtml($t->code).'</td>';
+	 	echo '<td>'.$this->escapeHtml($t->getFirstName()).'</td>';
+	 	echo '<td>'.$this->escapeHtml($t->getMiddleInitial()).'</td>';
+        echo '<td>'.$this->escapeHtml($t->getLastName()).'</td>';
+        echo '<td>'.$this->escapeHtml($t->getCode()).'</td>';
 	 	echo '<td>
-		 		<a href="'.$this->url('tenant/edit', array('action' => 'edit', 'id' => $t->id)).'">'.
+		 		<a href="'.$this->url('tenant/edit', array('action' => 'edit', 'id' => $t->getId())).'">'.
 		 			$this->escapeHtml('Edit').'</a>
 	 			&nbsp;&nbsp;&nbsp;
-	 			<a href="'.$this->url('tenant/delete', array('action' => 'delete', 'id' => $t->id)).'">'.
+	 			<a href="'.$this->url('tenant/delete', array('action' => 'delete', 'id' => $t->getId())).'">'.
 		 			$this->escapeHtml('Delete').'</a>
 			</td>';
  	echo '</tr>'; 

@@ -23,7 +23,7 @@
 <?php foreach($expenses as $e){
     echo '<tr>';
         echo '<td>'.$this->escapeHtml($e->property->getName()).'</td>';
-        echo '<td>'.$this->escapeHtml($e->category->getDisplay_name()).'</td>';
+        echo '<td>'.$this->escapeHtml($e->category->getDisplayName()).'</td>';
         echo '<td>'.$this->escapeHtml($e->getAmount()).'</td>';
         echo '<td>'.$this->escapeHtml($e->getDates()).'</td>';
         echo '<td>'.$this->escapeHtml($e->getDescription()).'</td>';

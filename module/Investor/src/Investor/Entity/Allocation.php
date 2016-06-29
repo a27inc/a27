@@ -2,42 +2,38 @@
 
 use SiteUser\Entity\User;
 use Property\Entity\Property;
+use Application\Entity\EntityAbstract;
 
-class Allocation{
+class Allocation extends EntityAbstract{
     /**
      * @var int
      */
-    protected $id; 
+    public $id; 
 
     /**
      * @var User
      */
-    protected $investor;
+    public $user;
 
     /**
-     * @var AllocationCategory
+     * @var Category
      */
-    protected $category;
+    public $category;
 
     /**
      * @var Property
      */
-    protected $property;
+    public $property;
 
     /**
      * @var float
      */
-    protected $allocation;
+    public $allocation;
 
     /**
      * @var string
      */
-    protected $note;
-
-    // prevent hydrating with similar fields from other tables
-    private $hydrator_flag = array(
-        'id' => false,
-        'note' => false);
+    public $note;
 
     /**
      * @return int
@@ -47,50 +43,43 @@ class Allocation{
     }
 
     /**
-     * @param int $id
+     * @param int $int
+     * @return Allocation
      */
-    public function setId($id){
-        if(!$this->hydrator_flag['id'])
-            $this->id = $id;
-        return $this;
-    }
-
-    /**
-     * @param int $id
-     */
-    public function setAllocation_id($id){
-        $this->hydrator_flag['id'] = true;
-        $this->id = $id;
+    public function setId($int){
+        $this->id = (int) $int;
         return $this;
     }
 
     /**
      * @return User
      */
-    public function getInvestor(){
-        return $this->investor;
+    public function getUser(){
+        return $this->user;
     }
 
     /**
-     * @param User $user
+     * @param User $obj
+     * @return Allocation
      */
-    public function setInvestor(User $user){
-        $this->investor = $user;
+    public function setUser(User $obj){
+        $this->user = $obj;
         return $this;
     }
 
     /**
-     * @return AllocationCategory
+     * @return Category
      */
     public function getCategory(){
         return $this->category;
     }
 
     /**
-     * @param AllocationCategory $category
+     * @param Category $obj
+     * @return Allocation
      */
-    public function setCategory(Category $category){
-        $this->category = $category;
+    public function setCategory(Category $obj){
+        $this->category = $obj;
         return $this;
     }
 
@@ -102,10 +91,11 @@ class Allocation{
     }
 
     /**
-     * @param Property $property
+     * @param Property $obj
+     * @return Allocation
      */
-    public function setProperty(Property $property){
-        $this->property = $property;
+    public function setProperty(Property $obj){
+        $this->property = $obj;
         return $this;
     }
 
@@ -117,10 +107,11 @@ class Allocation{
     }
 
     /**
-     * @param string $allocation
+     * @param string $str
+     * @return Allocation
      */
-    public function setAllocation($allocation){
-        $this->allocation = $allocation;
+    public function setAllocation($str){
+        $this->allocation = $str;
         return $this;
     }
 
@@ -132,20 +123,11 @@ class Allocation{
     }
 
     /**
-     * @param string $note
+     * @param string $str
+     * @return Allocation
      */
-    public function setNote($note){
-        if(!$this->hydrator_flag['note'])
-            $this->note = $note;
-        return $this;
-    }
-
-    /**
-     * @param string $note
-     */
-    public function setAllocation_note($note){
-        $this->hydrator_flag['note'] = true;
-        $this->note = $note;
+    public function setNote($str){
+        $this->note = $str;
         return $this;
     }
 }

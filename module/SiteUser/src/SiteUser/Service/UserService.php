@@ -1,391 +1,171 @@
 <?php namespace SiteUser\Service;
 
+use Application\Service\ServiceAbstract;
+
 use SiteUser\Entity\User;
 use SiteUser\Entity\Role;
-use SiteUser\Entity\RoleChild;
-use SiteUser\Entity\UserRole;
 use SiteUser\Entity\Permission;
-use SiteUser\Entity\RolePermission;
+use SiteUser\Hydrator\PermissionHydrator;
+use SiteUser\Hydrator\RoleHydrator;
+use SiteUser\Hydrator\UserHydrator;
 
-use Zend\Db\Adapter\AdapterInterface;
-use Zend\Db\Adapter\Driver\ResultInterface;
-use Zend\Db\ResultSet\ResultSet;
-use Zend\Db\ResultSet\HydratingResultSet;
-use Zend\Db\Sql\Sql;
-use Zend\Db\Sql\Insert;
-use Zend\Db\Sql\Update;
-use Zend\Db\Sql\Delete;
-use Zend\Stdlib\Hydrator\ClassMethods;
-
-class UserService{
-    /**
-     * @var \Zend\Db\Adapter\AdapterInterface
-     */
-    protected $dbAdapter;
-
-    /**
-     * @var \Zend\Stdlib\Hydrator\HydratorInterface
-     */
-    protected $hydrator;
-
-    /**
-     * @param PropertyMapper $propertyMapper
-     */
-    public function __construct(AdapterInterface $dbAdapter){
-        $this->dbAdapter = $dbAdapter;
-        $this->hydrator  = new ClassMethods(FALSE);
-    }
+class UserService extends ServiceAbstract{
 
     public function findUser($id){
-        $users = $this->findAllUsers('u.id = '.$id);
-        return array_shift($users);
+        $model = $this->getModel('SiteUser/User');
+        // set limit because joining roles can return multiple rows
+        //die(var_dump($model->open('id', $id, 100)));
+        return $model->open('id', $id, 100);
     }
 
     public function findRole($id){
-        $roles = $this->findAllRoles('r.id = '.$id);
-        return array_shift($roles);
+        $model = $this->getModel('SiteUser/Role');
+        //die(var_dump($model->open('id', $id, 100)));
+        return $model->open('id', $id, 100);
     }
 
     public function findPermission($id){
-        $permissions = $this->findAllPermissions('p.id = '.$id);
-        return $permissions->current();
+        $model = $this->getModel('SiteUser/Permission');
+        //die(var_dump($model->open('id', $id)));
+        return $model->open('id', $id);
     }
 
-    public function findAllUsers($where = NULL){
-        $sql    = new Sql($this->dbAdapter);
-        $select = $sql->select(array('u' => 'user'))
-            ->columns(array('uid' => 'id', '*'))
-            ->join(array('ur' => 'user_role'), 'u.id = ur.user_id', '*', 'left')
-            ->join(array('r' => 'roles'), 'ur.role_id = r.id', array('role_id' => 'id', 'role_name'), 'left');
-
-        if($where) $select->where($where);
-
-        $stmt   = $sql->prepareStatementForSqlObject($select);
-        $result = $stmt->execute();
-        if($result instanceof ResultInterface && $result->isQueryResult()){
-            $users = array();
-            $roles = array();
-            
-            // hydrate
-            while($data = $result->current()){
-                $data['user_id'] = $data['uid'];
-                if(!isset($users[$data['user_id']])){
-                    $users[$data['user_id']] = $this->hydrator->hydrate($data, new User()); 
-                    $roles[$data['user_id']] = new UserRole($data['user_id']);
-                } $roles[$data['user_id']]->addRole($this->getRole($data));
-                $result->next();   
-            } 
-
-            // set user roles
-            foreach($users as $uid => $user) 
-                $users[$uid]->setRole($roles[$uid]);
-                
-            return $users;
-        } return array();
+    public function findAllUsers($where = null){
+        $model = $this->getModel('SiteUser/User');
+        return $model->listQuery($where);
     }
 
-    public function findAllRoles($where = NULL){
-        $sql    = new Sql($this->dbAdapter);
-        $select = $sql->select(array('r' => 'roles'))
-            ->columns(array('rid' => 'id', '*'))
-            ->join(array('rp' => 'role_permission'), 'r.id = rp.role_id', '*', 'left')
-            ->join(array('hr' => 'role_role'), 'r.id = hr.parent_id', '*', 'left')
-            ->join(array('rc' => 'roles'), 'hr.child_id = rc.id', array('child_name' => 'role_name'), 'left')
-            ->join(array('p' => 'permissions'), 'rp.permission_id = p.id', 
-                array('permission_id' => 'id', 'permission_name'), 'left');
+    public function findAllRoles($where = null){
+        $model = $this->getModel('SiteUser/Role');
+        return $model->listQuery($where);
+    }
 
-        if($where) 
-            $select->where($where);
+    public function findAllPermissions($where = null){
+        $model = $this->getModel('SiteUser/Permission');
+        return $model->listQuery($where);
+    }
 
-        $stmt   = $sql->prepareStatementForSqlObject($select);
-        $result = $stmt->execute();
-        if($result instanceof ResultInterface && $result->isQueryResult()){
-            $roles = array();
-            $permissions = array();
-            
-            // hydrate
-            while($data = $result->current()){
-                
-                $data['role_id'] = $data['rid'];
+    public function saveUser(User $entity){
+        $hydrator = new UserHydrator();
+        $data = $hydrator->extract($entity);
 
-                if(!isset($roles[$data['role_id']])){
-                    $roles[$data['role_id']] = $this->hydrator->hydrate($data, new Role()); 
-                    
-                    if($data['child_id'])
-                        $roles[$data['role_id']]->setChild($this->hydrator->hydrate($data, new RoleChild()));
-                    
-                    $permissions[$data['role_id']] = new RolePermission($data['role_id']);
-                } 
+        $this->startTransaction();
 
-                $permissions[$data['role_id']]->addPermission($this->getPermission($data));
-                
-                $result->next();   
+        if($entity->getId()){
+            $this->_update('user', $data, array('id = ?' => $entity->getId()));
+        }
+
+        $this->saveUserRole($entity);
+
+        $this->commitTransaction();
+        
+        return $entity;
+    }
+
+    private function saveUserRole(User $entity){
+        $old = array_diff(array_keys($entity->getRoles()), $entity->getRoleIds());
+        $new = array_diff($entity->getRoleIds(), array_keys($entity->getRoles()));
+        if ($old || $new) {
+            foreach ($new as $roleId) {
+                if ($whereId = array_shift($old)) {
+                    $this->_update('user_role', array('role_id' => $roleId),
+                        array('user_id = ? AND role_id = ?' => array($entity->getId(), $whereId)));
+                }
+                else {
+                    $this->_insert('user_role', array(
+                        'user_id' => $entity->getId(),
+                        'role_id' => $roleId));
+                }
             }
-
-            // set user roles
-            foreach($roles as $rid => $role) 
-                $roles[$rid]->setPermission($permissions[$rid]);
-   
-            return $roles;
-        } return array();
+            if ($old) {
+                $this->_delete('user_role', array(
+                    'user_id = ? AND role_id IN(?)' => array($entity->getId(), implode(',',$old))));
+            }
+        }
     }
 
-    public function findAllPermissions($where = NULL){
-        $sql    = new Sql($this->dbAdapter);
-        $select = $sql->select(array('p' => 'permissions'))
-            ->columns(array('permission_id' => 'id', 'permission_name'));
+    public function saveRole(Role $entity){
+        $hydrator = new RoleHydrator();
+        $data = $hydrator->extract($entity);
 
-        if($where) 
-            $select->where($where);
+        $this->startTransaction();
 
-        $stmt   = $sql->prepareStatementForSqlObject($select);
-        $result = $stmt->execute();
-
-        $permissions = array();
-        if($result instanceof ResultInterface && $result->isQueryResult()){
-            $resultSet = new HydratingResultSet($this->hydrator, new Permission());
-            $permissions = $resultSet->initialize($result);
-        } return $permissions;
-    }
-
-    private function getRole($data){
-        $role = new Role();
-        return $this->hydrator->hydrate($data, $role);
-    }
-
-    private function getPermission($data){
-        $permission = new Permission();
-        return $this->hydrator->hydrate($data, $permission);
-    }
-
-    public function saveUser(User $user){
-        $data = $this->hydrator->extract($user);
-        unset($data['id']);
-
-        // Get role
-        $role = $data['role'];
-        unset($data['role']);
-
-        if($user->getId()){
-            $action = new Update('user');
-            $action->set($data);
-            $action->where(array('id = ?' => $user->getId()));
+        if($entity->getId()){
+            $this->_update('roles', $data, array('id = ?' => $entity->getId()));
+        }
+        else {
+            $this->_insert('roles', $data);
         }
 
-        $sql    = new Sql($this->dbAdapter);
-        $stmt   = $sql->prepareStatementForSqlObject($action);
-        $result = $stmt->execute();
+        $this->saveRoleChild($entity);
 
-        if($result instanceof ResultInterface){ 
-            if($user->getId() && $role)   
-                $this->saveUserRole($role);
+        $this->saveRolePermission($entity);
 
-            return $user;
-        } throw new \Exception('Database error: save()');
+        $this->commitTransaction();
+
+        return $entity;
     }
 
-    public function saveRole(Role $role){
-        $data = $this->hydrator->extract($role);
-        unset($data['id']);
-
-        // Get permission
-        $permission = $data['permission'];
-        unset($data['permission']);
-
-        // Get child
-        $child = $data['child'];
-        unset($data['child']);
-
-        if($role->getId()){
-            $action = new Update('roles');
-            $action->set(array('role_name' => $data['role_name']));
-            $action->where(array('id = ?' => $role->getId()));
-        } else{
-            $action = new Insert('roles');
-            $action->values(array('role_name' => $data['role_name']));   
+    private function saveRoleChild(Role $entity){
+        if($entity->getParentId() && $entity->getChildId()) {
+            $this->_update('role_role', array('child_id' => $entity->getChildId()), array('parent_id = ?' => $entity->getParentId()));
         }
-
-        $sql    = new Sql($this->dbAdapter);
-        $stmt   = $sql->prepareStatementForSqlObject($action);
-        $result = $stmt->execute();
-
-        if($result instanceof ResultInterface){ 
-            if(!$role->getId()){
-                $id = $result->getGeneratedValue();
-                $role->setRole_id($id);
-                if($permission) $permission->setRole_id($id);
-            } $child->setParent_id($role->getId());
-
-            if($role->getId() && $permission){   
-                $this->saveRolePermission($permission);
-            } $this->saveRoleChild($child);
-
-            return $role;
-        } throw new \Exception('Database error: saveRole()');
-    }
-
-    public function saveRoleChild(RoleChild $role){
-        if($role->getName()){
-            $action = new Update('role_role');
-            $action->set(array('child_id' => (int) $role->getId()));
-            $action->where(array('parent_id = ?' => (int) $role->getParent_id()));
-        } else{
-            $action = new Insert('role_role');
-            $action->values(array(
-                'parent_id' => (int) $role->getParent_id(),
-                'child_id' => (int) $role->getId()));   
+        else if ($entity->getChildId()) {
+            $this->_insert('role_role', array('child_id' => $entity->getChildId(), 'parent_id' => $entity->getParentId()));
         }
-
-        $sql    = new Sql($this->dbAdapter);
-        $stmt   = $sql->prepareStatementForSqlObject($action);
-        $result = $stmt->execute();
-
-        if(!$result instanceof ResultInterface) 
-            throw new \Exception('Database error: saveRoleChild()');
     }
 
-    public function savePermission(Permission $permission){
-        $data = $this->hydrator->extract($permission);
-
-        if($permission->getId()){
-            $action = new Update('permissions');
-            $action->set(array('permission_name' => $data['permission_name']));
-            $action->where(array('id = ?' => $permission->getId()));
-        } else{
-            $action = new Insert('permissions');
-            $action->values(array('permission_name' => $data['permission_name']));   
-        }
-
-        $sql    = new Sql($this->dbAdapter);
-        $stmt   = $sql->prepareStatementForSqlObject($action);
-        $result = $stmt->execute();
-
-        if($result instanceof ResultInterface){ 
-            if(!$permission->getId()){
-                $id = $result->getGeneratedValue();
-                $permission->setPermission_id($id);
-            } return $permission;
-        } throw new \Exception('Database error: savePermission()');
-    }
-
-    public function saveUserRole(UserRole $role){       
-        $old = $exist = array();
-        foreach($role->getRoles() as $r){
-            if(!in_array($r->getId(), $role->getIds()))
-                $old[] = $r->getId();
-            $exist[] = $r->getId();
-        } $new = array_diff($role->getIds(), $exist);
-
-        if($new){
-            foreach($new as $rid){
-                if($oid = array_shift($old)){ //Update
-                    $action = new Update('user_role');
-                    $action->set(array('role_id' => $rid));
-                    $action->where(array('user_id = ? AND role_id = ?' => array($role->getUser_id(), $oid)));    
-                } else{ //Insert
-                    $action = new Insert('user_role');
-                    $action->values(array('user_id' => $role->getUser_id(), 'role_id' => $rid));  
+    private function saveRolePermission(Role $entity){
+        $old = array_diff(array_keys($entity->getPermissions()), $entity->getPermissionIds());
+        $new = array_diff($entity->getPermissionIds(), array_keys($entity->getPermissions()));
+        if ($old || $new) {
+            foreach ($new as $permissionId) {
+                if ($whereId = array_shift($old)) {
+                    $this->_update('role_permission', array('permission_id' => $permissionId),
+                        array('role_id = ? AND permission_id = ?' => array($entity->getId(), $whereId)));
                 }
-
-                //Execute
-                $sql    = new Sql($this->dbAdapter);
-                $stmt   = $sql->prepareStatementForSqlObject($action);
-                $result = $stmt->execute();
-                if(!$result instanceof ResultInterface) 
-                    throw new \Exception('Database error: user_role insert/update');
-            } 
+                else {
+                    $this->_insert('role_permission', array(
+                        'role_id' => $entity->getId(),
+                        'permission_id' => $permissionId));
+                }
+            }
+            if ($old) {
+                $this->_delete('role_permission', array(
+                    'role_id = ? AND permission_id IN(?)' => array($entity->getId(), implode(',',$old))));
+            }
         }
-
-        if($old){ //Delete
-            $action = new Delete('user_role');
-            $action->where(array('user_id = ? AND role_id IN('.implode(',', $old).')' => array($role->getUser_id()))); 
-            $sql    = new Sql($this->dbAdapter);
-            $stmt   = $sql->prepareStatementForSqlObject($action);
-            $result = $stmt->execute(); 
-            if(!$result instanceof ResultInterface) 
-                throw new \Exception('Database error: removing old user roles');
-        }  
     }
 
-    public function saveRolePermission(RolePermission $permission){       
-        $old = $exist = array();
-        foreach($permission->getPermissions() as $p){
-            if(!in_array($p->getId(), $permission->getIds()))
-                $old[] = $p->getId();
-            $exist[] = $p->getId();
-        } $new = array_diff($permission->getIds(), $exist);
+    public function savePermission(Permission $entity){
+        $hydrator = new PermissionHydrator();
+        $data = $hydrator->extract($entity);
 
-        if(!$exist && $permission->getIds())
-            $new = $permission->getIds();
-
-        if($new){
-            foreach($new as $rid){
-                if($oid = array_shift($old)){ //Update
-                    $action = new Update('role_permission');
-                    $action->set(array('permission_id' => $rid));
-                    $action->where(array('role_id = ? AND permission_id = ?' => array($permission->getRole_id(), $oid)));    
-                } else{ //Insert
-                    $action = new Insert('role_permission');
-                    $action->values(array('role_id' => $permission->getRole_id(), 'permission_id' => $rid));  
-                }
-
-                //Execute
-                $sql    = new Sql($this->dbAdapter);
-                $stmt   = $sql->prepareStatementForSqlObject($action);
-                $result = $stmt->execute();
-                if(!$result instanceof ResultInterface) 
-                    throw new \Exception('Database error: role_permission insert/update');
-            } 
+        if($entity->getId()){
+            $this->_update('permissions', $data, array('id = ?' => $entity->getId()));
         }
-
-        if($old){ //Delete
-            $action = new Delete('role_permission');
-            $action->where(array('role_id = ? AND permission_id IN('.implode(',', $old).')' => array($permission->getRole_id()))); 
-            $sql    = new Sql($this->dbAdapter);
-            $stmt   = $sql->prepareStatementForSqlObject($action);
-            $result = $stmt->execute(); 
-
-            if(!$result instanceof ResultInterface) 
-                throw new \Exception('Database error: removing old role permissions');
-        }  
+        else {
+            $this->_insert('permissions', $data);
+        }
+        
+        return $entity;
     }
 
     public function deleteUser(User $entity){
         if($entity->getId()){
-            $action = new Delete('user');
-            $action->where(array('id = ?' => $entity->getId()));
-        }
-
-        $sql    = new Sql($this->dbAdapter);
-        $stmt   = $sql->prepareStatementForSqlObject($action);
-        $result = $stmt->execute();
-
-        return (bool) $result->getAffectedRows();
+            return $this->_delete('user', array('id = ?' => $entity->getId()));
+        } return false; 
     }
 
-    public function deleteRole($entity){
+    public function deleteRole(Role $entity){
         if($entity->getId()){
-            $action = new Delete('roles');
-            $action->where(array('id = ?' => $entity->getId()));
-        }
-
-        $sql    = new Sql($this->dbAdapter);
-        $stmt   = $sql->prepareStatementForSqlObject($action);
-        $result = $stmt->execute();
-
-        return (bool) $result->getAffectedRows();
+            return $this->_delete('roles', array('id = ?' => $entity->getId()));
+        } return false; 
     }
 
-    public function deletePermission($entity){
+    public function deletePermission(Permission $entity){
         if($entity->getId()){
-            $action = new Delete('permissions');
-            $action->where(array('id = ?' => $entity->getId()));
-        }
-
-        $sql    = new Sql($this->dbAdapter);
-        $stmt   = $sql->prepareStatementForSqlObject($action);
-        $result = $stmt->execute();
-
-        return (bool) $result->getAffectedRows();
+            return $this->_delete('permissions', array('id = ?' => $entity->getId()));
+        } return false; 
     }
 }

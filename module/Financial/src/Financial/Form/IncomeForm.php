@@ -1,8 +1,6 @@
 <?php namespace Financial\Form;
 
 use Zend\Form\Form;
-use Zend\InputFilter\InputFilter;
-use Zend\Stdlib\Hydrator\ClassMethods;
 
 class IncomeForm extends Form{
 	public function init(){
@@ -21,9 +19,5 @@ class IncomeForm extends Form{
 
     public function __construct($name = 'income_form', $options = array()){
 		parent::__construct($name);
-
-        $this->setAttribute('method', 'post')
-            ->setHydrator(new ClassMethods(false))
-            ->setInputFilter(new InputFilter());
 	}
 }

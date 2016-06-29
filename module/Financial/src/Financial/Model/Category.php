@@ -1,12 +1,25 @@
 <?php namespace Financial\Model;
 
-class Category{
+use Application\Model\ModelAbstract;
+
+class Category extends ModelAbstract{
 	public $id;
 	public $name;
 	public $display_name;
 	public $description;
 	public $note;
     public $excl_cash_flow;
+
+	protected function _init(){
+		$this->tableName('financial_categories')
+			->number('id')->primaryKey()
+			->string('name')
+			->string('display_name')
+			->string('description')
+			->string('note')
+			->number('excl_cash_flow')
+			->number('excl_all');
+	}
 
 	public function exchangeArray($data){
         $this->id     		= (!empty($data['id'])) ? $data['id'] : null;

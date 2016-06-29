@@ -1,16 +1,18 @@
 <?php namespace Property\Form;
 
-use Property\Entity\PropertyImage;
+use Property\Entity\Image;
 use Zend\Form\Fieldset;
+use Zend\Hydrator\ObjectProperty;
 use Zend\InputFilter\InputFilterProviderInterface;
-use Zend\Stdlib\Hydrator\ClassMethods;
+use Zend\Validator\Regex;
 
 class ImagesFieldset extends Fieldset implements InputFilterProviderInterface{
-	public function __construct($name = 'images', $options = array()){
+
+    public function __construct($name = 'images'){
         parent::__construct($name);
         
-        $this->setHydrator(new ClassMethods(false))
-            ->setObject(new PropertyImage());
+        $this->setHydrator(new ObjectProperty())
+            ->setObject(new Image());
 
         $this->add(array(
             'name' => 'id',
@@ -19,29 +21,17 @@ class ImagesFieldset extends Fieldset implements InputFilterProviderInterface{
                 'data-field' => 'id')));
 
         $this->add(array(
-            'name' => 'property_id',
-            'type' => 'Hidden',
-            'attributes' => array(
-                'data-field' => 'property_id')));
-
-        $this->add(array(
             'name' => 'file',
             'type' => 'Hidden',
             'attributes' => array(
                 'data-field' => 'file')));
 
         $this->add(array(
-            'name' => 'remove',
-            'type' => 'Hidden',
-            'attributes' => array(
-                'data-field' => 'remove')));
-
-        $this->add(array(
-            'name' => 'image_file',
+            'name' => 'imageFile',
             'type' => 'file',
             'attributes' => array(
                 'multiple' => false,
-                'data-field' => 'image_file'),
+                'data-field' => 'imageFile'),
             'options' => array(
                 'label' => 'Image Upload: ')));
 
@@ -62,19 +52,18 @@ class ImagesFieldset extends Fieldset implements InputFilterProviderInterface{
                 'data-field' => 'description')));
 
         $this->add(array(
-            'name' => 'remove_image',
+            'name' => 'removeImage',
             'type' => 'button',
             'options' => array('label' => 'Remove'),
             'attributes' => array(
-                'data-field' => 'remove_image',
-                'data-action' => 'remove')));
+                'data-field' => 'removeImage',
+                'data-action' => 'delete')));
 	}
 
     /**
      * @return array
      */
     public function getInputFilterSpecification(){
-        
         $text_filters = array(
             array('name' => 'StringTrim'),
             array('name' => 'StripTags')
@@ -89,27 +78,13 @@ class ImagesFieldset extends Fieldset implements InputFilterProviderInterface{
                         'options' => array(
                             'pattern' => '/^(?!0)[0-9]{1,11}$/',
                             'messages' => array(
-                                \Zend\Validator\Regex::NOT_MATCH => 'Non match: ^(?!0)[0-9]{1,11}$',
+                                Regex::NOT_MATCH => 'Non match: ^(?!0)[0-9]{1,11}$',
                             )
                         )
                     )
                 )
             ),
-            'property_id' => array(
-                'required' => false,
-                'filters' => $text_filters,
-                'validators' => array(
-                    array('name' => 'Regex',
-                        'options' => array(
-                            'pattern' => '/^(?!0)[0-9]{1,11}$/',
-                            'messages' => array(
-                                \Zend\Validator\Regex::NOT_MATCH => 'Non match: ^(?!0)[0-9]{1,11}$',
-                            )
-                        )
-                    )
-                )
-            ),
-            'image_file' => array(
+            'imageFile' => array(
                 'required' => false,
                 'validators' => array(
                     array('name' => 'filesize',
@@ -142,7 +117,7 @@ class ImagesFieldset extends Fieldset implements InputFilterProviderInterface{
                         'options' => array(
                             'pattern' => '/^(property|temp)_[a-z0-9]{13}\.jpg$/',
                             'messages' => array(
-                                \Zend\Validator\Regex::NOT_MATCH => 'Non match: ^(property|temp)_[a-z0-9]{13}\.jpg$',
+                                Regex::NOT_MATCH => 'Non match: ^(property|temp)_[a-z0-9]{13}\.jpg$',
                             )
                         )
                     )
@@ -156,7 +131,7 @@ class ImagesFieldset extends Fieldset implements InputFilterProviderInterface{
                         'options' => array(
                             'pattern' => '/^[- a-zA-Z0-9]{1,32}$/',
                             'messages' => array(
-                                \Zend\Validator\Regex::NOT_MATCH => 'Non match: ^[- a-zA-Z0-9]{1,32}$',
+                                Regex::NOT_MATCH => 'Non match: ^[- a-zA-Z0-9]{1,32}$',
                             )
                         )
                     )
@@ -170,7 +145,7 @@ class ImagesFieldset extends Fieldset implements InputFilterProviderInterface{
                         'options' => array(
                             'pattern' => '/^[-+,.?"\/\'!&*() a-zA-Z0-9]{1,64}$/',
                             'messages' => array(
-                                \Zend\Validator\Regex::NOT_MATCH => 'Non match: ^[-+,.?"/\'!&*() a-zA-Z0-9]{1,64}$',
+                                Regex::NOT_MATCH => 'Non match: ^[-+,.?"/\'!&*() a-zA-Z0-9]{1,64}$',
                             )
                         )
                     )

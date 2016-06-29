@@ -23,7 +23,7 @@
 <?php foreach($incomes as $i){
     echo '<tr>';
         echo '<td>'.$this->escapeHtml($i->property->getName()).'</td>';
-        echo '<td>'.$this->escapeHtml($i->category->getDisplay_name()).'</td>';
+        echo '<td>'.$this->escapeHtml($i->category->getDisplayName()).'</td>';
         echo '<td>'.$this->escapeHtml($i->getAmount()).'</td>';
         echo '<td>'.$this->escapeHtml($i->getDates()).'</td>';
         echo '<td>'.$this->escapeHtml($i->getDescription()).'</td>';

@@ -1,28 +1,35 @@
 <?php namespace Investor\Controller;
 
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
+use Application\Controller\AbstractController;
 
-class ViewController extends AbstractActionController implements ServiceLocatorAwareInterface{
-    protected $sl;
-    protected $service;
-    protected $view;
+class ViewController extends AbstractController{
+    protected $defaultService = 'Investor/InvestorService';
 
-    public function __construct(){
-        $this->service = array();
-        $this->view    = new ViewModel();
+    public function viewInvestorAction(){
+        if(!$this->isGranted('view_investor'))
+            return $this->view->setTemplate('error/403');
+
+        return $this->view->setVariables(array(
+            'investors' => $this->getService()->findAllInvestors(),
+        ));  
+    }
+    
+    public function viewAllocationAction(){
+        if(!$this->isGranted('view_allocation'))
+            return $this->view->setTemplate('error/403');
+
+        return $this->view->setVariables(array(
+            'allocations' => $this->getService()->findAllAllocations(),
+        ));
     }
 
-    public function setServiceLocator(ServiceLocatorInterface $sl){
-        $this->sl = $sl;
-    }
+    public function viewCategoryAction(){
+        if(!$this->isGranted('view_allocation_category'))
+            return $this->view->setTemplate('error/403');
 
-    public function getService($name = 'Investor/InvestorService'){
-        if(empty($this->service[$name])){
-            $this->service[$name] = $this->sl->get($name);   
-        } return $this->service[$name];   
+        return $this->view->setVariables(array(
+            'categories' => $this->getService()->findAllCategories(),
+        ));
     }
 
     public function viewInvestmentAction(){
@@ -32,30 +39,24 @@ class ViewController extends AbstractActionController implements ServiceLocatorA
         $u = $this->zfcUserAuthentication()->getIdentity();
         $fs = $this->getService('Financial/FinancialService');
         $summary = $fs->getFinancialSummary();
-
-        return new ViewModel(array(
+        
+        return $this->view->setVariables(array(
             'name' => ($u->getDisplayName() ? $u->getDisplayName() : $u->getUsername()),
             'email' => $u->getEmail(),
             'allocations' => $this->getService()->findInvestment($u->getId()),
-            'summary' => $summary
+            'summary' => $summary ?: array()
         ));
     }
 
-    public function viewAllocationAction(){
-        if(!$this->isGranted('view_allocation'))
+    public function viewProfileAction(){
+        if(!$this->isGranted('view_investment'))
             return $this->view->setTemplate('error/403');
+        
+        $u = $this->zfcUserAuthentication()->getIdentity();
 
-        return new ViewModel(array(
-            'allocations' => $this->getService()->findAllAllocations(),
-        ));
-    }
-
-    public function viewCategoryAction(){
-        if(!$this->isGranted('view_allocation_category'))
-            return $this->view->setTemplate('error/403');
-
-        return new ViewModel(array(
-            'categories' => $this->getService()->findAllCategories(),
+        return $this->view->setVariables(array(
+            'name' => ($u->getDisplayName() ? $u->getDisplayName() : $u->getUsername()),
+            'email' => $u->getEmail()
         ));
     }
 }

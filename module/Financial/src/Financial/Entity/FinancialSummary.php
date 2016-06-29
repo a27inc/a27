@@ -94,7 +94,7 @@ class FinancialSummary{
      */
     private function setYtd($obj){
         // to do excluded categories
-        $yr = substr($obj->getDate_filed(), 0, 4);
+        $yr = substr($obj->getDateFiled(), 0, 4);
         if(!isset($this->ytd[$yr]))
             $this->ytd[$yr] = 0;
         if(!isset($this->ytd_total[$yr]))
@@ -118,13 +118,13 @@ class FinancialSummary{
             $total = -$total;
 
         $cat = $obj->getCategory();
-        $ecf = $cat->getExcl_cash_flow();
-        $ea = $cat->getExcl_all();
+        $ecf = $cat->getExclCashFlow();
+        $ea = $cat->getExclAll();
         if(!$ecf && !$ea){
-            if(!isset($this->property_start[$pid]) || $this->property_start[$pid] > $obj->getDate_filed()){
-                $this->property_start[$pid] = $obj->getDate_filed();
-                if(!isset($this->property_start[$this->head_quarter_id]) || $this->property_start[$this->head_quarter_id] > $obj->getDate_filed())    
-                    $this->property_start[$this->head_quarter_id] = $obj->getDate_filed();
+            if(!isset($this->property_start[$pid]) || $this->property_start[$pid] > $obj->getDateFiled()){
+                $this->property_start[$pid] = $obj->getDateFiled();
+                if(!isset($this->property_start[$this->head_quarter_id]) || $this->property_start[$this->head_quarter_id] > $obj->getDateFiled())
+                    $this->property_start[$this->head_quarter_id] = $obj->getDateFiled();
             }
             $this->ytd[$yr] += $total;
             if($obj instanceof Income || $pid != $this->head_quarter_id){
@@ -143,13 +143,13 @@ class FinancialSummary{
             $this->total += $total;   
         }
 
-        if(!isset($this->property_category_total[$pid][$cat->getDisplay_name()]))
-            $this->property_category_total[$pid][$cat->getDisplay_name()] = 0;
-        $this->property_category_total[$pid][$cat->getDisplay_name()] += $total;
+        if(!isset($this->property_category_total[$pid][$cat->getDisplayName()]))
+            $this->property_category_total[$pid][$cat->getDisplayName()] = 0;
+        $this->property_category_total[$pid][$cat->getDisplayName()] += $total;
 
-        if(!isset($this->category_total[$cat->getDisplay_name()]))
-            $this->category_total[$cat->getDisplay_name()] = 0;
-        $this->category_total[$cat->getDisplay_name()] += $total;   
+        if(!isset($this->category_total[$cat->getDisplayName()]))
+            $this->category_total[$cat->getDisplayName()] = 0;
+        $this->category_total[$cat->getDisplayName()] += $total;
     }
 
     /**
@@ -208,7 +208,7 @@ class FinancialSummary{
     public function getProperty_profit_total($property){
         $ass = $property == $this->head_quarter_id
             ? 0 : $this->getProperty_assessment_total();
-        if($this->property[$property]->getStatus_id() == $this->disabled_status)
+        if($this->property[$property]->getStatusId() == $this->disabled_status)
             $ass = 0;
         return isset($this->property_profit_total[$property])
             ? $this->property_profit_total[$property] - $ass
@@ -273,7 +273,7 @@ class FinancialSummary{
     private function setProperty(Property $p){
         if(!isset($this->property[$p->getId()])){
             $this->property[$p->getId()] = $p;
-            if($p->getId() != $this->head_quarter_id && $p->getStatus_id() != $this->disabled_status)
+            if($p->getId() != $this->head_quarter_id && $p->getStatusId() != $this->disabled_status)
                 $this->property_count ++;            
         }
     }

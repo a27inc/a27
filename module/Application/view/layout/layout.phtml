@@ -87,17 +87,6 @@
                                 </li>
                             </ul>
                         <?php endif; ?>
-                        <!-- D E M O   N A V -->
-                        <?php if($this->hasRole(array('demo'))): ?>
-                            <ul class="nav navbar-nav">
-                                <li class="dropdown">
-                                    <a rel="nofollow" href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                        Demo <b class="caret"></b></a>
-                                    <?php echo $this->navigation('demo_nav')
-                                        ->menu()->setUlClass('dropdown-menu')->render(); ?>
-                                </li>
-                            </ul>
-                        <?php endif; ?>
 
                         <ul class="nav navbar-nav navbar-right">
                             <?php if(!$this->zfcUserIdentity()): ?>
@@ -123,9 +112,9 @@
                     </p>
                 </div>
                 <div class="pull-right">
-                    <a href="#" class="social-text"><span>Connect with A-27, Inc.</span></a>
+                    <span class="social-text"><span>Connect with A-27, Inc:</span></span>
                     <a href="http://www.facebook.com/a27inc" target="_blank" title="A-27, Inc. is on Facebook" class="social-facebook"><span>A-27, Inc. is on Facebook</span></a>
-                    <a href="http://plus.google.com/103343328669049965046" target="_blank" title="A-27, Inc. is on Google Plus" class="social-googleplus"><span>A-27, Inc. is on Google Plus</span></a>
+                    <!--a href="http://plus.google.com/103343328669049965046" target="_blank" title="A-27, Inc. is on Google Plus" class="social-googleplus"><span>A-27, Inc. is on Google Plus</span></a-->
                 </div><div class="clearfix"></div>
             </footer>
         </div> <!-- /container -->

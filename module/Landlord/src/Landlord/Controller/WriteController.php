@@ -1,33 +1,12 @@
 <?php namespace Landlord\Controller;
 
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
-use Landlord\Service\LandlordService;
-use Zend\Form\FormInterface;
-use Zend\Mvc\Controller\AbstractActionController;
+use Application\Controller\AbstractController;
 use Zend\View\Model\ViewModel;
 
-class WriteController extends AbstractActionController implements ServiceLocatorAwareInterface{
-    protected $service;
-    protected $view;
-    protected $form;
+class WriteController extends AbstractController{
 
-    public function setServiceLocator(ServiceLocatorInterface $sl){
-        $this->sl = $sl;
-    }
-
-    public function getService(){
-        if(is_null($this->service)){
-            $this->service = $this->sl->get('Landlord/LandlordService');   
-        } return $this->service;   
-    }
-
-    public function getForm(){
-        if(is_null($this->form)){
-            $fm = $this->sl->get('FormElementManager');
-            $this->form = $fm->get('Landlord\Form\TenantForm');   
-        } return $this->form;
-    }
+    protected $defaultService = 'Landlord/LandlordService';
+    protected $defaultForm = 'TenantForm';
 
     public function addAction(){
         if(!$this->isGranted('add_tenant'))
@@ -39,7 +18,7 @@ class WriteController extends AbstractActionController implements ServiceLocator
             $form->setData($request->getPost());
             if($form->isValid()){
                 try{
-                    $this->getService()->save($form->getData());
+                    $this->getService()->saveTenant($form->getData());
                     return $this->redirect()->toRoute('tenant');
                 } catch(\Exception $e){
                      var_dump($e->getMessage());
@@ -57,9 +36,9 @@ class WriteController extends AbstractActionController implements ServiceLocator
             return $this->view->setTemplate('error/403');
 
         $id = (int) $this->params()->fromRoute('id', 0);
-        if(!$id) return $this->redirect()->toRoute('tenant');
-
-        $entity = $this->getService()->find($id);
+        if(!$id || !$entity = $this->getService()->find($id))
+            return $this->redirect()->toRoute('tenant');
+        
         $form = $this->getForm();
         $form->bind($entity);
         
@@ -69,7 +48,7 @@ class WriteController extends AbstractActionController implements ServiceLocator
             
             if($form->isValid()){
                 try{
-                    $this->getService()->save($form->getData());
+                    $this->getService()->saveTenant($form->getData());
                     return $this->redirect()->toRoute('tenant');
                 } catch(\Exception $e){
                     var_dump($e);
