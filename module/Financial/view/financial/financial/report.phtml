@@ -34,7 +34,7 @@ foreach($incomes as $i){
     if(!isset($properties[$pid]))
         $properties[$pid] = $i->property->getName();  
     $cid = $i->category->getId();
-    $cdn = $i->category->getDisplay_name();
+    $cdn = $i->category->getDisplayName();
     // Report
     if(!in_array($cid, $exclude)){
         if(!isset($report['income'][$cdn]['total']))
@@ -57,7 +57,7 @@ foreach($expenses as $e){
     if(!isset($properties[$pid]))
         $properties[$pid] = $i->property->getName();
     $cid = $e->category->getId();
-    $cdn = $e->category->getDisplay_name();
+    $cdn = $e->category->getDisplayName();
 
     if(!in_array($cid, $exclude)){
         // Report
@@ -98,7 +98,7 @@ foreach($expenses as $e){
     <div id="data<?php echo $id; ?>" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading<?php echo $id; ?>">
     <?php foreach($i['itemized'] as $i): $pid = $i->property->getId(); ?>
         <div class="panel-body">
-            <?php if($i->date_from) 
+            <?php if($i->getDateFrom()) 
                 $i->amount = isset($by_property[$pid]['income'][$k]['total'])
                     ? $by_property[$pid]['income'][$k]['total'] 
                     : $i->amount;  
@@ -133,7 +133,7 @@ foreach($expenses as $e){
     <div id="data<?php echo $id; ?>" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading<?php echo $id; ?>">
     <?php foreach($i['itemized'] as $i): $pid = $i->property->getId(); ?>
         <div class="panel-body">
-            <?php if($i->date_from) 
+            <?php if($i->getDateFrom()) 
                 $i->amount = isset($by_property[$pid]['expense'][$k]['total'])
                     ? $by_property[$pid]['expense'][$k]['total'] 
                     : $i->amount; 

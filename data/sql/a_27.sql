@@ -70,6 +70,62 @@ CREATE TABLE IF NOT EXISTS `expenses` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `extra`
+--
+
+CREATE TABLE `extra` (
+  `id` int(11) NOT NULL,
+  `type_id` int(11) NOT NULL,
+  `name` varchar(32) COLLATE utf8_unicode_ci NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `extra`
+--
+
+INSERT INTO `extra` (`id`, `type_id`, `name`) VALUES
+(1, 2, 'Garbage'),
+(2, 2, 'Water'),
+(3, 2, 'Sewage'),
+(4, 3, 'Screened Porch'),
+(5, 3, 'Dishwasher'),
+(6, 3, 'Microwave'),
+(7, 3, 'Range/Oven'),
+(8, 3, 'Refrigerator'),
+(9, 3, 'Washer/Dryer Hookups'),
+(10, 3, 'Washer/Dryer'),
+(11, 3, 'Water Front'),
+(12, 3, 'Fireplace'),
+(13, 1, 'Pool'),
+(14, 1, 'Hot Tub/Spa'),
+(15, 1, 'Tennis Courts'),
+(16, 1, 'Fitness Center'),
+(17, 1, 'Clubhouse'),
+(18, 1, 'Car Wash Station');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `extra_type`
+--
+
+CREATE TABLE `extra_type` (
+  `id` int(11) NOT NULL,
+  `name` varchar(32) COLLATE utf8_unicode_ci NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `extra_type`
+--
+
+INSERT INTO `extra_type` (`id`, `name`) VALUES
+(1, 'Amenity'),
+(2, 'Include'),
+(3, 'Feature');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `financial_categories`
 --
 
@@ -134,21 +190,6 @@ CREATE TABLE IF NOT EXISTS `incomes` (
   KEY `category_id` (`category_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `investors`
---
-
-CREATE TABLE IF NOT EXISTS `investors` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_id` int(11) NOT NULL,
-  `financial_notification_frequency` tinyint(1) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `index_investors_user_id` (`id`,`user_id`),
-  KEY `investors_user_id` (`user_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
 --
 -- Dumping data for table `investors`
 --
@@ -167,26 +208,12 @@ CREATE TABLE IF NOT EXISTS `investor_allocations` (
   `allocation` float(9,2) NOT NULL,
   `note` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `category_id` (`category_id`,`property_id`),
-  KEY `property_id` (`property_id`),
+  UNIQUE KEY `property_category_investor_allocation` (`category_id`,`property_id`),
   KEY `user_id` (`user_id`),
-  KEY `category_id_2` (`category_id`),
-  KEY `property_id_2` (`property_id`),
-  KEY `user_id_2` (`user_id`)
+  KEY `category_id` (`category_id`),
+  KEY `property_id` (`property_id`),
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `investor_properties`
---
-
-CREATE TABLE IF NOT EXISTS `investor_properties` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `investor_id` int(11) NOT NULL,
-  `property_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1;
 
 -- --------------------------------------------------------
 
@@ -278,33 +305,19 @@ CREATE TABLE IF NOT EXISTS `properties` (
   KEY `status_id` (`status_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `properties_amenities`
---
-
-CREATE TABLE IF NOT EXISTS `properties_amenities` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `property_id` int(11) NOT NULL,
-  `amenity` varchar(32) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `properties_id` (`property_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `properties_features`
+-- Table structure for table `properties_description`
 --
 
-CREATE TABLE IF NOT EXISTS `properties_features` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS `properties_description` (
   `property_id` int(11) NOT NULL,
-  `feature` varchar(32) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `properties_id` (`property_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  `summary` varchar(1024) DEFAULT NULL,
+  `notes` varchar(512) DEFAULT NULL,
+  UNIQUE KEY `property_id` (`property_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -318,20 +331,6 @@ CREATE TABLE IF NOT EXISTS `properties_images` (
   `name` varchar(32) NOT NULL,
   `description` varchar(64) DEFAULT NULL,
   `file` varchar(128) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `properties_id` (`property_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `properties_includes`
---
-
-CREATE TABLE IF NOT EXISTS `properties_includes` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `property_id` int(11) NOT NULL,
-  `include` varchar(32) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `properties_id` (`property_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -356,6 +355,20 @@ CREATE TABLE IF NOT EXISTS `properties_info` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `property_extras`
+--
+
+CREATE TABLE IF NOT EXISTS `property_extras` (
+  `property_id` int(11) NOT NULL,
+  `extra_id` int(11) NOT NULL,
+  UNIQUE KEY `property_extra` (`property_id`, `extra_id`),
+  KEY `property_id` (`property_id`),
+  KEY `extra_id` (`extra_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `rates`
 --
 
@@ -364,10 +377,21 @@ CREATE TABLE IF NOT EXISTS `rates` (
   `name` varchar(16) NOT NULL,
   `monthly` decimal(7,4) NOT NULL,
   `quarterly` decimal(7,4) NOT NULL,
-  `semi_anual` decimal(7,4) NOT NULL,
-  `anual` decimal(7,4) NOT NULL,
+  `semi_annual` decimal(7,4) NOT NULL,
+  `annual` decimal(7,4) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=6;
+
+--
+-- Dumping data for table `rates`
+--
+
+INSERT INTO `rates` (`id`, `name`, `monthly`, `quarterly`, `semi_annual`, `annual`) VALUES
+(1, 'Monthly', '1.0000', '3.0000', '6.0000', '12.0000'),
+(2, 'Quarterly', '0.3333', '1.0000', '2.0000', '4.0000'),
+(3, 'Semi-Annual', '0.1667', '0.5000', '1.0000', '2.0000'),
+(4, 'Annual', '0.0833', '0.2500', '0.5000', '1.0000'),
+(5, 'One Time', '1.0000', '1.0000', '1.0000', '1.0000');
 
 -- --------------------------------------------------------
 
@@ -538,14 +562,15 @@ INSERT INTO `role_role` (`parent_id`, `child_id`) VALUES
 -- Table structure for table `tenants`
 --
 
-CREATE TABLE IF NOT EXISTS `tenants` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `first_name` varchar(32) NOT NULL,
-  `middle_initial` varchar(1) DEFAULT NULL,
-  `last_name` varchar(32) NOT NULL,
-  `code` varchar(64) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+CREATE TABLE `tenants` (
+  `id` int(11) NOT NULL,
+  `first_name` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
+  `middle_initial` varchar(1) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `last_name` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
+  `birth_date` date NOT NULL,
+  `code` varchar(64) COLLATE utf8_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`),
+) ENGINE=InnoDB AUTO_INCREMENT=76 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -592,6 +617,12 @@ ALTER TABLE `expenses`
   ADD CONSTRAINT `fk_expenses_rate_id` FOREIGN KEY (`rate_id`) REFERENCES `rates` (`id`);
 
 --
+-- Constraints for table `extra`
+--
+ALTER TABLE `extra`
+  ADD CONSTRAINT `extra_type` FOREIGN KEY (`type_id`) REFERENCES `extra_type` (`id`) ON DELETE CASCADE;
+
+--
 -- Constraints for table `incomes`
 --
 ALTER TABLE `incomes`
@@ -614,34 +645,23 @@ ALTER TABLE `investor_allocations`
   ADD CONSTRAINT `fk_investor_allocations_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE;
 
 --
--- Constraints for table `properties_amenities`
---
-ALTER TABLE `properties_amenities`
-  ADD CONSTRAINT `fk_properties_amenities_property_id` FOREIGN KEY (`property_id`) REFERENCES `properties` (`id`) ON DELETE CASCADE;
-
---
--- Constraints for table `properties_features`
---
-ALTER TABLE `properties_features`
-  ADD CONSTRAINT `fk_properties_features_property_id` FOREIGN KEY (`property_id`) REFERENCES `properties` (`id`) ON DELETE CASCADE;
-
---
 -- Constraints for table `properties_images`
 --
 ALTER TABLE `properties_images`
   ADD CONSTRAINT `fk_properties_images_property_id` FOREIGN KEY (`property_id`) REFERENCES `properties` (`id`) ON DELETE CASCADE;
 
 --
--- Constraints for table `properties_includes`
---
-ALTER TABLE `properties_includes`
-  ADD CONSTRAINT `fk_properties_includes_property_id` FOREIGN KEY (`property_id`) REFERENCES `properties` (`id`) ON DELETE CASCADE;
-
---
 -- Constraints for table `properties_info`
 --
 ALTER TABLE `properties_info`
   ADD CONSTRAINT `properties_info_property_id` FOREIGN KEY (`property_id`) REFERENCES `properties` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `property_extras`
+--
+ALTER TABLE `property_extras`
+  ADD CONSTRAINT `extra_extra` FOREIGN KEY (`extra_id`) REFERENCES `extra` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `extra_property` FOREIGN KEY (`property_id`) REFERENCES `properties` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `rental_listings`

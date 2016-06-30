@@ -44,16 +44,16 @@ class RolesTable extends AbstractTableGateway{
 
         $id = (int) $role->getId();
         if($id == 0)
-            $this->insert($data);
+            $this->_insert($data);
         else{
             if($this->getRole($id))
-                $this->update($data, array('id' => $id));
+                $this->_update($data, array('id' => $id));
             else
                 throw new \Exception('Role id does not exist!');
         }
     }
 
     public function deleteRole($id){
-        $this->delete(array('id' => (int) $id));
+        $this->_delete(array('id' => (int) $id));
     }
 }

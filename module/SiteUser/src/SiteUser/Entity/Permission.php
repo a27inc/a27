@@ -1,6 +1,8 @@
 <?php namespace SiteUser\Entity;
 
-class Permission{
+use Application\Entity\EntityAbstract;
+
+class Permission extends EntityAbstract{
     /**
      * @var int
      */
@@ -11,10 +13,6 @@ class Permission{
      */
     public $name;
 
-    // prevent hydrating with similar fields from other tables
-    private $hydrator_flag = array(
-        'id' => false);
-
     /**
      * @return int
      */
@@ -23,28 +21,12 @@ class Permission{
     }
 
     /**
-     * @param int $id
+     * @param int $int
+     * @return Permission
      */
-    public function setId($id){
-        if(!$this->hydrator_flag['id'])
-            $this->id = (int) $id;
+    public function setId($int){
+        $this->id = (int) $int;
         return $this;
-    }
-
-    /**
-     * @param int $id
-     */
-    public function setPermission_id($id){
-        $this->hydrator_flag['id'] = true;
-        $this->id = (int) $id;
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getPermission_id(){
-        return $this->id;
     }
 
     /**
@@ -55,27 +37,11 @@ class Permission{
     }
 
     /**
-     * @param string $name
+     * @param string $str
+     * @return Permission
      */
-    public function setName($name){
-        if(!$this->hydrator_flag['name'])
-            $this->name = $name;
+    public function setName($str){
+        $this->name = $str;
         return $this;
-    }
-
-    /**
-     * @param string $name
-     */
-    public function setPermission_name($name){
-        $this->hydrator_flag['name'] = true;
-        $this->name = $name;
-        return $this;
-    }
-
-    /**
-     * @return string $name
-     */
-    public function getPermission_name(){
-        return $this->name;
     }
 }

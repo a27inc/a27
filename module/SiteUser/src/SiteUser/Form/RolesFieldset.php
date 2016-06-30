@@ -2,16 +2,15 @@
 
 use SiteUser\Model\RolesTableAwareInterface;
 use SiteUser\Model\RolesTable;
-use SiteUser\Entity\UserRole;
+use SiteUser\Entity\Role;
 use Zend\Form\Fieldset;
-use Zend\Stdlib\Hydrator\ClassMethods as ClassMethodsHydrator;
+use Zend\Hydrator\ObjectProperty;
 
 class RolesFieldset extends Fieldset implements RolesTableAwareInterface{
     public function __construct(){
         parent::__construct('roles_fieldset');
-        
-        $this->setHydrator(new ClassMethodsHydrator(false))
-            ->setObject(new UserRole());
+        $this->setHydrator(new ObjectProperty())
+            ->setObject(new Role());
     }
 
     public function setRolesTable(RolesTable $t){

@@ -43,16 +43,16 @@ class PermissionsTable extends AbstractTableGateway{
 
         $id = (int) $permission->getId();
         if($id == 0)
-            $this->insert($data);
+            $this->_insert($data);
         else{
             if($this->getPermission($id))
-                $this->update($data, array('id' => $id));
+                $this->_update($data, array('id' => $id));
             else
                 throw new \Exception('Permission id does not exist!');
         }
     }
 
     public function deletePermission($id){
-        $this->delete(array('id' => (int) $id));
+        $this->_delete(array('id' => (int) $id));
     }
 }

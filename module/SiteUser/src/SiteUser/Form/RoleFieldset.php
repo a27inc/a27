@@ -2,34 +2,51 @@
 
 use SiteUser\Entity\Role;
 use Zend\Form\Fieldset;
+use Zend\Hydrator\ObjectProperty;
 use Zend\InputFilter\InputFilterProviderInterface;
-use Zend\Stdlib\Hydrator\ClassMethods;
+use SiteUser\Model\PermissionsTableAwareInterface;
+use SiteUser\Model\RolesTableAwareInterface;
+use SiteUser\Model\PermissionsTable;
+use SiteUser\Model\RolesTable;
+use Zend\Validator\Regex;
 
-class RoleFieldset extends Fieldset implements InputFilterProviderInterface{
-	public function init(){
+class RoleFieldset extends Fieldset implements InputFilterProviderInterface, PermissionsTableAwareInterface, RolesTableAwareInterface{
+
+    public function __construct($name = 'role', $options = array()){
+        parent::__construct($name);
+
+        $this->setHydrator(new ObjectProperty())
+            ->setObject(new Role());
+
         $this->add(array(
             'name' => 'id',
             'type' => 'Hidden'));
 
         $this->add(array(
-            'name' => 'role_name',
+            'name' => 'name',
             'type' => 'Text',
             'options' => array('label' => 'Name: ')));
+    }
 
+    public function setPermissionsTable(PermissionsTable $t){
         $this->add(array(
-            'name' => 'child',
-            'type' => 'RoleChildFieldset'));
+            'name' => 'permissionIds',
+            'type' => 'Zend\Form\Element\Select',
+            'attributes' => array(
+                'multiple' => 'multiple'
+            ),
+            'options' => array(
+                'label' => 'Permissions: ',
+                'value_options' => $t->getOptions())));
+    }
 
+    public function setRolesTable(RolesTable $t){
         $this->add(array(
-            'name' => 'permission',
-            'type' => 'PermissionsFieldset'));
-	}
-
-    public function __construct($name = 'role', $options = array()){
-        parent::__construct($name);
-
-        $this->setHydrator(new ClassMethods(false))
-            ->setObject(new Role());
+            'name' => 'childId',
+            'type' => 'Zend\Form\Element\Select',
+            'options' => array(
+                'label' => 'Child Role: ',
+                'value_options' => $t->getOptions())));
     }
 
     /**
@@ -43,7 +60,7 @@ class RoleFieldset extends Fieldset implements InputFilterProviderInterface{
         );
 
         return array(
-            'role_name' => array(
+            'name' => array(
                 'required' => true,
                 'filters' => $text_filters,
                 'validators' => array(
@@ -51,7 +68,7 @@ class RoleFieldset extends Fieldset implements InputFilterProviderInterface{
                         'options' => array(
                             'pattern' => '/^[a-z][_a-z]{1,47}$/',
                             'messages' => array(
-                                \Zend\Validator\Regex::NOT_MATCH => 'Please enter 1-48 alphabetical characters (a-z, _underscore)',
+                                Regex::NOT_MATCH => 'Please enter 1-48 lowercase alphabetical characters (a-z, _underscore)',
                             ))))));
     }
 }

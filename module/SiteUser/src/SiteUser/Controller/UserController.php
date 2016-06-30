@@ -1,25 +1,24 @@
 <?php namespace SiteUser\Controller;
 
-use SiteUser\Service\UserServiceAwareInterface;
+use SiteUser\Model\User;
 use SiteUser\Service\UserService;
-use SiteUser\Entity\UserRole;
-use SiteUser\Entity\User;
+use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
-class UserController extends AbstractActionController implements UserServiceAwareInterface{
+class UserController extends AbstractActionController{
     const ROUTE_CHANGEPASSWD = 'zfcuser/changepassword';
     const ROUTE_LOGIN        = 'zfcuser/login';
     const ROUTE_REGISTER     = 'zfcuser/register';
     const ROUTE_CHANGEEMAIL  = 'zfcuser/changeemail';
 
-    const USER_STATE_ACTIVE     = 1;
-    const USER_STATE_APPROVED   = 2;
-
+    protected $serviceLocator;
     protected $service;
     protected $view;
 
-    public function __construct(){
+    public function __construct(ServiceLocatorInterface $sl){
+        $this->serviceLocator = $sl;
+        $this->service = $sl->get('SiteUser/UserService');
         $this->view    = new ViewModel();
     }
 
@@ -30,7 +29,7 @@ class UserController extends AbstractActionController implements UserServiceAwar
     public function indexAction(){
         if(!$this->isGranted('view_user'))
             return $this->view->setTemplate('error/403');
-
+    
         return new ViewModel(array(
             'users' => $this->service->findAllUsers(),
         ));
@@ -44,15 +43,15 @@ class UserController extends AbstractActionController implements UserServiceAwar
         $user = $this->zfcUserAuthentication()->getIdentity();
         $displayMsg = false;
         // approve and assign super admin role for the first user
-        if ($user->getState() == static::USER_STATE_ACTIVE && $user->getId() == 1) {
+        if ($user->getState() == User::USER_STATE_ACTIVE && $user->getId() == 1) {
             $siteUser = $this->service->findUser($user->getId());
             $this->service->saveUser(
-                $siteUser->setState(static::USER_STATE_APPROVED));
+                $siteUser->setState(User::USER_STATE_APPROVED));
             $this->service->addUserRole($siteUser->getId(), 9);
             $this->redirect()->toRoute('site-user/profile');
         }
-        else if($user->getState() == static::USER_STATE_ACTIVE) {
-            $config = $this->getServiceLocator()->get('config');
+        else if($user->getState() == User::USER_STATE_ACTIVE) {
+            $config = $this->serviceLocator->get('config');
             $admin = isset($config['site']['admin'])
                 ? $config['site']['admin']
                 : array('name' => 'the site administrator');

@@ -4,37 +4,32 @@ class Rate{
     /**
      * @var int
      */
-    protected $id; 
+    public $id;
     
     /**
      * @var string
      */
-    protected $name;
+    public $name;
 
     /**
      * @var float
      */
-    protected $monthly;
+    public $monthly;
 
     /**
      * @var float
      */
-    protected $quarterly;
+    public $quarterly;
 
     /**
      * @var float
      */
-    protected $semi_anual;
+    public $semiAnnual;
 
     /**
      * @var float
      */
-    protected $anual;
-
-    // prevent hydrating with similar fields from other tables
-    private $hydrator_flag = array(
-        'id' => false,
-        'name' => false);
+    public $annual;
 
     /**
      * @return int
@@ -44,27 +39,11 @@ class Rate{
     }
 
     /**
-     * @param int $id
+     * @param int $int
+     * @return Rate
      */
-    public function setId($id){
-        if(!$this->hydrator_flag['id'])
-            $this->id = $id;
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getRate_id(){
-        return $this->id;
-    }
-
-    /**
-     * @param int $id
-     */
-    public function setRate_id($id){
-        $this->hydrator_flag['id'] = true;
-        $this->id = $id;
+    public function setId($int){
+        $this->id = (int) $int;
         return $this;
     }
 
@@ -76,36 +55,10 @@ class Rate{
     }
 
     /**
-     * @param string $name
-     */
-    public function setName($name){
-        if(!$this->hydrator_flag['name'])
-            $this->name = $name;
-        return $this;
-    }
-
-    /**
-     * @param string $name
-     */
-    public function setRate_name($name){
-        $this->hydrator_flag['name'] = true;
-        $this->name = $name;
-        return $this;
-    }
-
-    /**
      * @return float
      */
     public function getMonthly(){
         return $this->monthly;
-    }
-
-    /**
-     * @param float $monthly
-     */
-    public function setMonthly($monthly){
-        $this->monthly = $monthly;
-        return $this;
     }
 
     /**
@@ -116,40 +69,16 @@ class Rate{
     }
 
     /**
-     * @param float $quarterly
+     * @return float
      */
-    public function setQuarterly($quarterly){
-        $this->quarterly = $quarterly;
-        return $this;
+    public function getSemiAnnual(){
+        return $this->semiAnnual;
     }
 
     /**
      * @return float
      */
-    public function getSemi_anual(){
-        return $this->semi_anual;
-    }
-
-    /**
-     * @param float $semi_annual
-     */
-    public function setSemi_anual($semi_anual){
-        $this->semi_anual = $semi_anual;
-        return $this;
-    }
-
-    /**
-     * @return float
-     */
-    public function getAnual(){
-        return $this->anual;
-    }
-
-    /**
-     * @param float $annual
-     */
-    public function setAnual($anual){
-        $this->anual = $anual;
-        return $this;
+    public function getAnnual(){
+        return $this->annual;
     }
 }

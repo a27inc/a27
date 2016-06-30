@@ -1,0 +1,39 @@
+<?php
+    $title = 'Investor Table';
+    $this->headTitle($title);
+?>
+
+<div class="row">
+    <h1 class="pull-left"><?php echo $this->escapeHtml($title); ?></h1>
+    <a href="<?php echo $this->url('investor/add'); ?>" 
+        type="button" class="btn btn-primary pull-right">
+            Add Investor</a>
+</div>
+
+<table id="investor-table" class="table table-striped table-bordered">
+    <thead>
+        <th>Investor</th>
+        <th>Financial Notifications</th>
+        <th>Action</th>
+    </thead>
+
+<?php foreach($investors as $i){
+    echo '<tr>';
+        echo '<td>'.$this->escapeHtml($i->getUser()).'</td>';
+        echo '<td>'.$this->escapeHtml($i->getNotificationFrequencyName()).'</td>';
+        echo '<td>
+                <a href="'.$this->url('investor/edit', array('id' => $i->getId())).'">'.
+                    $this->escapeHtml('Edit').'</a>
+                &nbsp;&nbsp;&nbsp;
+                <a href="'.$this->url('investor/delete', array('id' => $i->getId())).'">'.
+                    $this->escapeHtml('Delete').'</a>
+            </td>';
+    echo '</tr>'; 
+} ?>
+</table>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('#investor-table').dataTable();
+    });
+</script>

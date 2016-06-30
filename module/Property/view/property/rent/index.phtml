@@ -20,12 +20,12 @@
 
         if(!in_array($p->getId(), $excluded)){
             $rent = '';
-            $available = date_create($p->getRental_listing()->getAvailable());
+            $available = date_create($p->getRentalListing()->getAvailable());
             $interval = date_diff($now, $available);
             $leasing = !$interval->format('%y') && $interval->format('%m') <= 3;
 
             //$unit = !empty($p->getUnit()) ? '#'.$p->getUnit().', ' : '';
-            $street = $p->getStreet_address();
+            $street = $p->getStreetAddress();
             //$street .= empty($unit) ? ', ' : ' ';
             //$address = $street.$unit.$p->getCity().', '.$p->getState().' '.$p->zip;
             $address = $street.', '.$p->getCity().', '.$p->getState().' '.$p->zip;
@@ -45,9 +45,10 @@
             echo '<div class="col-md-3">';
             echo '<div class="well"><a href="'.$link.'"><h3 style="margin-top:0;">'.$p->getName().'</h3></a>';
 
-            if(isset($images[$p->getId()])){
-                $i = $images[$p->getId()][0];
-                echo '<a href="'.$link.'"><img src="'.$i->dir.$i->file.'" style="width:100%;" /></a>';
+            $images = $p->getImages();
+            if(isset($images[0])){
+                $i = $images[0];
+                echo '<a href="'.$link.'"><img src="'.$i->getFile().'" style="width:100%;" /></a>';
             }
 
             echo '<p style="margin:5px 0;">'.$address.'</p>'.$rent.'</div>';

@@ -2,16 +2,19 @@
 
 use Property\Entity\Property;
 use Zend\Form\Fieldset;
+use Zend\Hydrator\ObjectProperty;
 use Zend\InputFilter\InputFilterProviderInterface;
-use Zend\Stdlib\Hydrator\ClassMethods;
+use Zend\Validator\Regex;
 
 class PropertyFieldset extends Fieldset implements InputFilterProviderInterface{
 	public function __construct($name = 'properties', $options = array()){
         parent::__construct($name);
 
-        $this->setHydrator(new ClassMethods(false))
+        $this->setHydrator(new ObjectProperty())
             ->setObject(new Property());
-
+	}
+    
+    public function init() {
         $this->add(array(
             'name' => 'id',
             'type' => 'Hidden'));
@@ -22,13 +25,13 @@ class PropertyFieldset extends Fieldset implements InputFilterProviderInterface{
             'options' => array('label' => 'ZPID: ')));
 
         $this->add(array(
-            'name' => 'status_id',
+            'name' => 'statusId',
             'type' => 'Select',
             'options' => array(
                 'label' => 'Status: ',
                 'empty_option' => 'Select status...',
                 'value_options' => array(
-                    1 => 'For Rent', 
+                    1 => 'For Rent',
                     2 => 'For Sale',
                     3 => 'Disabled')),
             'attributes' => array(
@@ -42,7 +45,7 @@ class PropertyFieldset extends Fieldset implements InputFilterProviderInterface{
             'attributes' => array('required' => 'required')));
 
         $this->add(array(
-            'name' => 'street_address',
+            'name' => 'streetAddress',
             'type' => 'Text',
             'options' => array('label' => 'Street: '),
             'attributes' => array('required' => 'required')));
@@ -71,19 +74,19 @@ class PropertyFieldset extends Fieldset implements InputFilterProviderInterface{
             'attributes' => array('required' => 'required')));
 
         $this->add(array(
-             'type' => 'Property\Form\InfoFieldset',
-             'name' => 'info',
-             'options' => array('label' => 'Info: '),
-             'attributes' => array(
+            'type' => 'Property\Form\InfoFieldset',
+            'name' => 'info',
+            'options' => array('label' => 'Info: '),
+            'attributes' => array(
                 'id' => 'info_fieldset',
                 'class' => 'listing-fieldset',
                 'data-toggle-values' => '1,2')));
 
         $this->add(array(
-             'type' => 'Property\Form\RentalListingFieldset',
-             'name' => 'rental_listing',
-             'options' => array('label' => 'Rental Listing: '),
-             'attributes' => array(
+            'type' => 'Property\Form\RentalListingFieldset',
+            'name' => 'rentalListing',
+            'options' => array('label' => 'Rental Listing: '),
+            'attributes' => array(
                 'id' => 'rental_listing_fieldset',
                 'class' => 'listing-fieldset',
                 'data-toggle-value' => '1')));
@@ -100,7 +103,7 @@ class PropertyFieldset extends Fieldset implements InputFilterProviderInterface{
                 'data-target' => '#images_fieldset')));
 
         $this->add(array(
-            'type' => 'Zend\Form\Element\Collection',
+            'type' => 'Collection',
             'name' => 'images',
             'attributes' => array(
                 'id' => 'images_fieldset',
@@ -108,90 +111,38 @@ class PropertyFieldset extends Fieldset implements InputFilterProviderInterface{
                 'data-toggle-values' => '1,2'),
             'options' => array(
                 'label' => 'Images: ',
+                'should_create_template' => true,
+                'allow_add' => true,
                 'count' => 1,
-                'should_create_template' => true,
-                'allow_add' => true,
                 'target_element' => array(
-                     'type' => 'Property\Form\ImagesFieldset'))));
+                    'type' => 'ImagesFieldset'))));
 
         $this->add(array(
-            'name' => 'add_feature',
+            'name' => 'add_extra',
             'type' => 'button',
-            'options' => array('label' => 'Add Feature'),
+            'options' => array('label' => 'Add Extra'),
             'attributes' => array(
-                'id' => 'add_feature',
+                'id' => 'add_extra',
                 'class' => 'pull-right listing-fieldset',
-                'data-toggle-values' => '1,2',
                 'data-action' => 'add',
-                'data-target' => '#features_fieldset')));
+                'data-toggle-values' => '1,2',
+                'data-target' => '#extras_fieldset')));
 
         $this->add(array(
-            'type' => 'Zend\Form\Element\Collection',
-            'name' => 'features',
+            'type' => 'Collection',
+            'name' => 'extras',
             'attributes' => array(
-                'id' => 'features_fieldset',
+                'id' => 'extras_fieldset',
                 'class' => 'listing-fieldset',
                 'data-toggle-values' => '1,2'),
             'options' => array(
-                'label' => 'Features: ',
+                'label' => 'Extras: ',
                 'should_create_template' => true,
                 'allow_add' => true,
                 'count' => 0,
                 'target_element' => array(
-                     'type' => 'Property\Form\FeaturesFieldset'))));
-
-        $this->add(array(
-            'name' => 'add_amenity',
-            'type' => 'button',
-            'options' => array('label' => 'Add Amenity'),
-            'attributes' => array(
-                'id' => 'add_amenity',
-                'class' => 'pull-right listing-fieldset',
-                'data-toggle-values' => '1,2',
-                'data-action' => 'add',
-                'data-target' => '#amenities_fieldset')));
-
-        $this->add(array(
-            'type' => 'Zend\Form\Element\Collection',
-            'name' => 'amenities',
-            'attributes' => array(
-                'id' => 'amenities_fieldset',
-                'class' => 'listing-fieldset',
-                'data-toggle-values' => '1,2'),
-            'options' => array(
-                'label' => 'Amenities: ',
-                'should_create_template' => true,
-                'allow_add' => true,
-                'count' => 0,
-                'target_element' => array(
-                     'type' => 'Property\Form\AmenitiesFieldset'))));
-
-        $this->add(array(
-            'name' => 'add_include',
-            'type' => 'button',
-            'options' => array('label' => 'Add Include'),
-            'attributes' => array(
-                'id' => 'add_include',
-                'class' => 'pull-right listing-fieldset',
-                'data-toggle-values' => '1,2',
-                'data-action' => 'add',
-                'data-target' => '#includes_fieldset')));
-
-        $this->add(array(
-            'type' => 'Zend\Form\Element\Collection',
-            'name' => 'includes',
-            'attributes' => array(
-                'id' => 'includes_fieldset',
-                'class' => 'listing-fieldset',
-                'data-toggle-values' => '1,2'),
-            'options' => array(
-                'label' => 'Includes: ',
-                'should_create_template' => true,
-                'allow_add' => true,
-                'count' => 0,
-                'target_element' => array(
-                     'type' => 'Property\Form\IncludesFieldset'))));
-	}
+                    'type' => 'Property/ExtrasFieldset'))));
+    }
 
     /**
      * @return array
@@ -212,13 +163,13 @@ class PropertyFieldset extends Fieldset implements InputFilterProviderInterface{
         $pat1 = '/^([1-9][-0-9]{0,3}|[1-9][0-9]{0,3}[.][0-9]{2})$/';
 
         return array(
-            'status_id' => array(
+            'statusId' => array(
                 'validators' => array(
                     array('name' => 'Regex',
                         'options' => array(
                             'pattern' => '/^(?!0)[0-9]{1,2}$/',
                             'messages' => array(
-                                \Zend\Validator\Regex::NOT_MATCH => 'Non match: ^(?!0)[0-9]{1,2}$',
+                                Regex::NOT_MATCH => 'Non match: ^(?!0)[0-9]{1,2}$',
                             )
                         )
                     )
@@ -231,7 +182,7 @@ class PropertyFieldset extends Fieldset implements InputFilterProviderInterface{
                         'options' => array(
                             'pattern' => '/^[0-9]{8,32}$/',
                             'messages' => array(
-                                \Zend\Validator\Regex::NOT_MATCH => 'Non match: ^[0-9]{8,32}$',
+                                Regex::NOT_MATCH => 'Non match: ^[0-9]{8,32}$',
                             )
                         )
                     )
@@ -244,21 +195,21 @@ class PropertyFieldset extends Fieldset implements InputFilterProviderInterface{
                         'options' => array(
                             'pattern' => '/^[A-Za-z][ A-Za-z]{1,63}$/',
                             'messages' => array(
-                                \Zend\Validator\Regex::NOT_MATCH => 'Non match: ^[A-Za-z][ A-Za-z]{1,63}$',
+                                Regex::NOT_MATCH => 'Non match: ^[A-Za-z][ A-Za-z]{1,63}$',
                             )
                         )
                     )
                 ),
                 'filters' => $text_filters 
             ),
-            'street_address' => array(
+            'streetAddress' => array(
                 'required' => true,
                 'validators' => array(
                     array('name' => 'Regex',
                         'options' => array(
                             'pattern' => '/^[1-9][ A-Za-z0-9]{1,127}$/',
                             'messages' => array(
-                                \Zend\Validator\Regex::NOT_MATCH => 'Non match: ^[1-9][ A-Za-z0-9]{1,127}$',
+                                Regex::NOT_MATCH => 'Non match: ^[1-9][ A-Za-z0-9]{1,127}$',
                             )
                         )
                     )
@@ -272,7 +223,7 @@ class PropertyFieldset extends Fieldset implements InputFilterProviderInterface{
                         'options' => array(
                             'pattern' => '/^[A-Za-z0-9]{1,8}$/',
                             'messages' => array(
-                                \Zend\Validator\Regex::NOT_MATCH => 'Non match: ^[A-Za-z0-9]{1,8}$',
+                                Regex::NOT_MATCH => 'Non match: ^[A-Za-z0-9]{1,8}$',
                             )
                         )
                     )
@@ -286,7 +237,7 @@ class PropertyFieldset extends Fieldset implements InputFilterProviderInterface{
                         'options' => array(
                             'pattern' => '/^[ A-Za-z]{1,64}$/',
                             'messages' => array(
-                                \Zend\Validator\Regex::NOT_MATCH => 'Non match: ^[ A-Za-z]{1,64}$',
+                                Regex::NOT_MATCH => 'Non match: ^[ A-Za-z]{1,64}$',
                             )
                         )
                     )
@@ -300,7 +251,7 @@ class PropertyFieldset extends Fieldset implements InputFilterProviderInterface{
                         'options' => array(
                             'pattern' => '/^[A-Za-z]{2}$/',
                             'messages' => array(
-                                \Zend\Validator\Regex::NOT_MATCH => 'Non match: ^[A-Za-z]{2}$',
+                                Regex::NOT_MATCH => 'Non match: ^[A-Za-z]{2}$',
                             )
                         )
                     )
@@ -314,7 +265,7 @@ class PropertyFieldset extends Fieldset implements InputFilterProviderInterface{
                         'options' => array(
                             'pattern' => '/^[1-9][0-9]{4}$/',
                             'messages' => array(
-                                \Zend\Validator\Regex::NOT_MATCH => 'Non match: ^[1-9][0-9]{4}$',
+                                Regex::NOT_MATCH => 'Non match: ^[1-9][0-9]{4}$',
                             )
                         )
                     )

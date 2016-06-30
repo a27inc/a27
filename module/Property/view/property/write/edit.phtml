@@ -22,7 +22,7 @@
     <?php foreach($this->uploaded as $k => $f): ?>
         $(document).ready(function(){
             var fs_key = <?php echo $k; ?>;
-            var pimg = '<img src="'+<?php echo '\''.$f.'\''; ?>+'" class="img-thumbnail">';
+            var pimg = '<img src="' + <?php echo '\''.$f.'\''; ?> + '" class="img-thumbnail">';
             $('#images_fieldset fieldset').slice(fs_key, parseInt(fs_key+1)).find('.form-group').first().html(pimg);    
         }); 
     <?php endforeach; ?>
@@ -75,5 +75,9 @@
         fs.hide();
         fs.find('[data-field="remove"]').val(1);
         return false;    
-    }); 
- </script>
+    });
+    $('[data-action="delete"]').click(function(){
+        $(this).closest('fieldset').remove();
+        return false;
+    });
+</script>

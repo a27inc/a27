@@ -2,13 +2,13 @@
 
 <div class="row">
 	<h1 class="pull-left"><?php echo $this->escapeHtml($title); ?></h1>
-	<a href="<?php echo $this->url('allocation/category'); ?>" 
+	<a href="<?php echo $this->url('investor/allocation/category'); ?>" 
 		type="button" class="btn btn-default pull-right">
 			Cancel</a>
 </div>
 <div class="row">
 	<div class="col-sm-5">
-		<?php $form->setAttribute('action', $this->url('allocation/category/edit', array(), true));
+		<?php $form->setAttribute('action', $this->url('investor/allocation/category/edit', array(), true));
 		$form->prepare();
         $form->get('submit')->setValue('Update Category');
 

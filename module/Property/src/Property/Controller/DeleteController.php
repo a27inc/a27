@@ -22,7 +22,7 @@ class DeleteController extends AbstractActionController implements PropertyServi
             return $this->view->setTemplate('error/403');
 
         try{
-            $property = $this->service->findProperty($this->params('id'));
+            $property = $this->service->find($this->params('id'));
         } catch(\InvalidArgumentException $e){
             return $this->redirect()->toRoute('property');
         }
@@ -33,7 +33,7 @@ class DeleteController extends AbstractActionController implements PropertyServi
             $del = $request->getPost('delete_confirmation', 'no');
 
             if($del === 'yes') {
-                $this->service->deleteProperty($property);
+                $this->service->delete($property);
             } return $this->redirect()->toRoute('property');
         }
 

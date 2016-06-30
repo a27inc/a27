@@ -41,8 +41,8 @@ class RatesTable  extends AbstractTableGateway{
             'name'    => $rate->name,
             'monthly'      => $rate->monthly,
             'quarterly'    => $rate->quarterly,
-            'semi_anual'   => $rate->semi_anual,
-            'anual'        => $rate->anual,
+            'semi_annual'   => $rate->semi_annual,
+            'annual'        => $rate->annual,
         );
 
         $id = (int) $rate->id;

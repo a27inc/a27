@@ -1,16 +1,16 @@
 <?php namespace Property\Form;
 
-use Property\Entity\PropertyAmenity;
+use Property\Entity\Amenity;
 use Zend\Form\Fieldset;
+use Zend\Hydrator\ObjectProperty;
 use Zend\InputFilter\InputFilterProviderInterface;
-use Zend\Stdlib\Hydrator\ClassMethods;
 
 class AmenitiesFieldset extends Fieldset implements InputFilterProviderInterface{
 	public function __construct($name = 'amenities', $options = array()){
         parent::__construct($name);
         
-        $this->setHydrator(new ClassMethods(false))
-            ->setObject(new PropertyAmenity());
+        $this->setHydrator(new ObjectProperty())
+            ->setObject(new Amenity());
 
         $this->add(array(
             'name' => 'id',

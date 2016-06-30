@@ -21,9 +21,9 @@ class RoleDeleteController extends AbstractActionController implements UserServi
         if(!$this->isGranted('delete_role'))
             return $this->view->setTemplate('error/403');
 
-        if(!$id = (int) $this->params()->fromRoute('id', 0))
+        $id = (int) $this->params()->fromRoute('id', 0);
+        if(!$id || !$entity = $this->service->findRole($id))
             return $this->redirect()->toRoute('role');
-        $entity = $this->service->findRole($id);
 
         $request = $this->getRequest();
         if($request->isPost()){

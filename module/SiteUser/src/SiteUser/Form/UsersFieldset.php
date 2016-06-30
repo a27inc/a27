@@ -4,14 +4,14 @@ use SiteUser\Model\UsersTableAwareInterface;
 use SiteUser\Model\UsersTable;
 use SiteUser\Entity\User;
 use Zend\Form\Fieldset;
+use Zend\Hydrator\ObjectProperty;
 use Zend\InputFilter\InputFilterProviderInterface;
-use Zend\Stdlib\Hydrator\ClassMethods as ClassMethodsHydrator;
 
 class UsersFieldset extends Fieldset  implements InputFilterProviderInterface, UsersTableAwareInterface{
     public function __construct(){
         parent::__construct('users_fieldset');
         
-        $this->setHydrator(new ClassMethodsHydrator(false))
+        $this->setHydrator(new ObjectProperty())
             ->setObject(new User());
     }
 

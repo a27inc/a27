@@ -7,7 +7,7 @@
 
 <p>
 	Are you sure that you want to delete
-	'<?php echo $this->escapeHtml($tenant->first_name); ?>'?
+	'<?php echo $this->escapeHtml($tenant->getFirstName()); ?>'?
 </p>
 
 <?php $url = $this->url('tenant/delete', array(

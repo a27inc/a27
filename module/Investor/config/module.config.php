@@ -3,21 +3,31 @@
 return [
     'navigation' => [
         'admin' => [   
+            /*'manage_investor' => [
+                'label' => 'Manage Investors',
+                'route' => 'investor',
+                'order' => -90
+            ],*/
             'manage_allocation' => [
-                'label' => 'Manage Investor Allocation',
-                'route' => 'allocation',
+                'label' => 'Manage Investor Allocations',
+                'route' => 'investor/allocation',
                 'order' => -90
             ],
             'manage_allocation_category' => [
                 'label' => 'Manage Allocation Categories',
-                'route' => 'allocation/category',
+                'route' => 'investor/allocation/category',
                 'order' => -90
             ]
         ],
         'investor' => [
-            'view_my_investment' => [
+            /*'view_profile' => [
+                'label' => 'My Profile',
+                'route' => 'investor/profile',
+                'order' => -90
+            ],*/
+            'view_investment' => [
                 'label' => 'My Investment',
-                'route' => 'investment',
+                'route' => 'investor/investment',
                 'order' => -90
             ]
         ]
@@ -29,31 +39,20 @@ return [
     ],
     'controllers' => [
         'invokables' => [
-            'ViewController' => 'Investor\Controller\ViewController',
             'WriteController' => 'Investor\Controller\WriteController',
             'DeleteController' => 'Investor\Controller\DeleteController'
         ]
     ],
     'router' => [
         'routes' => [
-            'investment' => [
+            'investor' => [
                 'type' => 'literal',
-                 'options' => [
-                    'route'    => '/investment',
-                    'defaults' => [
-                        'controller' => 'ViewController',
-                        'action'     => 'viewInvestment'
-                    ]
-                ],
-            ],
-            'allocation' => [
-                'type'    => 'literal',
                 'options' => [
-                    'route'    => '/allocation',
+                    'route'    => '/investor',
                     'defaults' => [
-                        'controller' => 'ViewController',
-                        'action'     => 'viewAllocation'
-                    ]
+                        'controller' => 'Investor/ViewController',
+                        'action'     => 'viewInvestor'
+                    ]  
                 ],
                 'may_terminate' => true,
                 'child_routes'  => [
@@ -63,7 +62,7 @@ return [
                             'route'    => '/add',
                             'defaults' => [
                                 'controller' => 'WriteController',
-                                'action' => 'addAllocation'  
+                                'action' => 'addInvestor'  
                             ]
                         ]
                     ],
@@ -73,7 +72,7 @@ return [
                             'route'    => '/edit/[:id]',
                             'defaults' => [
                                 'controller' => 'WriteController',
-                                'action' => 'editAllocation'  
+                                'action' => 'editInvestor'  
                             ],
                             'constraints' => [
                                 'id' => '[1-9]\d*'
@@ -86,20 +85,20 @@ return [
                             'route'    => '/delete/[:id]',
                             'defaults' => [
                                 'controller' => 'DeleteController',
-                                'action' => 'deleteAllocation'  
+                                'action' => 'deleteInvestor'  
                             ],
                             'constraints' => [
                                 'id' => '[1-9]\d*'
                             ]  
                         ]
                     ],
-                    'category' => [
-                        'type' => 'literal',
+                    'allocation' => [
+                        'type'    => 'literal',
                         'options' => [
-                            'route'    => '/category',
+                            'route'    => '/allocation',
                             'defaults' => [
-                                'controller' => 'ViewController',
-                                'action' => 'viewCategory'  
+                                'controller' => 'Investor/ViewController',
+                                'action'     => 'viewAllocation'
                             ]
                         ],
                         'may_terminate' => true,
@@ -110,7 +109,7 @@ return [
                                     'route'    => '/add',
                                     'defaults' => [
                                         'controller' => 'WriteController',
-                                        'action' => 'addCategory'  
+                                        'action' => 'addAllocation'  
                                     ]
                                 ]
                             ],
@@ -120,7 +119,7 @@ return [
                                     'route'    => '/edit/[:id]',
                                     'defaults' => [
                                         'controller' => 'WriteController',
-                                        'action' => 'editCategory'  
+                                        'action' => 'editAllocation'  
                                     ],
                                     'constraints' => [
                                         'id' => '[1-9]\d*'
@@ -133,17 +132,99 @@ return [
                                     'route'    => '/delete/[:id]',
                                     'defaults' => [
                                         'controller' => 'DeleteController',
-                                        'action' => 'deleteCategory'  
+                                        'action' => 'deleteAllocation'  
                                     ],
                                     'constraints' => [
                                         'id' => '[1-9]\d*'
                                     ]  
                                 ]
-                            ]    
+                            ],
+                            'category' => [
+                                'type' => 'literal',
+                                'options' => [
+                                    'route'    => '/category',
+                                    'defaults' => [
+                                        'controller' => 'Investor/ViewController',
+                                        'action' => 'viewCategory'  
+                                    ]
+                                ],
+                                'may_terminate' => true,
+                                'child_routes'  => [
+                                    'add' => [
+                                        'type' => 'literal',
+                                        'options' => [
+                                            'route'    => '/add',
+                                            'defaults' => [
+                                                'controller' => 'WriteController',
+                                                'action' => 'addCategory'  
+                                            ]
+                                        ]
+                                    ],
+                                    'edit' => [
+                                        'type' => 'segment',
+                                        'options' => [
+                                            'route'    => '/edit/[:id]',
+                                            'defaults' => [
+                                                'controller' => 'WriteController',
+                                                'action' => 'editCategory'  
+                                            ],
+                                            'constraints' => [
+                                                'id' => '[1-9]\d*'
+                                            ]  
+                                        ]
+                                    ],
+                                    'delete' => [
+                                        'type' => 'segment',
+                                        'options' => [
+                                            'route'    => '/delete/[:id]',
+                                            'defaults' => [
+                                                'controller' => 'DeleteController',
+                                                'action' => 'deleteCategory'  
+                                            ],
+                                            'constraints' => [
+                                                'id' => '[1-9]\d*'
+                                            ]  
+                                        ]
+                                    ]    
+                                ]
+                            ]
                         ]
-                    ]
+                    ],
+                    'investment' => [
+                        'type' => 'literal',
+                        'options' => [
+                            'route'    => '/investment',
+                            'defaults' => [
+                                'controller' => 'Investor/ViewController',
+                                'action'     => 'viewInvestment'
+                            ]
+                        ],
+                    ],
+                    'profile' => [
+                        'type' => 'literal',
+                        'options' => [
+                            'route'    => '/profile',
+                            'defaults' => [
+                                'controller' => 'Investor/ViewController',
+                                'action' => 'viewProfile'  
+                            ]
+                        ],
+                        'may_terminate' => true,
+                        'child_routes'  => [
+                            'settings' => [
+                                'type' => 'literal',
+                                'options' => [
+                                    'route'    => '/settings',
+                                    'defaults' => [
+                                        'controller' => 'WriteController',
+                                        'action' => 'editSettings'  
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]  
                 ]
-            ]
+            ]   
         ]
     ]
 ];

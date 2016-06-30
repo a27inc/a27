@@ -2,17 +2,15 @@
 
 use SiteUser\Model\PermissionsTableAwareInterface;
 use SiteUser\Model\PermissionsTable;
-use SiteUser\Entity\RolePermission;
 use Zend\Form\Fieldset;
+use Zend\Hydrator\ObjectProperty;
 use Zend\InputFilter\InputFilterProviderInterface;
-use Zend\Stdlib\Hydrator\ClassMethods as ClassMethodsHydrator;
 
 class PermissionsFieldset extends Fieldset  implements InputFilterProviderInterface, PermissionsTableAwareInterface{
     public function __construct(){
         parent::__construct('permissions_fieldset');
         
-        $this->setHydrator(new ClassMethodsHydrator(false))
-            ->setObject(new RolePermission());
+        $this->setHydrator(new ObjectProperty());
     }
 
     public function setPermissionsTable(PermissionsTable $t){

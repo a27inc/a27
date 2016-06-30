@@ -46,4 +46,12 @@ class Module implements AutoloaderProviderInterface, ConfigProviderInterface, Co
             ]
         ];
     }
+
+    public function getServiceConfig(){
+        return [
+            'factories' => [
+                'SiteUser\Service\UserService'
+            ]
+        ];
+    }
 }

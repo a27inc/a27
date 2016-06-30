@@ -4,13 +4,13 @@ use Investor\Model\InvestorCategoriesTableAwareInterface;
 use Investor\Model\CategoriesTable;
 use Investor\Entity\Category;
 use Zend\Form\Fieldset;
-use Zend\Stdlib\Hydrator\ClassMethods as ClassMethodsHydrator;
+use Zend\Hydrator\ObjectProperty;
 
 class CategoriesFieldset extends Fieldset implements InvestorCategoriesTableAwareInterface{
     public function __construct(){
         parent::__construct('categories_fieldset');
         
-        $this->setHydrator(new ClassMethodsHydrator(false))
+        $this->setHydrator(new ObjectProperty())
             ->setObject(new Category());
     }
 

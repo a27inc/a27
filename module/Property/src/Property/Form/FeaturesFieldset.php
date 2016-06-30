@@ -1,16 +1,16 @@
 <?php namespace Property\Form;
 
-use Property\Entity\PropertyFeature;
+use Property\Entity\Feature;
 use Zend\Form\Fieldset;
+use Zend\Hydrator\ObjectProperty;
 use Zend\InputFilter\InputFilterProviderInterface;
-use Zend\Stdlib\Hydrator\ClassMethods;
 
 class FeaturesFieldset extends Fieldset implements InputFilterProviderInterface{
 	public function __construct($name = 'features', $options = array()){
         parent::__construct($name);
         
-        $this->setHydrator(new ClassMethods(false))
-            ->setObject(new PropertyFeature());
+        $this->setHydrator(new ObjectProperty())
+            ->setObject(new Feature());
 
         $this->add(array(
             'name' => 'id',

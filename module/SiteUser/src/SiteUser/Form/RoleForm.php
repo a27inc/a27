@@ -1,8 +1,6 @@
 <?php namespace SiteUser\Form;
 
 use Zend\Form\Form;
-use Zend\InputFilter\InputFilter;
-use Zend\Stdlib\Hydrator\ClassMethods;
 
 class RoleForm extends Form{
     public function init(){
@@ -21,9 +19,5 @@ class RoleForm extends Form{
 
     public function __construct($name = 'role_form', $options = array()){
         parent::__construct($name);
-
-        $this->setAttribute('method', 'post')
-            ->setHydrator(new ClassMethods(false))
-            ->setInputFilter(new InputFilter());
     }
 }

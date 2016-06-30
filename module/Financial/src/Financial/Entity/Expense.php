@@ -2,8 +2,6 @@
 
 use Financial\Model\Financial;
 use Property\Entity\Property;
-use Financial\Entity\Category;
-use Financial\Entity\Rate;
 
 class Expense extends Financial{
     /**
@@ -20,7 +18,7 @@ class Expense extends Financial{
      * @var Category
      */
     public $category;
-
+    
     /**
      * @var Rate
      */
@@ -34,17 +32,17 @@ class Expense extends Financial{
     /**
      * @var string
      */
-    public $date_filed;
+    public $dateFiled;
 
     /**
      * @var string
      */
-    public $date_from;
+    public $dateFrom;
 
     /**
      * @var string
      */
-    public $date_to;
+    public $dateTo;
 
     /**
      * @var string
@@ -61,12 +59,6 @@ class Expense extends Financial{
      */
     protected $total;
 
-    // prevent hydrating with similar fields from other tables
-    private $hydrator_flag = array(
-        'id' => false,
-        'description' => false,
-        'note' => false);
-
     /**
      * @return int
      */
@@ -75,20 +67,11 @@ class Expense extends Financial{
     }
 
     /**
-     * @param int $id
+     * @param int $int
+     * @return Expense
      */
-    public function setId($id){
-        if(!$this->hydrator_flag['id'])
-            $this->id = (int) $id;
-        return $this;
-    }
-
-    /**
-     * @param int $id
-     */
-    public function setExpense_id($id){
-        $this->hydrator_flag['id'] = true;
-        $this->id = (int) $id;
+    public function setId($int){
+        $this->id = (int) $int;
         return $this;
     }
 
@@ -100,10 +83,11 @@ class Expense extends Financial{
     }
 
     /**
-     * @param Property $property_id
+     * @param Property $obj
+     * @return Expense
      */
-    public function setProperty(Property $property){
-        $this->property = $property;
+    public function setProperty(Property $obj){
+        $this->property = $obj;
         return $this;
     }
 
@@ -115,10 +99,11 @@ class Expense extends Financial{
     }
 
     /**
-     * @param Category $category
+     * @param Category $obj
+     * @return Expense
      */
-    public function setCategory(Category $category){
-        $this->category = $category;
+    public function setCategory(Category $obj){
+        $this->category = $obj;
         return $this;
     }
 
@@ -130,10 +115,11 @@ class Expense extends Financial{
     }
 
     /**
-     * @param Rate $rate
+     * @param Rate $obj
+     * @return Expense
      */
-    public function setRate(Rate $rate){
-        $this->rate = $rate;
+    public function setRate(Rate $obj){
+        $this->rate = $obj;
         return $this;
     }
 
@@ -145,56 +131,24 @@ class Expense extends Financial{
     }
 
     /**
-     * @param float $amount
+     * @return string
      */
-    public function setAmount($amount){
-        $this->amount = $amount;
-        return $this;
+    public function getDateFiled(){
+        return $this->dateFiled;
     }
 
     /**
      * @return string
      */
-    public function getDate_filed(){
-        return $this->date_filed;
-    }
-
-    /**
-     * @param string $date_filed
-     */
-    public function setDate_filed($date_filed){
-        $this->date_filed = $date_filed;
-        return $this;
+    public function getDateFrom(){
+        return $this->dateFrom;
     }
 
     /**
      * @return string
      */
-    public function getDate_from(){
-        return $this->date_from;
-    }
-
-    /**
-     * @param string $date_from
-     */
-    public function setDate_from($date_from){
-        $this->date_from = $date_from;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getDate_to(){
-        return $this->date_to;
-    }
-
-    /**
-     * @param string $date_to
-     */
-    public function setDate_to($date_to){
-        $this->date_to = $date_to;
-        return $this;
+    public function getDateTo(){
+        return $this->dateTo;
     }
 
     /**
@@ -205,24 +159,6 @@ class Expense extends Financial{
     }
 
     /**
-     * @param string $description
-     */
-    public function setDescription($description){
-        if(!$this->hydrator_flag['description'])
-            $this->description = $description;
-        return $this;
-    }
-
-    /**
-     * @param string $description
-     */
-    public function setExpense_description($description){
-        $this->hydrator_flag['description'] = true;
-        $this->description = $description;
-        return $this;
-    }
-
-    /**
      * @return string
      */
     public function getNote(){
@@ -230,24 +166,8 @@ class Expense extends Financial{
     }
 
     /**
-     * @param string $note
-     */
-    public function setNote($note){
-        if(!$this->hydrator_flag['note'])
-            $this->note = $note;
-        return $this;
-    }
-
-    /**
-     * @param string $note
-     */
-    public function setExpense_note($note){
-        $this->hydrator_flag['note'] = true;
-        $this->note = $note;
-        return $this;
-    }
-
-    /**
+     * @param string $end
+     * @param string $start
      * @return float
      */
     public function getTotal($end = NULL, $start = NULL){
@@ -257,7 +177,9 @@ class Expense extends Financial{
     }
 
     /**
-     * sets the total for recurring expenses
+     * @param string $end
+     * @param string $start
+     * @return Expense
      */
     private function setTotal($end, $start){
         $this->total = parent::getFinanceTotal($this, $end, $start);

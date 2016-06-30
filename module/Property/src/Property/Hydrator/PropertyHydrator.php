@@ -1,57 +1,42 @@
-<?php namespace Property\Hydrator;
+<?php
+/**
+ * Created by PhpStorm.
+ * User: Alex
+ * Date: 5/9/2016
+ * Time: 8:29 AM
+ */
 
-use Property\Entity\Property;
-use Property\Entity\PropertyInfo;
-use Zend\Stdlib\Hydrator\ClassMethods;
+namespace Property\Hydrator;
 
-class PropertyHydrator extends ClassMethods{
-    protected $_dataMap;
+use Application\Hydrator\HydratorAbstract;
+use Zend\Hydrator\Filter\FilterComposite;
+use Zend\Hydrator\Filter\MethodMatchFilter;
 
-    public function __construct($underscoreSeparatedKeys = FALSE){
-        parent::__construct($underscoreSeparatedKeys);
+class PropertyHydrator extends HydratorAbstract{
+    
+    protected function initHydrate() {
+        $this->entityTableMap = array(
+            '\Property\Entity\Info'             => 'propertiesInfo',
+            '\Property\Entity\Description'      => 'propertiesDescription',
+            '\Property\Entity\RentalListing'    => 'rentalListings',
+            '\Property\Entity\Extra'            => 'extra',
+            '\Property\Entity\Image'            => 'propertiesImages'
+        );
 
-        $this->_dataMap = array(
-            'property_info' => new PropertyInfo());
+        $this->entitySetterMap = array(
+            'Image' => 'add',
+            'Extra' => 'add',
+        );
     }
-
-    public function stdHydrate(array $data, $object){
-        return parent::hydrate($data, $object);   
-    }
-
-    public function hydrate(array $data, $object){       
-        return parent::hydrate($data, $object);
-
-        if(!$object instanceof Property){
-            return $object;
-        }
-
-        foreach($data as $property => $value){
-            if(!property_exists($object, $property)){
-                if(is_array($value)){
-                    var_dump($value);
-                } else{
-                    foreach($this->_dataMap as $_prop => $_obj){
-                        $method = 'set' . ucfirst($property);    
-                        if(is_callable(array($_obj, $method)))
-                            $this->_dataMap[$_prop]->$method($value);
-                    }
-                }
-            } else{ 
-                $method = 'set' . ucfirst($this->hydrateName($property, $data));
-                if(is_callable(array($object, $method))){
-                    $value = $this->hydrateValue($property, $value, $data);
-                    $object->$method($value);
-                }
-            }
-        } 
-
-        foreach($this->_dataMap as $_prop => $_obj){
-            $data[$_prop] = $_obj;   
-            $method = 'set' . ucfirst($this->hydrateName($_prop, $_obj));    
-            if(is_callable(array($object, $method))){
-                $value = $this->hydrateValue($_prop, $_obj, $data);
-                $object->$method($value);
-            }
-        } return $object;
+    
+    protected function initExtract() {
+        $exclude = new FilterComposite();
+        $exclude->addFilter('info', new MethodMatchFilter('info'), FilterComposite::CONDITION_AND);
+        $exclude->addFilter('images', new MethodMatchFilter('images'), FilterComposite::CONDITION_AND);
+        $exclude->addFilter('extras', new MethodMatchFilter('extras'), FilterComposite::CONDITION_AND);
+        $exclude->addFilter('rentalListing', new MethodMatchFilter('rentalListing'), FilterComposite::CONDITION_AND);
+        $exclude->addFilter('saleListing', new MethodMatchFilter('saleListing'), FilterComposite::CONDITION_AND);
+        $this->filterComposite->addFilter('excludes', $exclude, FilterComposite::CONDITION_AND);
+        
     }
 }

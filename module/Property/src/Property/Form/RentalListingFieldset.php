@@ -2,19 +2,15 @@
 
 use Property\Entity\RentalListing;
 use Zend\Form\Fieldset;
+use Zend\Hydrator\ObjectProperty;
 use Zend\InputFilter\InputFilterProviderInterface;
-use Zend\Stdlib\Hydrator\ClassMethods;
 
 class RentalListingFieldset extends Fieldset implements InputFilterProviderInterface{
 	public function __construct($name = 'rental_listing', $options = array()){
         parent::__construct($name);
         
-        $this->setHydrator(new ClassMethods(false))
+        $this->setHydrator(new ObjectProperty())
             ->setObject(new RentalListing());
-
-        $this->add(array(
-            'name' => 'property_id',
-            'type' => 'Hidden'));
 
         $this->add(array(
             'name' => 'rent',
@@ -39,13 +35,13 @@ class RentalListingFieldset extends Fieldset implements InputFilterProviderInter
                 'step' => '1')));
 
         $this->add(array(
-            'name' => 'contact_name',
+            'name' => 'contactName',
             'type' => 'Text',
             'options' => array(
                 'label' => 'Contact Name: ')));
 
         $this->add(array(
-            'name' => 'contact_number',
+            'name' => 'contactNumber',
             'type' => 'Text',
             'options' => array(
                 'label' => 'Contact Number: ')));
@@ -63,25 +59,25 @@ class RentalListingFieldset extends Fieldset implements InputFilterProviderInter
                 'label' => 'Listing Notes: ')));
 
         $this->add(array(
-            'name' => 'cta_button',
+            'name' => 'ctaButton',
             'type' => 'Text',
             'options' => array(
                 'label' => 'CTA Button Text: ')));
 
         $this->add(array(
-            'name' => 'cta_title',
+            'name' => 'ctaTitle',
             'type' => 'Text',
             'options' => array(
                 'label' => 'CTA Heading: ')));
 
         $this->add(array(
-            'name' => 'cta_message',
+            'name' => 'ctaMessage',
             'type' => 'Textarea',
             'options' => array(
                 'label' => 'CTA Message: ')));
 
         $this->add(array(
-            'name' => 'cta_footer',
+            'name' => 'ctaFooter',
             'type' => 'Text',
             'options' => array(
                 'label' => 'CTA Footer Message: ')));
@@ -134,7 +130,7 @@ class RentalListingFieldset extends Fieldset implements InputFilterProviderInter
                     )
                 )
             ),
-            'contact_name' => array(
+            'contactName' => array(
                 'required' => true,
                 'filters' => $text_filters,
                 'validators' => array(
@@ -148,7 +144,7 @@ class RentalListingFieldset extends Fieldset implements InputFilterProviderInter
                     )
                 )
             ),
-            'contact_number' => array(
+            'contactNumber' => array(
                 'required' => true,
                 'filters' => $text_filters,
                 'validators' => array(

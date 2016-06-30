@@ -2,8 +2,8 @@
 
 use Financial\Entity\Expense;
 use Zend\Form\Fieldset;
+use Zend\Hydrator\ObjectProperty;
 use Zend\InputFilter\InputFilterProviderInterface;
-use Zend\Stdlib\Hydrator\ClassMethods;
 
 class ExpenseFieldset extends Fieldset implements InputFilterProviderInterface{
 	public function init(){
@@ -26,7 +26,7 @@ class ExpenseFieldset extends Fieldset implements InputFilterProviderInterface{
                 'label' => 'Amount: ')));
         $this->add(array(
             'type' => 'Zend\Form\Element\Date',
-            'name' => 'date_filed',
+            'name' => 'dateFiled',
             'options' => array(
                 'label' => 'Date: '),
             'attributes' => array(
@@ -67,7 +67,7 @@ class ExpenseFieldset extends Fieldset implements InputFilterProviderInterface{
     public function __construct($name = 'expense', $options = array()){
         parent::__construct($name);
 
-        $this->setHydrator(new ClassMethods(false))
+        $this->setHydrator(new ObjectProperty())
             ->setObject(new Expense());
 	}
 

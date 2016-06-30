@@ -1,8 +1,8 @@
 <?php namespace Investor\Form;
 
 use Zend\Form\Form;
+use Zend\Hydrator\ObjectProperty;
 use Zend\InputFilter\InputFilter;
-use Zend\Stdlib\Hydrator\ClassMethods;
 
 class AllocationForm extends Form{
     public function init(){
@@ -23,7 +23,7 @@ class AllocationForm extends Form{
         parent::__construct($name);
 
         $this->setAttribute('method', 'post')
-            ->setHydrator(new ClassMethods(false))
+            ->setHydrator(new ObjectProperty())
             ->setInputFilter(new InputFilter());
     }
 }

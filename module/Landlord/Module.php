@@ -3,8 +3,9 @@
 use Zend\ModuleManager\Feature\AutoloaderProviderInterface;
 use Zend\ModuleManager\Feature\ConfigProviderInterface;
 use Zend\ModuleManager\Feature\ControllerProviderInterface;
+use Zend\ModuleManager\Feature\FormElementProviderInterface;
 
-class Module implements AutoloaderProviderInterface, ConfigProviderInterface, ControllerProviderInterface{
+class Module implements AutoloaderProviderInterface, ConfigProviderInterface, ControllerProviderInterface, FormElementProviderInterface{
 
 
      public function getAutoloaderConfig(){
@@ -25,6 +26,14 @@ class Module implements AutoloaderProviderInterface, ConfigProviderInterface, Co
         return [
             'initializers' => [
                 'Landlord\Service\LandlordServiceInitializer'
+            ]
+        ];
+    }
+
+    public function getFormElementConfig() {
+        return [
+            'invokables' => [
+                'TenantForm' => 'Landlord\Form\TenantForm'
             ]
         ];
     }

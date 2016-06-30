@@ -9,26 +9,27 @@ class Tenant{
     /**
      * @var string
      */
-    public $first_name;
+    public $firstName;
 
     /**
      * @var string
      */
-	public $middle_initial;
+	public $middleInitial;
 	
     /**
      * @var string
      */
-    public $last_name;
+    public $lastName;
+
+    /**
+     * @var string
+     */
+    public $birthDate;
 	
     /**
      * @var string
      */
     public $code;
-
-    // prevent hydrating with similar fields from other tables
-    private $hydrator_flag = array(
-        'id' => false);
 
 	/**
      * @return int
@@ -38,66 +39,40 @@ class Tenant{
     }
 
     /**
-     * @param int $id
+     * @param int $int
+     * @return Tenant
      */
-    public function setId($id){
-        if(!$this->hydrator_flag['id'])
-            $this->id = (int) $id;
-        return $this;
-    }
-
-    /**
-     * @param int $id
-     */
-    public function setTenant_id($id){
-        $this->hydrator_flag['id'] = true;
-        $this->id = (int) $id;
+    public function setId($int){
+        $this->id = (int) $int;
         return $this;
     }
 
     /**
      * @return string
      */
-    public function getFirst_name(){
-        return $this->first_name;
-    }
-
-    /**
-     * @param string $first_name
-     */
-    public function setFirst_name($name){
-        $this->first_name = $name;
-        return $this;
+    public function getFirstName(){
+        return $this->firstName;
     }
 
     /**
      * @return string
      */
-    public function getMiddle_initial(){
-        return $this->middle_initial;
-    }
-
-    /**
-     * @param string $middle_initial
-     */
-    public function setMiddle_initial($initial){
-        $this->middle_initial = $initial;
-        return $this;
+    public function getMiddleInitial(){
+        return $this->middleInitial;
     }
 
     /**
      * @return string
      */
-    public function getLast_name(){
-        return $this->last_name;
+    public function getLastName(){
+        return $this->lastName;
     }
 
     /**
-     * @param string $last_name
+     * @return string
      */
-    public function setLast_name($name){
-        $this->last_name = $name;
-        return $this;
+    public function getBirthDate(){
+        return $this->birthDate;
     }
 
     /**
@@ -105,13 +80,5 @@ class Tenant{
      */
     public function getCode(){
         return $this->code;
-    }
-
-    /**
-     * @param string $code
-     */
-    public function setCode($code){
-        $this->code = $code;
-        return $this;
     }
 }

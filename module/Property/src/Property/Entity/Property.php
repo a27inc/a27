@@ -1,10 +1,8 @@
 <?php namespace Property\Entity;
 
-use Property\Entity\PropertyInfo; 
-use Property\Entity\RentalListing; 
-use Property\Entity\SaleListing; 
+use Application\Entity\EntityAbstract;
 
-class Property{
+class Property extends EntityAbstract{
     /**
      * @var int
      */
@@ -18,7 +16,7 @@ class Property{
     /**
      * @var int
      */
-    public $status_id;
+    public $statusId;
 
     /**
      * @var string
@@ -28,7 +26,7 @@ class Property{
     /**
      * @var string
      */
-    public $street_address;
+    public $streetAddress;
 
     /**
      * @var string
@@ -51,44 +49,69 @@ class Property{
     public $zip;
 
     /**
-     * @var PropertyInfo
+     * @var Info
      */
     public $info;
 
     /**
      * @var array
      */
-    public $images;
+    public $images = array();
 
     /**
      * @var array
      */
-    public $features;
+    protected $imageIds = array();
 
     /**
      * @var array
      */
-    public $amenities;
+    protected $featuresById = array();
+    
+    /**
+     * @var array
+     */
+    protected $featuresByName = array();
 
     /**
      * @var array
      */
-    public $includes;
+    protected $amenitiesById = array();
+
+    /**
+     * @var array
+     */
+    protected $amenitiesByName = array();
+
+    /**
+     * @var array
+     */
+    protected $includesById = array();
+
+    /**
+     * @var array
+     */
+    protected $includesByName = array();
+
+    /**
+     * @var array
+     */
+    protected $extraIds = array();
+
+    /**
+     * @var array
+     */
+    public $extras = array();
 
     /**
      * @var RentalListing
      */
-    public $rental_listing;
+    public $rentalListing;
 
     /**
      * @var SaleListing
      */
-    public $sale_listing;
-
-    // prevent hydrating with similar fields from other tables
-    private $hydrator_flag = array(
-        'id' => false,
-        'name' => false);
+    public $saleListing;
 
     /**
      * @return int
@@ -98,19 +121,12 @@ class Property{
     }
 
     /**
-     * @param int $id
+     * @param int $int
+     * @return Property
      */
-    public function setId($id){
-        if(!$this->hydrator_flag['id'])
-            $this->id = (int) $id;
-    }
-
-    /**
-     * @param int $id
-     */
-    public function setProperty_id($id){
-        $this->hydrator_flag['id'] = true;
-        $this->id = (int) $id;
+    public function setId($int){
+        $this->id = (int) $int;
+        return $this;
     }
 
     /**
@@ -121,26 +137,10 @@ class Property{
     }
 
     /**
-     * @param int $zpid
-     */
-    public function setZpid($zpid){
-        $this->zpid = (int) $zpid;
-        return $this;
-    }
-
-    /**
      * @return int
      */
-    public function getStatus_id(){
-        return $this->status_id;
-    }
-
-    /**
-     * @param int $status_id
-     */
-    public function setStatus_id($status_id){
-        $this->status_id = (int) $status_id;
-        return $this;
+    public function getStatusId(){
+        return $this->statusId;
     }
 
     /**
@@ -151,38 +151,10 @@ class Property{
     }
 
     /**
-     * @param string $name
-     */
-    public function setName($name){
-        if(!$this->hydrator_flag['name'])
-            $this->name = $name;
-        return $this;
-    }
-
-    /**
-     * @param string $name
-     */
-    public function setProperty_name($name){
-        $this->hydrator_flag['name'] = true;
-        $this->name = $name;
-        return $this;
-    }
-
-    /**
-     * returns the street of the property
-     *
      * @return string
      */
-    public function getStreet_address(){
-        return $this->street_address;
-    }
-
-    /**
-     * @param string $street_address
-     */
-    public function setStreet_address($street_address){
-        $this->street_address = $street_address;
-        return $this;
+    public function getStreetAddress(){
+        return $this->streetAddress;
     }
 
     /**
@@ -193,26 +165,10 @@ class Property{
     }
 
     /**
-     * @param string $unit
-     */
-    public function setUnit($unit){
-        $this->unit = $unit;
-        return $this;
-    }
-
-    /**
      * @return string
      */
     public function getCity(){
         return $this->city;
-    }
-
-    /**
-     * @param string $city
-     */
-    public function setCity($city){
-        $this->city = $city;
-        return $this;
     }
 
     /**
@@ -223,14 +179,6 @@ class Property{
     }
 
     /**
-     * @param string $state
-     */
-    public function setState($state){
-        $this->state = $state;
-        return $this;
-    }
-
-    /**
      * @return int
      */
     public function getZip(){
@@ -238,26 +186,18 @@ class Property{
     }
 
     /**
-     * @param int $zip
-     */
-    public function setZip($zip){
-        $this->zip = (int) $zip;
-        return $this;
-    }
-
-    /**
-     * @return PropertyInfo
+     * @return Info
      */
     public function getInfo(){
         return $this->info;
     }
 
     /**
-     * @param PropertyInfo $property_info
+     * @param Info $obj
      * @return Property
      */
-    public function setInfo(PropertyInfo $info){
-        $this->info = $info;
+    public function setInfo(Info $obj){
+        $this->info = $obj;
         return $this;
     }
 
@@ -269,91 +209,178 @@ class Property{
     }
 
     /**
-     * @param array $images
-     * @return Property
+     * @param Image $obj
+     * @return $this
      */
-    public function setImages(array $images){
-        $this->images = $images;
+    public function addImage(Image $obj) {
+        $this->images[$obj->getId()] = $obj;
+        $this->imageIds[] = $obj->getId();
         return $this;
     }
+
+    
 
     /**
      * @return array
      */
     public function getFeatures(){
-        return $this->features;
+        return array_keys($this->featuresByName);
     }
 
     /**
-     * @param array $features
-     * @return Property
+     * @return array
      */
-    public function setFeatures(array $features){
-        $this->features = $features;
-        return $this;
+    public function getFeatureIds() {
+        return array_keys($this->featuresById);
     }
 
     /**
      * @return array
      */
     public function getAmenities(){
-        return $this->amenities;
+        return array_keys($this->amenitiesByName);
     }
 
     /**
-     * @param array $amenities
-     * @return Property
+     * @return array
      */
-    public function setAmenities(array $amenities){
-        $this->amenities = $amenities;
-        return $this;
+    public function getAmenityIds() {
+        return array_keys($this->amenitiesById);
     }
 
     /**
      * @return array
      */
     public function getIncludes(){
-        return $this->includes;
+        return array_keys($this->includesByName);
     }
 
     /**
-     * @param array $includes
-     * @return Property
+     * @return array
      */
-    public function setIncludes(array $includes){
-        $this->includes = $includes;
+    public function getIncludeIds() {
+        return array_keys($this->includesById);
+    }
+
+    /**
+     * @param Extra $obj
+     * @return $this
+     */
+    public function addExtra(Extra $obj) {
+        $this->extras[$obj->getId()] = $obj;
+        $this->extraIds[] = $obj->getId();
+        if ($obj->getTypeId() == Extra::TYPE_AMENITY) {
+            $this->amenitiesById[$obj->getId()] = $obj;  
+            $this->amenitiesByName[$obj->getName()] = $obj;
+        }
+        else if ($obj->getTypeId() == Extra::TYPE_INCLUDE) {
+            $this->includesById[$obj->getId()] = $obj;
+            $this->includesByName[$obj->getName()] = $obj;
+        }
+        else if ($obj->getTypeId() == Extra::TYPE_FEATURE) {
+            $this->featuresById[$obj->getId()] = $obj;
+            $this->featuresByName[$obj->getName()] = $obj;
+        }
         return $this;
+    }
+
+    /**
+     * @param bool $fromForm retrieve 
+     * @return array
+     */
+    public function getExtraIds($fromForm = false) {
+        if ($fromForm) {
+            $ids = array();
+            // these are possibly new ids from the form
+            foreach ($this->extras as $obj) {
+                $ids[] = $obj->getId();
+            }
+            return $ids;
+        }
+        // these ids came directly from the database
+        return $this->extraIds;
     }
 
     /**
      * @return RentalListing
      */
-    public function getRental_listing(){
-        return $this->rental_listing;
+    public function getRentalListing(){
+        return $this->rentalListing;
     }
 
     /**
-     * @param RentalListing $rental_listing
+     * @param RentalListing $obj
      * @return Property
      */
-    public function setRental_listing(RentalListing $rental_listing){
-        $this->rental_listing = $rental_listing;
+    public function setRentalListing(RentalListing $obj){
+        $this->rentalListing = $obj;
         return $this;
     }
 
     /**
      * @return SaleListing
      */
-    public function getSale_listing(){
-        return $this->sale_listing;
+    public function getSaleListing(){
+        return $this->saleListing;
     }
 
     /**
-     * @param SaleListing $sale_listing
+     * @param SaleListing $obj
      * @return Property
      */
-    public function setSale_listing(SaleListing $sale_listing){
-        $this->sale_listing = $sale_listing;
+    public function setSaleListing(SaleListing $obj){
+        $this->saleListing = $obj;
         return $this;
+    }
+
+    /**
+     * Return meta description for property detail page
+     *
+     * @param int $maxLength maximum description length
+     * @return string
+     */
+    public function getMetaDescription($maxLength = 160){
+        $meta_desc = $this->getInfo()->getBedrooms().' bed '.
+            $this->getInfo()->getBathrooms().' bath';
+
+        switch($this->getStatusId()){
+            case 1: $meta_desc .= ' condo for rent'; break;
+            case 2: $meta_desc .= ' home for sale'; break;
+        }
+
+        $meta_desc .= ' in '.$this->getCity().', '.$this->getState().'.';
+
+        $meta_amenities = $this->getAmenities()
+            ? ' Amenities: ' . implode(', ', $this->getAmenities()) : '';
+        if((strlen($meta_desc) + strlen($meta_amenities)) <= $maxLength)
+            $meta_desc .= $meta_amenities;
+
+        $metaFeatures = $this->getFeatures()
+            ? ' Features: ' . implode(', ', $this->getFeatures()) : '';
+        if((strlen($meta_desc) + strlen($metaFeatures)) <= $maxLength)
+            $meta_desc .= $metaFeatures;
+
+        $meta_includes = $this->getIncludes()
+            ? ' Included: ' . implode(', ', $this->getIncludes()) : '';
+        if((strlen($meta_desc) + strlen($meta_includes)) <= $maxLength)
+            $meta_desc .= $meta_includes;
+
+        return $meta_desc;
+    }
+
+    /**
+     * Return Property address
+     *
+     * @param bool $includeUnit
+     * @return string
+     */
+    public function getAddress($includeUnit = false){
+        $address = $this->getStreetAddress();
+        if($this->getUnit() && $includeUnit) 
+            $address .= ' #'.$this->getUnit();
+        $address .= ', '.$this->getCity();
+        $address .= ', '.$this->getState();
+        $address .= ' '.$this->getZip();
+        return $address;
     }
 }

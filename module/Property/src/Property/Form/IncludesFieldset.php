@@ -1,16 +1,16 @@
 <?php namespace Property\Form;
 
-use Property\Entity\PropertyInclude;
+use Property\Entity\Included;
 use Zend\Form\Fieldset;
+use Zend\Hydrator\ObjectProperty;
 use Zend\InputFilter\InputFilterProviderInterface;
-use Zend\Stdlib\Hydrator\ClassMethods;
 
 class IncludesFieldset extends Fieldset implements InputFilterProviderInterface{
 	public function __construct($name = 'includes', $options = array()){
         parent::__construct($name);
         
-        $this->setHydrator(new ClassMethods(false))
-            ->setObject(new PropertyInclude());
+        $this->setHydrator(new ObjectProperty())
+            ->setObject(new Included());
 
         $this->add(array(
             'name' => 'id',

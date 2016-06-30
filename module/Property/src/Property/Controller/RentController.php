@@ -14,31 +14,24 @@ class RentController extends AbstractActionController implements PropertyService
 
     public function indexAction(){
         return new ViewModel(array(
-            'properties' => array(), //$this->service->findAllProperties(array('status_id' => 1)),
-            'images' => array(), //$this->service->getImagesByProperty(),
+            'properties' => $this->service->findAll(array('status_id' => 1), true),
         ));
 	}
 
     public function detailsAction(){
         $id = (int) $this->params()->fromRoute('id', 0);
-        $property = $this->service->findProperty($id);
+        $property = $this->service->find($id, true);
 
-        $amenities = $this->service->extract($property->amenities, 'amenity');
-        $features = $this->service->extract($property->features, 'feature');
-        $includes = $this->service->extract($property->includes, 'include');
-
-        $meta_desc = $this->service->getMetaDescription($property, $amenities, $features, $includes);
-        
         return new ViewModel(array(
-            'meta_desc' => $meta_desc,
-            'address' => $this->service->getAddress($property),
+            'meta_desc' => $property->getMetaDescription(),
+            'address' => $property->getAddress(),
             'property' => $property,
-            'listing' => $property->rental_listing,
-            'info' => $property->info,
-            'images' => $property->images,
-            'features' => $features,
-            'amenities' => $amenities,
-            'includes' => $includes 
+            'listing' => $property->getRentalListing(),
+            'info' => $property->getInfo(),
+            'images' => $property->getImages(),
+            'amenities' => $property->getAmenities(),
+            'features' => $property->getFeatures(),
+            'includes' => $property->getIncludes()
         ));
     }
 }

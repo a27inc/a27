@@ -1,6 +1,8 @@
 <?php namespace SiteUser\Entity;
 
-class Role{
+use Application\Entity\EntityAbstract;
+
+class Role extends EntityAbstract{
     /**
      * @var int
      */
@@ -12,90 +14,152 @@ class Role{
     public $name;
 
     /**
-     * @var RoleChild
+     * @var int
      */
-    public $child;
+    public $childId;
 
     /**
-     * @var RolePermission
+     * @var int
      */
-    public $permission;
+    public $parentId;
 
-    // prevent hydrating with similar fields from other tables
-    private $hydrator_flag = array(
-        'id' => false);
+    /**
+     * @var array
+     */
+    public $permissionIds = array();
+
+    /**
+     * @var array Permission
+     */
+    public $permissionsByName = array();
+
+    /**
+     * @var array Permission
+     */
+    public $permissionsById = array();
 
     /**
      * @return int
      */
-    public function getId(){
+    public function getId() {
         return $this->id;
     }
 
     /**
-     * @param int $id
+     * @param int $int
+     * @return Role
      */
-    public function setId($id){
-        if(!$this->hydrator_flag['id'])
-            $this->id = (int) $id;
-        return $this;
-    }
-
-    /**
-     * @param int $id
-     */
-    public function setRole_id($id){
-        $this->hydrator_flag['id'] = true;
-        $this->id = (int) $id;
+    public function setId($int) {
+        $this->id = (int) $int;
         return $this;
     }
 
     /**
      * @return string
      */
-    public function getName(){
+    public function getName() {
         return $this->name;
     }
 
     /**
-     * @param string
+     * @param string $str
+     * @return Role
      */
-    public function getRole_name(){
-        return $this->name;
+    public function setName($str) {
+        $this->name = $str;
+        return $this;
     }
 
     /**
-     * @param string $name
+     * @return int
      */
-    public function setRole_name($name){
-        $this->name = $name;
+    public function getChildId() {
+        return $this->childId;
     }
 
     /**
-     * @param RolePermission
+     * @param int $int
+     * @return Role
      */
-    public function getPermission(){
-        return $this->permission;
+    public function setChildId($int) {
+        $this->childId = $int;
+        return $this;
     }
 
     /**
-     * @return RolePermission $permission
+     * @return int
      */
-    public function setPermission(RolePermission $permission){
-        $this->permission = $permission;
+    public function getParentId() {
+        return $this->parentId;
     }
 
     /**
-     * @param RoleChild
+     * @param int $int
+     * @return Role
      */
-    public function getChild(){
-        return $this->child;
+    public function setParentId($int) {
+        $this->parentId = $int;
+        return $this;
     }
 
     /**
-     * @return RolePermission $permission
+     * @param Permission $obj
+     * @return Role
      */
-    public function setChild(RoleChild $child){
-        $this->child = $child;
+    public function addPermission(Permission $obj) {
+        $this->permissionIds[] = $obj->getId();
+        $this->permissionsById[$obj->getId()] = $obj;
+        $this->permissionsByName[$obj->getName()] = $obj;
+        return $this;
+    }
+
+    /**
+     * @param mixed $permission id or name
+     * @return bool
+     */
+    public function hasPermission($permission) {
+        return isset($this->permissionsByName[$permission]) || isset($this->permissionsById[$permission]);
+    }
+
+    /**
+     * Returns the current role permissions in the database
+     * 
+     * @param bool $byName return by name, defaults to returning by id
+     * @return array
+     */
+    public function getPermissions($byName = false) {
+        return $byName ? $this->permissionsByName : $this->permissionsById;
+    }
+
+    /**
+     * Returns role permissions after a form submit to be saved
+     * 
+     * @return array
+     */
+    public function getPermissionIds() {
+        return $this->permissionIds;
+    }
+
+    /**
+     * @param array $arr
+     * @return Role
+     */
+    public function setPermissionIds($arr) {
+        $this->permissionIds = $arr;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getPermissionNames() {
+        return array_keys($this->permissionsByName);
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString(){
+        return $this->getName() ?: '';
     }
 }

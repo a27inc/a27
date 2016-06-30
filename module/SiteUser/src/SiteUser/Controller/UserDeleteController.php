@@ -22,8 +22,8 @@ class UserDeleteController extends AbstractActionController implements UserServi
             return $this->view->setTemplate('error/403');
 
         $id = (int) $this->params()->fromRoute('id', 0);
-        if(!$id) return $this->redirect()->toRoute('site-user');
-        $entity = $this->service->findUser($id);
+        if(!$id || !$entity = $this->service->findUser($id)) 
+            return $this->redirect()->toRoute('site-user');
 
         $request = $this->getRequest();
         if($request->isPost()){

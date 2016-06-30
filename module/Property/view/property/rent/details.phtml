@@ -1,8 +1,8 @@
 <?php
-    $title = 'For Rent: '.$property->street_address.', '.$property->city;
+    $title = 'For Rent: '.$this->property->getStreetAddress().', '.$this->property->getCity();
     $this->headTitle($title);
 
-    $this->headMeta()->appendName('description', $meta_desc);
+    $this->headMeta()->appendName('description', $this->meta_desc);
 
     $this->headLink()->appendStylesheet('http://blueimp.github.io/Gallery/css/blueimp-gallery.min.css');
     $this->headLink()->appendStylesheet('/css/bootstrap-image-gallery.min.css');
@@ -10,7 +10,7 @@
     $this->inlineScript()->appendFile('/js/bootstrap-image-gallery.js');
 
     $now = date_create(date('Y-m-d'));
-    $available = date_create($this->property->getRental_listing()->getAvailable());
+    $available = date_create($this->property->getRentalListing()->getAvailable());
     $interval = date_diff($now, $available);
     $action = !$interval->format('%y') && $interval->format('%m') <= 3;
 
@@ -22,7 +22,7 @@
     </div>
     <div class="col-sm-2 clearfix" style="margin-bottom:10px;">
         <a href="#" class="btn btn-success btn-lg contact" data-toggle="modal" data-target="#contactModal">
-            Contact <?php echo $listing->contact_name; ?></a>
+            Contact <?php echo $this->listing->getContactName(); ?></a>
     </div>
 </div>
 
@@ -62,19 +62,18 @@
     </div>
     <div id="links">
     <?php $count = 0; $gallery = array(); 
-        foreach($this->images as $i){   
+        foreach($this->images as $i){
             //if(!stripos($i->full, 'youtube')){ 
-            echo '<a href="'.$i->dir.$i->file.'" title="'.$i->description.'" index="'.$count.'">
-                <img src="'.$i->thumb_dir.$i->file.'" /></a>';
+            echo '<a href="'.$i->getFile().'" title="'.$i->getDescription().'" index="'.$count.'">
+                <img src="'.$i->getFile(true).'" /></a>';
             $gallery[] = array(
-                'title' => $i->description,
-                'href' => $i->dir.$i->file,
+                'title' => $i->getDescription(),
+                'href' => $i->getFile(),
                 'type' => 'image/jpeg');
             $count ++;
             //}
         }
-        $this->inlineScript()->prependScript('
-            window.gobject = '.json_encode($gallery).';'); ?>
+        $this->inlineScript()->prependScript('window.gobject = '.json_encode($gallery).';'); ?>
     </div>
     <hr />
 </div></div>
@@ -117,7 +116,7 @@
         <?php if($action): ?>
             <a href="#" class="btn btn-success btn-lg contact" 
                 data-toggle="modal" data-target="#contactModal">
-                <?php if($listing->cta_button): echo $listing->cta_button; else: ?>
+                <?php if($this->listing->getCtaButton()): echo $this->listing->getCtaButton(); else: ?>
                     Schedule Appointment Today!
                 <?php endif; ?>
             </a>
@@ -149,25 +148,25 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <?php if($listing->cta_title): ?>
-                    <h2 class="modal-title" id="contactModalLabel"><?php echo $listing->cta_title; ?></h2>
+                <?php if($this->listing->getCtaTitle()): ?>
+                    <h2 class="modal-title" id="contactModalLabel"><?php echo $this->listing->getCtaTitle(); ?></h2>
                 <?php else: ?>
                     <h2 class="modal-title" id="contactModalLabel">Contact Information</h2>
                 <?php endif; ?>
             </div>
         <div class="modal-body">
             <p class="lead">
-                <?php if($listing->cta_message): ?>
-                    <?php echo $listing->cta_message; ?>
+                <?php if($this->listing->getCtaMessage()): ?>
+                    <?php echo $this->listing->getCtaMessage(); ?>
                 <?php else: ?>
-                    Call <?php echo $listing->contact_name; ?> @
+                    Call <?php echo $this->listing->getContactName(); ?> @
                 <?php endif; ?>
                 <span id="contactNumber"></span>
             </p>
         </div>
         <div class="modal-footer">
-            <?php if($listing->cta_footer): ?>
-                <h4 class="pull-left"><?php echo $listing->cta_footer; ?></h4>
+            <?php if($this->listing->getCtaFooter()): ?>
+                <h4 class="pull-left"><?php echo $this->listing->getCtaFooter(); ?></h4>
             <?php endif; ?>
             <button type="button" class="btn btn-default pull-right" data-dismiss="modal">Close</button>
         </div>
@@ -178,8 +177,9 @@
 <script type="text/javascript">
     $(document).ready(function(){
         $(".contact").click(function(){
-            $('#contactNumber').html('<a class="call" href="tel:'+<?php echo '\''.$listing->contact_number.'\''; ?>+'">'+
-                <?php echo '\''.$listing->contact_number.'\''; ?>+'</a>');
+            $('#contactNumber').html('<a class="call" href="tel:' +
+                <?php echo '\''.$this->listing->getContactNumber().'\''; ?>+'">' +
+                <?php echo '\''.$this->listing->getContactNumber().'\''; ?>+'</a>');
         });
         $(".call").click(function(){
             return true;

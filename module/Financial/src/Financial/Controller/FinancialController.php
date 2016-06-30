@@ -53,7 +53,7 @@ class FinancialController extends AbstractActionController implements FinancialS
     public function incomeAction(){
         if(!$this->isGranted('view_income'))
             return $this->view->setTemplate('error/403');
-
+  
         return new ViewModel(array(
             'incomes' => $this->service->getIncomes()
         ));
@@ -70,11 +70,10 @@ class FinancialController extends AbstractActionController implements FinancialS
         if($request->isPost()){
             $form->setData($request->getPost());
             if($form->isValid()){
-                $data = $form->getData();
-                $to = $data['report']['date_to'];
-                $from = $data['report']['date_from'];
-                $exp_where = 'e.date_filed BETWEEN ? AND ? OR ? BETWEEN e.date_from AND e.date_to OR ? BETWEEN e.date_from AND e.date_to';
-                $inc_where = 'i.date_filed BETWEEN ? AND ? OR ? BETWEEN i.date_from AND i.date_to OR ? BETWEEN i.date_from AND i.date_to';
+                $to = $form->get('reportfieldset')->get('dateTo')->getValue();
+                $from = $form->get('reportfieldset')->get('dateFrom')->getValue();
+                $exp_where = 't.date_filed BETWEEN ? AND ? OR ? BETWEEN t.date_from AND t.date_to OR ? BETWEEN t.date_from AND t.date_to';
+                $inc_where = 't.date_filed BETWEEN ? AND ? OR ? BETWEEN t.date_from AND t.date_to OR ? BETWEEN t.date_from AND t.date_to';
                 $return = array(
                     'expenses' => $this->service->getExpenses(array(
                         $exp_where => array($from, $to, $from, $to))),

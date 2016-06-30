@@ -5,7 +5,7 @@
 
 <div class="row">
 	<h1 class="pull-left"><?php echo $this->escapeHtml($title); ?></h1>
-    <a href="<?php echo $this->url('allocation/add'); ?>" 
+    <a href="<?php echo $this->url('investor/allocation/add'); ?>" 
         type="button" class="btn btn-primary pull-right">
             Add Allocation</a>
 </div>
@@ -22,15 +22,15 @@
 <?php foreach($allocations as $a){
     //var_dump($a->getProperty()); die;
 	echo '<tr>';
-	 	echo '<td>'.$this->escapeHtml($a->getInvestor()->getDisplayName()).'</td>';
-	 	echo '<td>'.$this->escapeHtml($a->getCategory()->getDisplay_name()).'</td>';
+	 	echo '<td>'.$this->escapeHtml($a->getUser()->getDisplayName()).'</td>';
+	 	echo '<td>'.$this->escapeHtml($a->getCategory()->getDisplayName()).'</td>';
         echo '<td>'.$this->escapeHtml($a->getProperty()->getName()).'</td>';
         echo '<td>'.$this->escapeHtml($a->getAllocation()).'</td>';
         echo '<td>
-		 		<a href="'.$this->url('allocation/edit', array('action' => 'edit', 'id' => $a->getId())).'">'.
+		 		<a href="'.$this->url('investor/allocation/edit', array('action' => 'edit', 'id' => $a->getId())).'">'.
 		 			$this->escapeHtml('Edit').'</a>
 	 			&nbsp;&nbsp;&nbsp;
-	 			<a href="'.$this->url('allocation/delete', array('action' => 'delete', 'id' => $a->getId())).'">'.
+	 			<a href="'.$this->url('investor/allocation/delete', array('action' => 'delete', 'id' => $a->getId())).'">'.
 		 			$this->escapeHtml('Delete').'</a>
 			</td>';
  	echo '</tr>'; 

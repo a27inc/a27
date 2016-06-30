@@ -2,7 +2,6 @@
 
 use SiteUser\Service\UserServiceAwareInterface;
 use SiteUser\Service\UserService;
-use Zend\Form\FormInterface;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
@@ -26,14 +25,12 @@ class UserWriteController extends AbstractActionController implements UserServic
             return $this->redirect()->toRoute('zfcuser/login'); 
 
         $id = (int) $this->params()->fromRoute('id', 0);
-        if(!$id) return $this->redirect()->toRoute('site-user');
-
-        $user = $this->service->findUser($id);
-        //var_dump($user); die;
+        if(!$id || !$entity = $this->service->findUser($id))
+            return $this->redirect()->toRoute('site-user');
 
         $formManager = $this->serviceLocator->get('FormElementManager');
         $form = $formManager->get('UserForm');
-        $form->bind($user);
+        $form->bind($entity);
         
         $request = $this->getRequest();
         if($request->isPost()){

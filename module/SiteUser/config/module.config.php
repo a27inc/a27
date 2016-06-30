@@ -29,7 +29,6 @@ return [
     ],
     'controllers' => [
         'invokables' => [
-            'UserController' => 'SiteUser\Controller\UserController',
             'UserWriteController' => 'SiteUser\Controller\UserWriteController',
             'UserDeleteController' => 'SiteUser\Controller\UserDeleteController',
             'RoleController' => 'SiteUser\Controller\RoleController',
@@ -44,7 +43,7 @@ return [
                 'options' => [
                     'route'    => '/site-user',
                     'defaults' => [
-                        'controller' => 'UserController',
+                        'controller' => 'SiteUser/UserController',
                         'action'     => 'index'
                     ]
                 ],
@@ -81,7 +80,7 @@ return [
                         'options' => [
                             'route' => '/profile',
                             'defaults' => [
-                                'controller' => 'UserController',
+                                'controller' => 'SiteUser/UserController',
                                 'action'    => 'profile'
                             ]
                         ]

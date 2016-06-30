@@ -20,16 +20,16 @@ class DeleteController extends AbstractActionController implements InvestorServi
     public function deleteAllocationAction(){
         if(!$this->isGranted('delete_allocation'))
             return $this->view->setTemplate('error/403');
-
-        if(!$id = (int) $this->params()->fromRoute('id', 0))
-            return $this->redirect()->toRoute('allocation');
-        $entity = $this->service->findAllocation($id);
+        
+        $id = (int) $this->params()->fromRoute('id', 0);
+        if(!$id || !$entity = $this->service->findAllocation($id))
+            return $this->redirect()->toRoute('investor/allocation');
 
         $request = $this->getRequest();
         if($request->isPost()){
             $del = $request->getPost('del');
             if($del == 'Yes') $this->service->deleteAllocation($entity);
-            return $this->redirect()->toRoute('allocation');
+            return $this->redirect()->toRoute('investor/allocation');
         }
         return array('allocation' => $entity); 
     }
@@ -38,15 +38,15 @@ class DeleteController extends AbstractActionController implements InvestorServi
         if(!$this->isGranted('delete_allocation_category'))
             return $this->view->setTemplate('error/403');
 
-        if(!$id = (int) $this->params()->fromRoute('id', 0))
-            return $this->redirect()->toRoute('allocation/category');
-        $entity = $this->service->findCategory($id);
+        $id = (int) $this->params()->fromRoute('id', 0);
+        if(!$id || !$entity = $this->service->findCategory($id))
+            return $this->redirect()->toRoute('investor/allocation/category');
 
         $request = $this->getRequest();
         if($request->isPost()){
             $del = $request->getPost('del');
             if($del == 'Yes') $this->service->deleteCategory($entity);
-            return $this->redirect()->toRoute('allocation/category');
+            return $this->redirect()->toRoute('investor/allocation/category');
         }
         return array('category' => $entity); 
     }

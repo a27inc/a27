@@ -1,8 +1,8 @@
 <?php namespace SiteUser\Entity;
 
-use SiteUser\Entity\UserRole;
+use Application\Entity\EntityAbstract;
 
-class User{
+class User extends EntityAbstract{
     /**
      * @var int
      */
@@ -16,7 +16,7 @@ class User{
     /**
      * @var int
      */
-    public $displayname;
+    public $displayName;
 
     /**
      * @var int
@@ -24,37 +24,25 @@ class User{
     public $state;
 
     /**
-     * @var UserRole
+     * @var array
      */
-    public $role;
+    public $roleIds = array();
 
-    // prevent hydrating with similar fields from other tables
-    private $hydrator_flag = array(
-        'id' => false);
+    /**
+     * @var array
+     */
+    protected $rolesById = array();
+
+    /**
+     * @var array
+     */
+    protected $rolesByName = array();
 
     /**
      * @return int
      */
     public function getId(){
         return $this->id;
-    }
-
-    /**
-     * @param int $id
-     */
-    public function setId($id){
-        if(!$this->hydrator_flag['id'])
-            $this->id = (int) $id;
-        return $this;
-    }
-
-    /**
-     * @param int $id
-     */
-    public function setUser_id($id){
-        $this->hydrator_flag['id'] = true;
-        $this->id = (int) $id;
-        return $this;
     }
 
     /**
@@ -65,26 +53,10 @@ class User{
     }
 
     /**
-     * @param string $email
-     */
-    public function setEmail($email){
-        $this->email = (string) $email;
-        return $this;
-    }
-
-    /**
      * @return string
      */
-    public function getDisplayname(){
-        return $this->displayname;
-    }
-
-    /**
-     * @param string $displayname
-     */
-    public function setDisplayname($displayname){
-        $this->displayname = (string) $displayname;
-        return $this;
+    public function getDisplayName(){
+        return $this->displayName;
     }
 
     /**
@@ -95,27 +67,58 @@ class User{
     }
 
     /**
-     * @param int $state
+     * @param Role $obj
      * @return User
      */
-    public function setState($state){
-        $this->state = (int) $state;
+    public function addRole(Role $obj){
+        $this->roleIds[] = $obj->getId();
+        $this->rolesById[$obj->getId()] = $obj;
+        $this->rolesByName[$obj->getName()] = $obj;
         return $this;
     }
 
     /**
-     * @return  UserRole
+     * @param mixed $role
+     * @return bool
      */
-    public function getRole(){
-        return $this->role;
+    public function hasRole($role) {
+        return isset($this->rolesByName[$role]) || isset($this->rolesById[$role]);
     }
 
     /**
-     * @param UserRole $role
-     * @return User
+     * Returns the current user roles in the database
+     *
+     * @param bool $byName return by name, defaults to returning by id
+     * @return  array
      */
-    public function setRole(UserRole $role){
-        $this->role = $role;
-        return $this;
+    public function getRoles($byName = false){
+        return $byName ? $this->rolesByName : $this->rolesById;
+    }
+
+    /**
+     * @return array
+     */
+    public function getRoleIds() {
+        return $this->roleIds;
+    }
+
+    /**
+     * @return  array
+     */
+    public function getRoleNames(){
+        return array_keys($this->rolesByName);
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString(){
+        if ($this->displayName) {
+            return $this->displayName;
+        }
+        else if ($this->email) {
+            return $this->email;
+        }
+        return '';
     }
 }

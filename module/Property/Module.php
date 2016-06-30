@@ -32,10 +32,13 @@ class Module implements AutoloaderProviderInterface, ConfigProviderInterface, Co
     public function getFormElementConfig(){
         return [
             'initializers' => [
-                'Property\Model\PropertiesTableInitializer'
+                'Property\Model\PropertiesTableInitializer',
+                'Property\Model\ExtrasTableInitializer'
             ],
             'invokables' => [
-                'PropertiesFieldset' => 'Property\Form\PropertiesFieldset'
+                'PropertiesFieldset'    => 'Property\Form\PropertiesFieldset',
+                'ImagesFieldset'        => 'Property\Form\ImagesFieldset',
+                'PropertyForm'          => 'Property\Form\PropertyForm'
             ]
         ];
     }

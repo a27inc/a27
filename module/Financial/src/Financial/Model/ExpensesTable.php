@@ -6,7 +6,7 @@ use Zend\Db\ResultSet\HydratingResultSet;
 
 //use Financial\Entity\Expense as Entity;
 //use Zend\Db\Adapter\Driver\ResultInterface;
-//use Zend\Stdlib\Hydrator\ClassMethods;
+//use Zend\Hydrator\ClassMethods;
 
 class ExpensesTable extends AbstractTableGateway{
     protected $table = 'expenses';

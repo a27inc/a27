@@ -9,7 +9,7 @@
     "homepage": "http://framework.zend.com/",
     "require": {
         "php": ">=5.3.3",
-        "zendframework/zendframework": "2.3.*@stable",
+        "zendframework/zendframework": "~2.3",
         "zendframework/zend-developer-tools": "dev-master",
         "zendframework/zftool": "dev-master",
         "imagine/imagine": "~0.5.0",

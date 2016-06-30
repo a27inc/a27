@@ -36,11 +36,11 @@ return [
         ],
         'factories' => [
             'navigation' => 'Zend\Navigation\Service\DefaultNavigationFactory',
-            'admin_nav' => 'Application\Factory\Service\AdminNavigationFactory',
-            'account_nav' => 'Application\Factory\Service\AccountNavigationFactory',
-            'investor_nav' => 'Application\Factory\Service\InvestorNavigationFactory',
-            'landlord_nav' => 'Application\Factory\Service\LandlordNavigationFactory',
-            'demo_nav' => 'Application\Factory\Service\DemoNavigationFactory'
+            'admin_nav' => 'Application\Navigation\Factory\AdminNavigationFactory',
+            'account_nav' => 'Application\Navigation\Factory\AccountNavigationFactory',
+            'investor_nav' => 'Application\Navigation\Factory\InvestorNavigationFactory',
+            'landlord_nav' => 'Application\Navigation\Factory\LandlordNavigationFactory',
+            //'demo_nav' => 'Application\Navigation\Factory\DemoNavigationFactory'
         ],
         'aliases' => [
             'translator' => 'MvcTranslator',

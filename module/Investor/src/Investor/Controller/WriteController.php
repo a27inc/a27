@@ -33,7 +33,7 @@ class WriteController extends AbstractActionController implements InvestorServic
             if($form->isValid()){
                 try{
                     $this->service->saveAllocation($form->getData());
-                    return $this->redirect()->toRoute('allocation');
+                    return $this->redirect()->toRoute('investor/allocation');
                 } catch(\Exception $e){
                      var_dump($e->getMessage());
                 }
@@ -57,7 +57,32 @@ class WriteController extends AbstractActionController implements InvestorServic
             if($form->isValid()){
                 try{
                     $this->service->saveCategory($form->getData());
-                    return $this->redirect()->toRoute('allocation/category');
+                    return $this->redirect()->toRoute('investor/allocation/category');
+                } catch(\Exception $e){
+                     var_dump($e->getMessage());
+                }
+            }
+        }
+
+        return new ViewModel(array(
+            'form' => $form
+        ));
+    }
+
+    public function addInvestorAction(){
+        if(!$this->isGranted('add_investor'))
+            return $this->view->setTemplate('error/403');
+
+        $formManager = $this->serviceLocator->get('FormElementManager');
+        $form = $formManager->get('Investor\Form\InvestorForm');
+
+        $request = $this->getRequest();
+        if($request->isPost()){           
+            $form->setData($request->getPost());
+            if($form->isValid()){
+                try{
+                    $this->service->saveInvestor($form->getData());
+                    return $this->redirect()->toRoute('investor');
                 } catch(\Exception $e){
                      var_dump($e->getMessage());
                 }
@@ -73,15 +98,13 @@ class WriteController extends AbstractActionController implements InvestorServic
         if(!$this->isGranted('edit_allocation'))
             return $this->view->setTemplate('error/403');
 
-        if(!$id = (int) $this->params()->fromRoute('id', 0))
-            return $this->redirect()->toRoute('allocation');
-
-        $allocation = $this->service->findAllocation($id);
-        //var_dump($allocation); die;
+        $id = (int) $this->params()->fromRoute('id', 0);
+        if(!$id || !$entity = $this->service->findAllocation($id))
+            return $this->redirect()->toRoute('investor/allocation');
 
         $formManager = $this->serviceLocator->get('FormElementManager');
         $form = $formManager->get('Investor\Form\AllocationForm');
-        $form->bind($allocation);
+        $form->bind($entity);
         
         $request = $this->getRequest();
         if($request->isPost()){
@@ -90,7 +113,7 @@ class WriteController extends AbstractActionController implements InvestorServic
             if($form->isValid()){
                 try{
                     $this->service->saveAllocation($form->getData());
-                    return $this->redirect()->toRoute('allocation');
+                    return $this->redirect()->toRoute('investor/allocation');
                 } catch(\Exception $e){
                     var_dump($e);
                 }
@@ -102,14 +125,12 @@ class WriteController extends AbstractActionController implements InvestorServic
         if(!$this->isGranted('edit_allocation_category'))
             return $this->view->setTemplate('error/403');
 
-        if(!$id = (int) $this->params()->fromRoute('id', 0))
-            return $this->redirect()->toRoute('allocation/category');
-
-        $category = $this->service->findCategory($id);
-        //var_dump($category); die;
+        $id = (int) $this->params()->fromRoute('id', 0);
+        if(!$id || !$entity = $this->service->findCategory($id))
+            return $this->redirect()->toRoute('investor/allocation/category');
 
         $form = new CategoryForm();
-        $form->bind($category);
+        $form->bind($entity);
         
         $request = $this->getRequest();
         if($request->isPost()){
@@ -118,7 +139,34 @@ class WriteController extends AbstractActionController implements InvestorServic
             if($form->isValid()){
                 try{
                     $this->service->saveCategory($form->getData());
-                    return $this->redirect()->toRoute('allocation/category');
+                    return $this->redirect()->toRoute('investor/allocation/category');
+                } catch(\Exception $e){
+                    var_dump($e);
+                }
+            }
+        } return new ViewModel(array('form' => $form)); 
+    }
+
+    public function editInvestorAction(){
+        if(!$this->isGranted('edit_investor'))
+            return $this->view->setTemplate('error/403');
+        
+        $id = (int) $this->params()->fromRoute('id', 0);
+        if(!$id || !$entity = $this->service->findInvestor($id))
+            return $this->redirect()->toRoute('investor');
+
+        $formManager = $this->serviceLocator->get('FormElementManager');
+        $form = $formManager->get('Investor\Form\InvestorForm');
+        $form->bind($entity);
+        
+        $request = $this->getRequest();
+        if($request->isPost()){
+            $form->setData($request->getPost());
+            
+            if($form->isValid()){
+                try{
+                    $this->service->saveInvestor($form->getData());
+                    return $this->redirect()->toRoute('investor');
                 } catch(\Exception $e){
                     var_dump($e);
                 }
