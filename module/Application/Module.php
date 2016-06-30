@@ -58,9 +58,6 @@ class Module implements AutoloaderProviderInterface, BootstrapListenerInterface,
                 'Application\Model\Factory\DbModelFactoryAbstract',
                 'Application\Factory\DbTableFactoryAbstract'
             ],
-            'invokables' => [
-                'Financial\Model\Income'
-            ],
             'initializers' => [
                 'Application\Model\ModelAbstractInitializer'
             ]

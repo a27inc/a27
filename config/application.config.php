@@ -22,7 +22,6 @@ return array(
         'Landlord',
         'Property',
         'SiteUser',
-        'Mail',
     ),
     'module_listener_options' => array(
         'module_paths' => array(
