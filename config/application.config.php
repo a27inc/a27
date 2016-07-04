@@ -4,10 +4,8 @@ if(!$env) $env = 'production';
 $cache = $env == 'production'; 
 $configPaths = 'config/autoload/{,*.}{{,*.}global-'.$env.',{,*.}local-'.$env.',{,*.}global,{,*.}local}.php';
 
-return array(
+$config = array(
     'modules' => array(
-        'ZendDeveloperTools',
-        'ZFTool',
         'ZfcBase',
         'ZfcUser',
         'ZfcUserDoctrineORM',
@@ -72,3 +70,10 @@ return array(
    // Should be compatible with Zend\ServiceManager\Config.
    //'service_manager' => array()
 );
+
+if ($env == 'development') {
+    $config['modules'][] = 'ZendDeveloperTools';
+    $config['modules'][] = 'ZFTool';
+}
+
+return $config;

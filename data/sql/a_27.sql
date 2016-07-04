@@ -190,10 +190,6 @@ CREATE TABLE IF NOT EXISTS `incomes` (
   KEY `category_id` (`category_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
---
--- Dumping data for table `investors`
---
-
 -- --------------------------------------------------------
 
 --
