@@ -7,14 +7,13 @@ nbproject
 .project
 .settings
 composer.lock
-vendor/bin
 
 # My old backup directories
 /_*/
 
 # Composer files
 composer.phar
-vendor/
+vendor
 
 # Local configs
 config/autoload/local-*.php

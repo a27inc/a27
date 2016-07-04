@@ -35,7 +35,10 @@ class Module implements AutoloaderProviderInterface, BootstrapListenerInterface,
         return [
             'aliases' => [
                 'Zend\Authentication\AuthenticationService' => 'zfcuser_auth_service'
-            ]
+            ],
+            'initializers' => [
+                'Auth\Service\AuthServiceInitializer'
+            ],
         ];
     }
 }

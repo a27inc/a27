@@ -10,7 +10,6 @@ use Zend\ModuleManager\Feature\ServiceProviderInterface;
 use Zend\EventManager\EventInterface;
 use Zend\ModuleManager\Feature\ViewHelperProviderInterface;
 use Zend\Mvc\ModuleRouteListener;
-use Financial\Model\Income;
 
 class Module implements AutoloaderProviderInterface, BootstrapListenerInterface, ConfigProviderInterface, ControllerProviderInterface, FormElementProviderInterface, ServiceProviderInterface, ViewHelperProviderInterface{
     
