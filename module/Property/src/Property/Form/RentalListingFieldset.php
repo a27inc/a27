@@ -100,7 +100,7 @@ class RentalListingFieldset extends Fieldset implements InputFilterProviderInter
             array('name' => 'StringToUpper')
         );
 
-        $pat1 = '/^(0|([1-9][0-9]{0,3}|[1-9][0-9]{0,3}[.][1-9][0-9]?))$/';
+        $pat1 = '/^(0|([1-9][0-9]{0,3}|[1-9][0-9]{0,3}[.][0-9]{1,2}))$/';
 
         return array(
             'rent' => array(

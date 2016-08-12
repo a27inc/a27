@@ -105,7 +105,7 @@ class IncomeFieldset extends Fieldset implements InputFilterProviderInterface{
             ]
         ];
 
-        $pat1 = '/^(0|([1-9][0-9]{0,6}|[1-9][0-9]{0,6}[.][1-9][0-9]?))$/';
+        $pat1 = '/^(0|([1-9][0-9]{0,6}|[1-9][0-9]{0,6}[.][0-9]{1,2}))$/';
 
         return [
             'amount' => [
