@@ -4,6 +4,7 @@ use Property\Entity\RentalListing;
 use Zend\Form\Fieldset;
 use Zend\Hydrator\ObjectProperty;
 use Zend\InputFilter\InputFilterProviderInterface;
+use Zend\Validator\Regex;
 
 class RentalListingFieldset extends Fieldset implements InputFilterProviderInterface{
 	public function __construct($name = 'rental_listing', $options = array()){
@@ -99,7 +100,7 @@ class RentalListingFieldset extends Fieldset implements InputFilterProviderInter
             array('name' => 'StringToUpper')
         );
 
-        $pat1 = '/^(0|([1-9][-0-9]{0,3}|[1-9][0-9]{0,3}[.][0-9]{2}))$/';
+        $pat1 = '/^(0|([1-9][0-9]{0,3}|[1-9][0-9]{0,3}[.][1-9][0-9]?))$/';
 
         return array(
             'rent' => array(
@@ -110,7 +111,7 @@ class RentalListingFieldset extends Fieldset implements InputFilterProviderInter
                         'options' => array(
                             'pattern' => $pat1,
                             'messages' => array(
-                                \Zend\Validator\Regex::NOT_MATCH => 'Non match: '.trim($pat1, '/')
+                                Regex::NOT_MATCH => 'Non match: '.trim($pat1, '/')
                             )
                         )
                     )
@@ -124,7 +125,7 @@ class RentalListingFieldset extends Fieldset implements InputFilterProviderInter
                         'options' => array(
                             'pattern' => $pat1,
                             'messages' => array(
-                                \Zend\Validator\Regex::NOT_MATCH => 'Non match: '.trim($pat1, '/')
+                                Regex::NOT_MATCH => 'Non match: '.trim($pat1, '/')
                             )
                         )
                     )
@@ -138,7 +139,7 @@ class RentalListingFieldset extends Fieldset implements InputFilterProviderInter
                         'options' => array(
                             'pattern' => '/^[ a-zA-Z]{2,32}$/',
                             'messages' => array(
-                                \Zend\Validator\Regex::NOT_MATCH => 'Non match: ^[ a-zA-Z]{2,32}$',
+                                Regex::NOT_MATCH => 'Non match: ^[ a-zA-Z]{2,32}$',
                             )
                         )
                     )
@@ -152,7 +153,7 @@ class RentalListingFieldset extends Fieldset implements InputFilterProviderInter
                         'options' => array(
                             'pattern' => '/^[-1-9]{10,12}$/',
                             'messages' => array(
-                                \Zend\Validator\Regex::NOT_MATCH => 'Non match: ^[-1-9]{10,12}$',
+                                Regex::NOT_MATCH => 'Non match: ^[-1-9]{10,12}$',
                             )
                         )
                     )

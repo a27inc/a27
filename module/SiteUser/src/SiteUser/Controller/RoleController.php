@@ -26,6 +26,20 @@ class RoleController extends AbstractActionController implements UserServiceAwar
         ));
     }
 
+    public function viewRoleAction(){
+        if(!$this->isGranted('view_role'))
+            return $this->view->setTemplate('error/403');
+
+        $id = (int) $this->params()->fromRoute('id', 0);
+        if(!$id || !$entities = $this->service->findRoleAndChildren($id))
+            return $this->redirect()->toRoute('role');
+
+        return new ViewModel(array(
+            'roles' => $entities,
+            'currentRoleId' => $id
+        ));
+    }
+
     public function viewPermissionAction(){
         if(!$this->isGranted('view_permission'))
             return $this->view->setTemplate('error/403');

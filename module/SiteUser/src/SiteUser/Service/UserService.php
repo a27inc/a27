@@ -8,6 +8,7 @@ use SiteUser\Entity\Permission;
 use SiteUser\Hydrator\PermissionHydrator;
 use SiteUser\Hydrator\RoleHydrator;
 use SiteUser\Hydrator\UserHydrator;
+use Zend\Db\Sql\Predicate\In;
 
 class UserService extends ServiceAbstract{
 
@@ -22,6 +23,23 @@ class UserService extends ServiceAbstract{
         $model = $this->getModel('SiteUser/Role');
         //die(var_dump($model->open('id', $id, 100)));
         return $model->open('id', $id, 100);
+    }
+
+    public function findRoleAndChildren($id){
+        $ids = array($id);
+        $child = $this->_select('role_role', array('child_id'), array('parent_id = ?' => $id));
+        while($child && $id = array_pop($child)) {
+            $ids[] = $id;
+            $child = $this->_select('role_role', array('child_id'), array('parent_id = ?' => $id));
+        }
+        $roles = $this->findAllRoles(new In('t.id', $ids));
+        // sort according to hierarchy
+        $sort = array();
+        foreach ($roles as $r) {
+            $sort[] = array_search($r->getId(), $ids);
+        }
+        array_multisort($sort, SORT_NUMERIC, $roles);
+        return $roles;
     }
 
     public function findPermission($id){
@@ -79,7 +97,7 @@ class UserService extends ServiceAbstract{
             }
             if ($old) {
                 $this->_delete('user_role', array(
-                    'user_id = ? AND role_id IN(?)' => array($entity->getId(), implode(',',$old))));
+                    'user_id = ?' => $entity->getId(), new In('role_id', $old)));
             }
         }
     }
@@ -132,7 +150,7 @@ class UserService extends ServiceAbstract{
             }
             if ($old) {
                 $this->_delete('role_permission', array(
-                    'role_id = ? AND permission_id IN(?)' => array($entity->getId(), implode(',',$old))));
+                    'role_id = ?' => $entity->getId(), new In('permission_id', $old)));
             }
         }
     }

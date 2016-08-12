@@ -1,0 +1,35 @@
+<?php
+	$title = 'View Associated Roles';
+	$this->headTitle($title);
+?>
+
+<div class="row">
+	<div class="col-md-12">
+		<h1 class="pull-left"><?php echo $this->escapeHtml($title); ?></h1>
+		<a href="<?php echo $this->url('role'); ?>" type="button" class="btn btn-primary pull-right">
+			Back
+		</a>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-md-12">
+<?php foreach($roles as $r):
+		$url = $r->getId() == $currentRoleId
+			? '#' : $this->url('role/view', array('action' => 'view', 'id' => $r->getId()));
+	?>
+	<h2>
+		<a href="<?php echo $url ?>">
+			<?php echo $this->escapeHtml($r->name) ?>
+		</a>
+	</h2>
+	<?php if($r->permissionsByName): ksort($r->permissionsByName); ?>
+	<ul>
+		<?php foreach ($r->permissionsByName as $p): ?>
+		<li><?php echo $p->getName() ?></li>
+		<?php endforeach; ?>
+	</ul>
+	<?php endif; ?>
+<?php endforeach; ?>
+	</div>
+</div>

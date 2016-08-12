@@ -108,6 +108,19 @@ return [
                             ] 
                         ]
                     ],
+                    'view' => [
+                        'type' => 'segment',
+                        'options' => [
+                            'route'    => '/view/[:id]',
+                            'defaults' => [
+                                'controller' => 'RoleController',
+                                'action' => 'viewRole'
+                            ],
+                            'constraints' => [
+                                'id' => '[1-9]\d*'
+                            ]
+                        ]
+                    ],
                     'edit' => [
                         'type' => 'segment',
                         'options' => [

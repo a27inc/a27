@@ -13,6 +13,7 @@ use \Imagine\Image\Box;
 use \Imagine\Image\Point;
 
 use Property\Hydrator\PropertyHydrator;
+use Zend\Db\Sql\Predicate\In;
 use Zend\Hydrator\ObjectProperty;
 
 class PropertyService extends ServiceAbstract{
@@ -179,7 +180,7 @@ class PropertyService extends ServiceAbstract{
         }
         
         if($old_ids){
-            $this->_delete($table, array('id IN(?)' => implode(',', $old_ids)));
+            $this->_delete($table, new In('id', $old_ids));
         } return;
     }*/
 
@@ -200,7 +201,7 @@ class PropertyService extends ServiceAbstract{
             }
             if ($old) {
                 $this->_delete('property_extras', array(
-                    'property_id = ? AND extra_id IN(?)' => array($entity->getId(), implode(',',$old))));
+                    'property_id = ?' => $entity->getId(), new In('extra_id', $old)));
             }
         }
     }

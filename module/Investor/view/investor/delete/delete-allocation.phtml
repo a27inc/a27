@@ -6,8 +6,8 @@
 <h1><?php echo $this->escapeHtml($title); ?></h1>
 
 <p>
-	Are you sure that you want to delete allocation
-	'<?php echo $this->escapeHtml($allocation->getInvestor()->getDisplayName()); ?>'?
+	Are you sure you want to delete this allocation for
+	'<?php echo $this->escapeHtml($allocation->getUser()->getDisplayName()); ?>'?
 </p>
 
 <?php
