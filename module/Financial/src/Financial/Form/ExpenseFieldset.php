@@ -5,6 +5,8 @@ use Zend\Form\Fieldset;
 use Zend\Hydrator\ObjectProperty;
 use Zend\InputFilter\InputFilterProviderInterface;
 use Zend\Validator\Regex;
+use Zend\Validator\Date;
+use Zend\Validator\Between;
 
 class ExpenseFieldset extends Fieldset implements InputFilterProviderInterface{
 	public function init(){
