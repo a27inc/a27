@@ -4,10 +4,12 @@
 ?>
 
 <div class="row">
-    <h1 class="pull-left"><?php echo $this->escapeHtml($title); ?></h1>
-    <a href="<?php echo $this->url('investor/allocation/category/add'); ?>" 
-        type="button" class="btn btn-primary pull-right">
-            Add Type</a>
+    <div class="col-md-12">
+        <h1 class="pull-left"><?php echo $this->escapeHtml($title); ?></h1>
+        <a href="<?php echo $this->url('investor/allocation/category/add'); ?>"
+            type="button" class="btn btn-primary pull-right">
+                Add Type</a>
+    </div>
 </div>
 
 <table id="category-table" class="table table-striped table-bordered">

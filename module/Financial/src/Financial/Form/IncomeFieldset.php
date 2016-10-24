@@ -6,61 +6,65 @@ use Zend\Hydrator\ObjectProperty;
 use Zend\Validator\Between;
 use Zend\Validator\Date;
 use Zend\InputFilter\InputFilterProviderInterface;
+use Zend\Validator\Regex;
 
 class IncomeFieldset extends Fieldset implements InputFilterProviderInterface{
 	public function init(){
-        $this->add(array(
+        $this->add([
             'name' => 'id',
-            'type' => 'Hidden'));
-        $this->add(array(
+            'type' => 'Hidden']);
+        $this->add([
             'name' => 'property',
-            'type' => 'PropertiesFieldset'));
-        $this->add(array(
+            'type' => 'PropertiesFieldset']);
+        $this->add([
             'name' => 'category',
-            'type' => 'CategoriesFieldset'));
-        $this->add(array(
+            'type' => 'CategoriesFieldset']);
+        $this->add([
             'name' => 'rate',
-            'type' => 'RatesFieldset'));
-        $this->add(array(
+            'type' => 'RatesFieldset']);
+        $this->add([
             'name' => 'amount',
             'type' => 'Text',
-            'options' => array(
-                'label' => 'Amount: ')));
-        $this->add(array(
+            'options' => [
+                'label' => 'Amount: '],
+            'attributes' => [
+                'placeholder' => '9999.99'
+            ]]);
+        $this->add([
             'type' => 'Date',
             'name' => 'dateFiled',
-            'options' => array(
-                'label' => 'Date: '),
-            'attributes' => array(
-                'value' => date('Y-m-d'))));
-        /*$this->add(array(
+            'options' => [
+                'label' => 'Date: '],
+            'attributes' => [
+                'value' => date('Y-m-d')]]);
+        /*$this->add([
             'type' => 'Zend\Form\Element\Date',
             'name' => 'date_from',
-            'options' => array(
-                'label' => 'Recurring From: '),
-            'attributes' => array(
+            'options' => [
+                'label' => 'Recurring From: '],
+            'attributes' => [
                 'min' => '2014-01-01',
                 'max' => '2020-01-01',
-                'step' => '1')));
-        $this->add(array(
+                'step' => '1']]);
+        $this->add([
             'type' => 'Zend\Form\Element\Date',
             'name' => 'date_to',
-            'options' => array(
-                'label' => 'Recurring To: '),
-            'attributes' => array(
+            'options' => [
+                'label' => 'Recurring To: '],
+            'attributes' => [
                 'min' => '2014-01-01',
                 'max' => '2020-01-01',
-                'step' => '1')));*/
-        $this->add(array(
+                'step' => '1']]);*/
+        $this->add([
             'name' => 'description',
             'type' => 'Textarea',
-            'options' => array(
-                'label' => 'Description: ')));
-        $this->add(array(
+            'options' => [
+                'label' => 'Description: ']]);
+        $this->add([
             'name' => 'note',
             'type' => 'Textarea',
-            'options' => array(
-                'label' => 'Note: ')));
+            'options' => [
+                'label' => 'Note: ']]);
     }
 
     public function __construct($name = 'income', $options = array()){
@@ -101,7 +105,23 @@ class IncomeFieldset extends Fieldset implements InputFilterProviderInterface{
             ]
         ];
 
+        $pat1 = '/^(0|([1-9][0-9]{0,6}|[1-9][0-9]{0,6}[.][0-9]{1,2}))$/';
+
         return [
+            'amount' => [
+                'required' => true,
+                'filters' => $text_filters,
+                'validators' => [
+                    ['name' => 'Regex',
+                        'options' => [
+                            'pattern' => $pat1,
+                            'messages' => [
+                                Regex::NOT_MATCH => 'Non match: '.trim($pat1, '/')
+                            ]
+                        ]
+                    ]
+                ]
+            ],
             'dateFiled' => [
                 'required' => true,
                 'filters' => $text_filters,

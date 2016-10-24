@@ -7,6 +7,9 @@ nbproject
 .project
 .settings
 composer.lock
+ghostsaid.json
+error_log
+*/error_log
 
 # My old backup directories
 /_*/
