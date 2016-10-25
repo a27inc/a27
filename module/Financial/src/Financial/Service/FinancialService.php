@@ -85,8 +85,12 @@ class FinancialService extends ServiceAbstract{
 
         if($entity->getId()){
             $this->_update('expenses', $data, array('id = ?' => $entity->getId()));
-        } elseif($id = $this->_insert('expenses', $data)){
-            $entity->setId($id);
+        } else {
+            $data['author_id'] = $this->getUserId();
+            if($id = $this->_insert('expenses', $data)){
+                $entity->setId($id);
+                $entity->setAuthorId($data['author_id']);
+            }
         } return $entity;
     }
 
@@ -96,8 +100,12 @@ class FinancialService extends ServiceAbstract{
         //die(var_dump($data));
         if($entity->getId()){
             $this->_update('incomes', $data, array('id = ?' => $entity->getId()));
-        } elseif($id = $this->_insert('incomes', $data)){
-            $entity->setId($id);
+        } else {
+            $data['author_id'] = $this->getUserId();
+            if($id = $this->_insert('incomes', $data)) {
+                $entity->setId($id);
+                $entity->setAuthorId($data['author_id']);
+            }
         } return $entity;
     }
 

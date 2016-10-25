@@ -24,8 +24,12 @@ class LandlordService extends ServiceAbstract{
         //var_dump($data); die;
         if($entity->getId()){
             $this->_update('tenants', $data, array('id = ?' => $entity->getId()));
-        } elseif($id = $this->_insert('tenants', $data)){
-            $entity->setId($id);
+        } else {
+            $data['author_id'] = $this->getUserId();
+            if($id = $this->_insert('tenants', $data)){
+                $entity->setId($id);
+                $entity->setAuthorId($data['author_id']);
+            }
         } return $entity;
     }
 

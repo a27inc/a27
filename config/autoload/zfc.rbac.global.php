@@ -37,6 +37,14 @@
                 ]*/
             ]
         ],
+        'assertion_map' => [
+            'edit_expense' => 'Auth\Assertion\OwnerOrAdmin',
+            'delete_expense' => 'Auth\Assertion\OwnerOrAdmin',
+            'edit_income' => 'Auth\Assertion\OwnerOrAdmin',
+            'delete_income' => 'Auth\Assertion\OwnerOrAdmin',
+            'edit_tenant' => 'Auth\Assertion\OwnerOrAdmin',
+            'delete_tenant' => 'Auth\Assertion\OwnerOrAdmin'
+        ],
 
         /**
          * As soon as one rule for either route or controller is specified, a guard will be automatically

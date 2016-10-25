@@ -8,6 +8,11 @@ class Tenant extends ModelAbstract{
 	 */
 	public $id;
 
+    /**
+	 * @var int
+	 */
+	public $authorId;
+
 	/**
 	 * @var string
 	 */
@@ -36,6 +41,7 @@ class Tenant extends ModelAbstract{
 	protected function _init(){
 		$this->tableName('tenants')
 			->number('id')->primaryKey()
+			->number('author_id')
 			->string('first_name')
 			->string('middle_initial')
 			->string('last_name')
@@ -45,6 +51,7 @@ class Tenant extends ModelAbstract{
 
 	public function exchangeArray($data){
         $this->id     			= (!empty($data['id'])) ? $data['id'] : null;
+        $this->authorId     	= (!empty($data['author_id'])) ? $data['author_id'] : null;
 		$this->firstName 		= (!empty($data['first_name'])) ? $data['first_name'] : null;
 		$this->middleInitial	= (!empty($data['middle_initial'])) ? $data['middle_initial'] : null;
 		$this->lastName 		= (!empty($data['last_name'])) ? $data['last_name'] : null;
