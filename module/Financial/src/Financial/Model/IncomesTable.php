@@ -52,6 +52,7 @@ class IncomesTable extends AbstractTableGateway{
 
     public function saveIncome(Income $income){
         $data = array(
+            'author_id'     => $income->author_id,
             'property_id'   => $income->property_id,
             'category_id'   => $income->category_id,
             'rate_id'       => $income->rate_id,

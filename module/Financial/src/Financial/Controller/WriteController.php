@@ -94,12 +94,12 @@ class WriteController extends AbstractActionController implements FinancialServi
     }
 
     public function editExpenseAction(){
-        if(!$this->isGranted('edit_expense'))
-            return $this->view->setTemplate('error/403');
-
         $id = (int) $this->params()->fromRoute('id', 0);
         if(!$id || !$entity = $this->service->getExpense($id))
             return $this->redirect()->toRoute('financial/expense');
+
+        if(!$this->isGranted('edit_expense', $entity))
+            return $this->view->setTemplate('error/403');
         
         $formManager = $this->serviceLocator->get('FormElementManager');
         $form = $formManager->get('ExpenseForm');
@@ -146,12 +146,12 @@ class WriteController extends AbstractActionController implements FinancialServi
     }
 
     public function editIncomeAction(){
-        if(!$this->isGranted('edit_income'))
-            return $this->view->setTemplate('error/403');
-
         $id = (int) $this->params()->fromRoute('id', 0);
         if(!$id || !$entity = $this->service->getIncome($id))
             return $this->redirect()->toRoute('financial/income');
+
+        if(!$this->isGranted('edit_income', $entity))
+            return $this->view->setTemplate('error/403');
 
         $formManager = $this->serviceLocator->get('FormElementManager');
         $form = $formManager->get('IncomeForm');

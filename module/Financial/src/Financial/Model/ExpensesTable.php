@@ -54,6 +54,7 @@ class ExpensesTable extends AbstractTableGateway{
 
     public function saveExpense(Expense $expense){
         $data = array(
+            'author_id'     => $expense->author_id,
             'property_id'   => $expense->property_id,
             'category_id'   => $expense->category_id,
             'rate_id'       => $expense->rate_id,

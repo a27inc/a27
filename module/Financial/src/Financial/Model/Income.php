@@ -20,6 +20,7 @@ class Income extends ModelAbstract{
     protected function _init() {
         $this->tableName('incomes')
             ->number('id')->primaryKey()
+            ->number('author_id')
             ->string('amount')
             ->string('date_filed')
             ->string('date_from')

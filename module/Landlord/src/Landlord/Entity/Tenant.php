@@ -5,6 +5,11 @@ class Tenant{
      * @var int
      */
     public $id;
+
+    /**
+     * @var int
+     */
+    public $authorId;
     
     /**
      * @var string
@@ -44,6 +49,22 @@ class Tenant{
      */
     public function setId($int){
         $this->id = (int) $int;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getAuthorId(){
+        return $this->authorId;
+    }
+
+    /**
+     * @param int $int
+     * @return Tenant
+     */
+    public function setAuthorId($int){
+        $this->authorId = (int) $int;
         return $this;
     }
 
