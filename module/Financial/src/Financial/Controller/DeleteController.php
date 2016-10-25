@@ -17,13 +17,13 @@ class DeleteController extends AbstractActionController implements FinancialServ
         $this->service = $fs;
     }
 
-    public function deleteExpenseAction(){ 
-        if(!$this->isGranted('delete_expense'))
-            return $this->view->setTemplate('error/403');
-
+    public function deleteExpenseAction(){
         $id = (int) $this->params()->fromRoute('id', 0);
         if(!$id || !$entity = $this->service->getExpense($id))
             return $this->redirect()->toRoute('financial/expense');
+
+        if(!$this->isGranted('delete_expense', $entity))
+            return $this->view->setTemplate('error/403');
         
         $request = $this->getRequest();
         if($request->isPost()){
@@ -34,13 +34,13 @@ class DeleteController extends AbstractActionController implements FinancialServ
         return array('expense' => $entity); 
     }
 
-    public function deleteIncomeAction(){ 
-        if(!$this->isGranted('delete_income'))
-            return $this->view->setTemplate('error/403');
-
+    public function deleteIncomeAction(){
         $id = (int) $this->params()->fromRoute('id', 0);
         if(!$id || !$entity = $this->service->getIncome($id))
             return $this->redirect()->toRoute('financial/income');
+
+        if(!$this->isGranted('delete_income', $entity))
+            return $this->view->setTemplate('error/403');
 
         $request = $this->getRequest();
         if($request->isPost()){
