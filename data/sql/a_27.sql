@@ -581,7 +581,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `email` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `displayName` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `display_name` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
   `password` varchar(128) COLLATE utf8_unicode_ci NOT NULL,
   `state` smallint(1) DEFAULT NULL,
   PRIMARY KEY (`id`),
