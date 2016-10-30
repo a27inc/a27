@@ -39,7 +39,7 @@ class User implements UserInterface, IdentityInterface{
     /**
      * @var string|null
      *
-     * @ORM\Column(type="string", length=50, nullable=true)
+     * @ORM\Column(name="display_name", type="string", length=50, nullable=true)
      */
     protected $displayName;
 
