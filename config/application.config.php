@@ -73,7 +73,6 @@ $config = array(
 
 if ($env == 'development') {
     $config['modules'][] = 'ZendDeveloperTools';
-    $config['modules'][] = 'ZFTool';
 }
 
 return $config;
