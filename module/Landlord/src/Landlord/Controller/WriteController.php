@@ -32,12 +32,12 @@ class WriteController extends AbstractController{
     }
 
     public function editAction(){
-        if(!$this->isGranted('edit_tenant'))
-            return $this->view->setTemplate('error/403');
-
         $id = (int) $this->params()->fromRoute('id', 0);
         if(!$id || !$entity = $this->getService()->find($id))
             return $this->redirect()->toRoute('tenant');
+
+        if(!$this->isGranted('edit_tenant', $entity))
+            return $this->view->setTemplate('error/403');
         
         $form = $this->getForm();
         $form->bind($entity);

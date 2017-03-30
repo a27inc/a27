@@ -3,6 +3,7 @@
 #use ZfcUser\Entity\User as ZfcUserEntity;
 use ZfcUser\Entity\UserInterface;
 use ZfcRbac\Identity\IdentityInterface;
+use Rbac\Role\RoleInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -38,7 +39,7 @@ class User implements UserInterface, IdentityInterface{
     /**
      * @var string|null
      *
-     * @ORM\Column(type="string", length=50, nullable=true)
+     * @ORM\Column(name="display_name", type="string", length=50, nullable=true)
      */
     protected $displayName;
 
@@ -197,21 +198,10 @@ class User implements UserInterface, IdentityInterface{
     }
 
     /**
-     * Set the list of roles
-     * @param Collection $roles
+     * @param string $roleName
+     * @return bool
      */
-    public function setRoles(Collection $roles){
-        $this->roles->clear();
-        foreach ($roles as $role){
-            $this->roles[] = $role;
-        }
-    }
-
-    /**
-     * Add one role to roles list
-     * @param \Rbac\Role\RoleInterface $role
-     */
-    public function addRole(RoleInterface $role){
-        $this->roles[] = $role;
+    public function hasRole($roleName) {
+        return $this->roles->containsKey($roleName);
     }
 }

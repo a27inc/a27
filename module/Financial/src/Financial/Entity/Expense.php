@@ -10,6 +10,11 @@ class Expense extends Financial{
     public $id;
 
     /**
+     * @var int
+     */
+    public $authorId;
+
+    /**
      * @var Property
      */
     public $property;  
@@ -72,6 +77,22 @@ class Expense extends Financial{
      */
     public function setId($int){
         $this->id = (int) $int;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getAuthorId(){
+        return $this->authorId;
+    }
+
+    /**
+     * @param int $int
+     * @return Expense
+     */
+    public function setAuthorId($int){
+        $this->authorId = (int) $int;
         return $this;
     }
 

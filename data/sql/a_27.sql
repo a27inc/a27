@@ -51,6 +51,7 @@ INSERT INTO `allocation_categories` (`id`, `name`, `display_name`, `symbol`, `de
 
 CREATE TABLE IF NOT EXISTS `expenses` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `author_id` int(11) NOT NULL,
   `property_id` int(11) NOT NULL,
   `category_id` int(11) NOT NULL,
   `rate_id` int(11) NOT NULL,
@@ -61,9 +62,10 @@ CREATE TABLE IF NOT EXISTS `expenses` (
   `description` varchar(255) DEFAULT NULL,
   `note` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `term_id` (`rate_id`),
-  KEY `property_id` (`property_id`),
-  KEY `category_id` (`category_id`)
+  KEY `property_id` (`property_id`,`category_id`,`rate_id`),
+  KEY `rate_id` (`rate_id`),
+  KEY `category_id` (`category_id`),
+  KEY `author_id` (`author_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
@@ -174,6 +176,7 @@ INSERT INTO `financial_categories` (`id`, `name`, `display_name`, `description`,
 
 CREATE TABLE IF NOT EXISTS `incomes` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `author_id` int(11) NOT NULL,
   `property_id` int(11) NOT NULL,
   `category_id` int(11) NOT NULL,
   `rate_id` int(11) NOT NULL,
@@ -186,7 +189,8 @@ CREATE TABLE IF NOT EXISTS `incomes` (
   PRIMARY KEY (`id`),
   KEY `property_id` (`property_id`,`category_id`,`rate_id`),
   KEY `rate_id` (`rate_id`),
-  KEY `category_id` (`category_id`)
+  KEY `category_id` (`category_id`),
+  KEY `author_id` (`author_id`),
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
@@ -557,12 +561,14 @@ INSERT INTO `role_role` (`parent_id`, `child_id`) VALUES
 
 CREATE TABLE `tenants` (
   `id` int(11) NOT NULL,
+  `author_id` int(11) NOT NULL,
   `first_name` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
   `middle_initial` varchar(1) COLLATE utf8_unicode_ci DEFAULT NULL,
   `last_name` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
   `birth_date` date NOT NULL,
   `code` varchar(64) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
+  KEY `author_id` (`author_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=76 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
@@ -575,7 +581,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `email` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `displayName` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `display_name` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
   `password` varchar(128) COLLATE utf8_unicode_ci NOT NULL,
   `state` smallint(1) DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -607,6 +613,7 @@ CREATE TABLE IF NOT EXISTS `user_role` (
 ALTER TABLE `expenses`
   ADD CONSTRAINT `fk_expenses_category_id` FOREIGN KEY (`category_id`) REFERENCES `financial_categories` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `fk_expenses_property_id` FOREIGN KEY (`property_id`) REFERENCES `properties` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_expenses_author_id` FOREIGN KEY (`author_id`) REFERENCES `user` (`id`) ON DELETE NO ACTION,
   ADD CONSTRAINT `fk_expenses_rate_id` FOREIGN KEY (`rate_id`) REFERENCES `rates` (`id`);
 
 --
@@ -620,6 +627,7 @@ ALTER TABLE `extra`
 --
 ALTER TABLE `incomes`
   ADD CONSTRAINT `fk_incomes_property_id` FOREIGN KEY (`property_id`) REFERENCES `properties` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_incomes_author_id` FOREIGN KEY (`author_id`) REFERENCES `user` (`id`) ON DELETE NO ACTION,
   ADD CONSTRAINT `fk_incomes_category_id` FOREIGN KEY (`category_id`) REFERENCES `financial_categories` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `fk_incomes_rate_id` FOREIGN KEY (`rate_id`) REFERENCES `rates` (`id`);
 
@@ -682,6 +690,12 @@ ALTER TABLE `role_role`
 ALTER TABLE `user_role`
   ADD CONSTRAINT `fk_user_role_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `fk_user_role_role_id` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `tenants`
+--
+ALTER TABLE `tenants`
+  ADD CONSTRAINT `fk_tenants_author_id` FOREIGN KEY (`author_id`) REFERENCES `user` (`id`) ON DELETE NO ACTION,
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

@@ -27,6 +27,7 @@ class ExpenseHydrator extends HydratorAbstract{
             'property'  => $namingMap,
             'category'  => $namingMap,
             'rate'      => $namingMap,
+            'authorId'  => $underscore,
             'dateFiled' => $underscore,
             'dateFrom'  => $underscore,
             'dateTo'    => $underscore

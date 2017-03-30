@@ -16,7 +16,7 @@ class User extends ModelAbstract{
 			->number('id')->primaryKey()
 			->string('username')
 			->string('email')
-			->string('displayName')
+			->string('display_name')
 			->number('state');
 
 		$this->join('user_role')
@@ -32,7 +32,7 @@ class User extends ModelAbstract{
 	public function exchangeArray($data){
         $this->id     		= (!empty($data['id'])) ? $data['id'] : null;
 		$this->username 	= (!empty($data['username'])) ? $data['username'] : null;
-		$this->displayName	= (!empty($data['displayName'])) ? $data['displayName'] : null;
+		$this->displayName	= (!empty($data['display_name'])) ? $data['display_name'] : null;
 		$this->email        = (!empty($data['email'])) ? $data['email'] : null;
 	}
 

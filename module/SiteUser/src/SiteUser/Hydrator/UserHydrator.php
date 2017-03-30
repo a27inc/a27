@@ -22,11 +22,5 @@ class UserHydrator extends HydratorAbstract{
         $exclude = new FilterComposite();
         $exclude->addFilter('roleIds', new MethodMatchFilter('roleIds'), FilterComposite::CONDITION_AND);
         $this->filterComposite->addFilter('excludes', $exclude, FilterComposite::CONDITION_AND);
-
-        $namingMap = new MapNamingStrategy([
-            'displayName'   => 'displayName']);
-        $namingStrategies = new CompositeNamingStrategy([
-            'displayName'  => $namingMap]);
-        $this->setNamingStrategy($namingStrategies);
     }
 }
