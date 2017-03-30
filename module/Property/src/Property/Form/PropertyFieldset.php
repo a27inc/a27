@@ -147,8 +147,7 @@ class PropertyFieldset extends Fieldset implements InputFilterProviderInterface{
     /**
      * @return array
      */
-    public function getInputFilterSpecification(){
-        
+    public static function getInputFilterConfig() {
         $text_filters = array(
             array('name' => 'StringTrim'),
             array('name' => 'StripTags')
@@ -166,12 +165,12 @@ class PropertyFieldset extends Fieldset implements InputFilterProviderInterface{
             'statusId' => array(
                 'validators' => array(
                     array('name' => 'Regex',
-                        'options' => array(
-                            'pattern' => '/^(?!0)[0-9]{1,2}$/',
-                            'messages' => array(
-                                Regex::NOT_MATCH => 'Non match: ^(?!0)[0-9]{1,2}$',
-                            )
-                        )
+                          'options' => array(
+                              'pattern' => '/^(?!0)[0-9]{1,2}$/',
+                              'messages' => array(
+                                  Regex::NOT_MATCH => 'Non match: ^(?!0)[0-9]{1,2}$',
+                              )
+                          )
                     )
                 )
             ),
@@ -179,12 +178,12 @@ class PropertyFieldset extends Fieldset implements InputFilterProviderInterface{
                 'required' => false,
                 'validators' => array(
                     array('name' => 'Regex',
-                        'options' => array(
-                            'pattern' => '/^[0-9]{8,32}$/',
-                            'messages' => array(
-                                Regex::NOT_MATCH => 'Non match: ^[0-9]{8,32}$',
-                            )
-                        )
+                          'options' => array(
+                              'pattern' => '/^[0-9]{8,32}$/',
+                              'messages' => array(
+                                  Regex::NOT_MATCH => 'Non match: ^[0-9]{8,32}$',
+                              )
+                          )
                     )
                 )
             ),
@@ -192,85 +191,92 @@ class PropertyFieldset extends Fieldset implements InputFilterProviderInterface{
                 'required' => true,
                 'validators' => array(
                     array('name' => 'Regex',
-                        'options' => array(
-                            'pattern' => '/^[A-Za-z][ A-Za-z]{1,63}$/',
-                            'messages' => array(
-                                Regex::NOT_MATCH => 'Non match: ^[A-Za-z][ A-Za-z]{1,63}$',
-                            )
-                        )
+                          'options' => array(
+                              'pattern' => '/^[A-Za-z][ A-Za-z]{1,63}$/',
+                              'messages' => array(
+                                  Regex::NOT_MATCH => 'Non match: ^[A-Za-z][ A-Za-z]{1,63}$',
+                              )
+                          )
                     )
                 ),
-                'filters' => $text_filters 
+                'filters' => $text_filters
             ),
             'streetAddress' => array(
                 'required' => true,
                 'validators' => array(
                     array('name' => 'Regex',
-                        'options' => array(
-                            'pattern' => '/^[1-9][ A-Za-z0-9]{1,127}$/',
-                            'messages' => array(
-                                Regex::NOT_MATCH => 'Non match: ^[1-9][ A-Za-z0-9]{1,127}$',
-                            )
-                        )
+                          'options' => array(
+                              'pattern' => '/^[1-9][ A-Za-z0-9]{1,127}$/',
+                              'messages' => array(
+                                  Regex::NOT_MATCH => 'Non match: ^[1-9][ A-Za-z0-9]{1,127}$',
+                              )
+                          )
                     )
                 ),
-                'filters' => $text_filters 
+                'filters' => $text_filters
             ),
             'unit' => array(
                 'required' => false,
                 'validators' => array(
                     array('name' => 'Regex',
-                        'options' => array(
-                            'pattern' => '/^[A-Za-z0-9]{1,8}$/',
-                            'messages' => array(
-                                Regex::NOT_MATCH => 'Non match: ^[A-Za-z0-9]{1,8}$',
-                            )
-                        )
+                          'options' => array(
+                              'pattern' => '/^[A-Za-z0-9]{1,8}$/',
+                              'messages' => array(
+                                  Regex::NOT_MATCH => 'Non match: ^[A-Za-z0-9]{1,8}$',
+                              )
+                          )
                     )
                 ),
-                'filters' => $text2_filters 
+                'filters' => $text2_filters
             ),
             'city' => array(
                 'required' => true,
                 'validators' => array(
                     array('name' => 'Regex',
-                        'options' => array(
-                            'pattern' => '/^[ A-Za-z]{1,64}$/',
-                            'messages' => array(
-                                Regex::NOT_MATCH => 'Non match: ^[ A-Za-z]{1,64}$',
-                            )
-                        )
+                          'options' => array(
+                              'pattern' => '/^[ A-Za-z]{1,64}$/',
+                              'messages' => array(
+                                  Regex::NOT_MATCH => 'Non match: ^[ A-Za-z]{1,64}$',
+                              )
+                          )
                     )
                 ),
-                'filters' => $text_filters 
+                'filters' => $text_filters
             ),
             'state' => array(
                 'required' => true,
                 'validators' => array(
                     array('name' => 'Regex',
-                        'options' => array(
-                            'pattern' => '/^[A-Za-z]{2}$/',
-                            'messages' => array(
-                                Regex::NOT_MATCH => 'Non match: ^[A-Za-z]{2}$',
-                            )
-                        )
+                          'options' => array(
+                              'pattern' => '/^[A-Za-z]{2}$/',
+                              'messages' => array(
+                                  Regex::NOT_MATCH => 'Non match: ^[A-Za-z]{2}$',
+                              )
+                          )
                     )
                 ),
-                'filters' => $text2_filters 
+                'filters' => $text2_filters
             ),
             'zip' => array(
                 'required' => true,
                 'validators' => array(
                     array('name' => 'Regex',
-                        'options' => array(
-                            'pattern' => '/^[1-9][0-9]{4}$/',
-                            'messages' => array(
-                                Regex::NOT_MATCH => 'Non match: ^[1-9][0-9]{4}$',
-                            )
-                        )
+                          'options' => array(
+                              'pattern' => '/^[1-9][0-9]{4}$/',
+                              'messages' => array(
+                                  Regex::NOT_MATCH => 'Non match: ^[1-9][0-9]{4}$',
+                              )
+                          )
                     )
-                ) 
+                )
             )
         );
+    }
+
+    /**
+     * @return array
+     */
+    public function getInputFilterSpecification() {
+        return self::getInputFilterConfig();
     }
 }

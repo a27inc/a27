@@ -13,6 +13,10 @@ class Property extends ModelAbstract{
 	public $state;
 	public $zip;
 
+	const STATUS_FOR_RENT = 1;
+	const STATUS_FOR_SALE = 2;
+	const STATUS_DISABLED = 3;
+
     protected function _init(){
         $this->tableName('properties')
             ->number('id')->primaryKey()

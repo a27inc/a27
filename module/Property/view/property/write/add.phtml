@@ -19,3 +19,65 @@
         echo $this->form()->closeTag(); ?>
     </div>
 </div>
+
+<script type="text/javascript">
+    $('[data-action="add"]').click(function(){
+        var target = $(this).attr('data-target');
+        var currentCount = $(target+' fieldset').length;
+        var template = $(target+' span').data('template');
+        template = template.replace(/__index__/g, currentCount);
+
+        if($(target+' [data-action="remove"]').length)
+            $(target+' [data-action="remove"]').unbind('click');
+
+        $(target).append(template);
+
+        $(target+' [data-action="remove"]').bind('click', function(){
+            $(this).parents('fieldset')[0].remove();
+        }); return false;
+    });
+
+    $('[data-toggle]').change(function(){
+        if(typeof $(this).val() != 'undefined'){
+            var selector = $(this).attr('data-toggle'),
+                value = $(this).val();
+            // toggle everything bound to this toggle
+            $(selector).each(function(index, element) {
+                var values = typeof $(element).attr('data-toggle-value') == 'undefined'
+                    ? $(element).attr('data-toggle-values').split(',')
+                    : [$(element).attr('data-toggle-value')];
+                if (values.indexOf(value) > -1) {
+                    $(element).prop('disabled', false).show();
+                    $(element).find('input, select, textarea').prop('disabled', false);
+                }
+                else {
+                    $(element).prop('disabled', true).hide();
+                    $(element).find('input, select, textarea').prop('disabled', true);
+                }
+            });
+        }
+    });
+
+    $('[data-toggle]').each(function(){
+        $($(this).attr('data-toggle')).prop('disabled', true).hide();
+        if(typeof $(this).val() != 'undefined'){
+            $(this).trigger('change');
+        }
+    });
+
+
+    $('[data-field="remove"]').each(function(){
+        if($(this).val() == 1)
+            $(this).closest('fieldset').hide();
+    });
+    $('[data-action="remove"]').click(function(){
+        var fs = $(this).closest('fieldset');
+        fs.hide();
+        fs.find('[data-field="remove"]').val(1);
+        return false;
+    });
+    $('[data-action="delete"]').click(function(){
+        $(this).closest('fieldset').remove();
+        return false;
+    });
+</script>

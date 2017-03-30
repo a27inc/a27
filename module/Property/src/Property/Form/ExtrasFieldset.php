@@ -48,8 +48,7 @@ class ExtrasFieldset extends Fieldset implements InputFilterProviderInterface{
     /**
      * @return array
      */
-    public function getInputFilterSpecification(){
-        
+    public static function getInputFilterConfig() {
         $text_filters = array(
             array('name' => 'StringTrim'),
             array('name' => 'StripTags')
@@ -61,15 +60,22 @@ class ExtrasFieldset extends Fieldset implements InputFilterProviderInterface{
                 'filters' => $text_filters,
                 'validators' => array(
                     array('name' => 'Regex',
-                        'options' => array(
-                            'pattern' => '/^(?!0)[0-9]{1,11}$/',
-                            'messages' => array(
-                                Regex::NOT_MATCH => 'Non match: ^(?!0)[0-9]{1,11}$',
-                            )
-                        )
+                          'options' => array(
+                              'pattern' => '/^(?!0)[0-9]{1,11}$/',
+                              'messages' => array(
+                                  Regex::NOT_MATCH => 'Non match: ^(?!0)[0-9]{1,11}$',
+                              )
+                          )
                     )
                 )
             )
         );
+    }
+
+    /**
+     * @return array
+     */
+    public function getInputFilterSpecification(){
+        return self::getInputFilterConfig();
     }
 }

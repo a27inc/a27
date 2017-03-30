@@ -210,32 +210,32 @@ class PropertyService extends ServiceAbstract{
         if (!$entity->getInfo()) {
             $entity->setInfo(new Info());
         }
-
         $data = $this->hydrator->extract($entity->getInfo());
-
-        if ($this->isInsert) {
-            $data['property_id'] = $entity->getId();
-            $this->_insert('properties_info', $data);
-        }
-        else {
-            $this->_update('properties_info', $data, array('property_id = ?' => $entity->getId()));
+        if (!empty(array_filter($data))) {
+            if ($this->isInsert) {
+                $data['property_id'] = $entity->getId();
+                $this->_insert('properties_info', $data);
+            }
+            else {
+                $this->_update('properties_info', $data, array('property_id = ?' => $entity->getId()));
+            }
         }
         return $entity;
     }
 
     protected function saveRentalListing(Property $entity){
-        if (!$entity->getInfo()) {
+        if (!$entity->getRentalListing()) {
             $entity->setRentalListing(new RentalListing());
         }
-
         $data = $this->hydrator->extract($entity->getRentalListing());
-
-        if ($this->isInsert) {
-            $data['property_id'] = $entity->getId();
-            $this->_insert('rental_listings', $data);
-        }
-        else {
-            $this->_update('rental_listings', $data, array('property_id = ?' => $entity->getId()));
+        if (!empty(array_filter($data))) {
+            if ($this->isInsert) {
+                $data['property_id'] = $entity->getId();
+                $this->_insert('rental_listings', $data);
+            }
+            else {
+                $this->_update('rental_listings', $data, array('property_id = ?' => $entity->getId()));
+            }
         }
         return $entity;
     }

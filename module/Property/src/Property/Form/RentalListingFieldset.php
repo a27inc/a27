@@ -87,8 +87,7 @@ class RentalListingFieldset extends Fieldset implements InputFilterProviderInter
     /**
      * @return array
      */
-    public function getInputFilterSpecification(){
-        
+    public static function getInputFilterConfig() {
         $text_filters = array(
             array('name' => 'StringTrim'),
             array('name' => 'StripTags')
@@ -108,12 +107,12 @@ class RentalListingFieldset extends Fieldset implements InputFilterProviderInter
                 'filters' => $text_filters,
                 'validators' => array(
                     array('name' => 'Regex',
-                        'options' => array(
-                            'pattern' => $pat1,
-                            'messages' => array(
-                                Regex::NOT_MATCH => 'Non match: '.trim($pat1, '/')
-                            )
-                        )
+                          'options' => array(
+                              'pattern' => $pat1,
+                              'messages' => array(
+                                  Regex::NOT_MATCH => 'Non match: '.trim($pat1, '/')
+                              )
+                          )
                     )
                 )
             ),
@@ -122,12 +121,12 @@ class RentalListingFieldset extends Fieldset implements InputFilterProviderInter
                 'filters' => $text_filters,
                 'validators' => array(
                     array('name' => 'Regex',
-                        'options' => array(
-                            'pattern' => $pat1,
-                            'messages' => array(
-                                Regex::NOT_MATCH => 'Non match: '.trim($pat1, '/')
-                            )
-                        )
+                          'options' => array(
+                              'pattern' => $pat1,
+                              'messages' => array(
+                                  Regex::NOT_MATCH => 'Non match: '.trim($pat1, '/')
+                              )
+                          )
                     )
                 )
             ),
@@ -136,12 +135,12 @@ class RentalListingFieldset extends Fieldset implements InputFilterProviderInter
                 'filters' => $text_filters,
                 'validators' => array(
                     array('name' => 'Regex',
-                        'options' => array(
-                            'pattern' => '/^[ a-zA-Z]{2,32}$/',
-                            'messages' => array(
-                                Regex::NOT_MATCH => 'Non match: ^[ a-zA-Z]{2,32}$',
-                            )
-                        )
+                          'options' => array(
+                              'pattern' => '/^[ a-zA-Z]{2,32}$/',
+                              'messages' => array(
+                                  Regex::NOT_MATCH => 'Non match: ^[ a-zA-Z]{2,32}$',
+                              )
+                          )
                     )
                 )
             ),
@@ -150,15 +149,22 @@ class RentalListingFieldset extends Fieldset implements InputFilterProviderInter
                 'filters' => $text_filters,
                 'validators' => array(
                     array('name' => 'Regex',
-                        'options' => array(
-                            'pattern' => '/^[-1-9]{10,12}$/',
-                            'messages' => array(
-                                Regex::NOT_MATCH => 'Non match: ^[-1-9]{10,12}$',
-                            )
-                        )
+                          'options' => array(
+                              'pattern' => '/^[1-9][-1-9]{9,12}$/',
+                              'messages' => array(
+                                  Regex::NOT_MATCH => 'Non match: ^[1-9][-1-9]{9,12}$',
+                              )
+                          )
                     )
                 )
             )
         );
+    }
+
+    /**
+     * @return array
+     */
+    public function getInputFilterSpecification(){
+        return self::getInputFilterConfig();
     }
 }

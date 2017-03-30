@@ -5,6 +5,7 @@ use Zend\Form\Form;
 class PropertyForm extends Form{
     public function __construct($name = 'property_form', $options = array()){
         parent::__construct($name);
+        $this->setInputFilter(new PropertyInputFilter());
     }
 
     public function init() {

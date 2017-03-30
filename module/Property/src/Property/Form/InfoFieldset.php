@@ -54,8 +54,7 @@ class InfoFieldset extends Fieldset implements InputFilterProviderInterface{
     /**
      * @return array
      */
-    public function getInputFilterSpecification(){
-        
+    public static function getInputFilterConfig() {
         $text_filters = array(
             array('name' => 'StringTrim'),
             array('name' => 'StripTags')
@@ -76,16 +75,16 @@ class InfoFieldset extends Fieldset implements InputFilterProviderInterface{
                 'filters' => $text_filters,
                 'validators' => array(
                     array('name' => 'Callback',
-                        'options' => array(
-                            'messages' => array(
-                                Callback::INVALID_VALUE => 'Non match: ^([0-9]{3,4})$',
-                            ),
-                            'callback' => function($value, $context = array()){
-                                if(isset($context['statusId']) && $context['statusId'] == 3)
-                                    return TRUE;
-                                return (bool) preg_match('/^([0-9]{3,4})*$/', $value);
-                            }
-                        )
+                          'options' => array(
+                              'messages' => array(
+                                  Callback::INVALID_VALUE => 'Non match: ^([0-9]{3,4})$',
+                              ),
+                              'callback' => function($value, $context = array()){
+                                  if(isset($context['statusId']) && $context['statusId'] == 3)
+                                      return TRUE;
+                                  return (bool) preg_match('/^([0-9]{3,4})*$/', $value);
+                              }
+                          )
                     )
                 )
             ),
@@ -94,12 +93,12 @@ class InfoFieldset extends Fieldset implements InputFilterProviderInterface{
                 'filters' => $text_filters,
                 'validators' => array(
                     array('name' => 'Regex',
-                        'options' => array(
-                            'pattern' => '/^[1-9]$/',
-                            'messages' => array(
-                                Regex::NOT_MATCH => 'Non match: ^[1-9]$',
-                            )
-                        )
+                          'options' => array(
+                              'pattern' => '/^[1-9]$/',
+                              'messages' => array(
+                                  Regex::NOT_MATCH => 'Non match: ^[1-9]$',
+                              )
+                          )
                     )
                 )
             ),
@@ -108,26 +107,26 @@ class InfoFieldset extends Fieldset implements InputFilterProviderInterface{
                 'filters' => $text_filters,
                 'validators' => array(
                     array('name' => 'Regex',
-                        'options' => array(
-                            'pattern' => '/^[1-9][.]?[025]?[05]?$/',
-                            'messages' => array(
-                                Regex::NOT_MATCH => 'Non match: ^[1-9][.]?[025]?[05]?$',
-                            )
-                        )
+                          'options' => array(
+                              'pattern' => '/^[1-9][.]?[025]?[05]?$/',
+                              'messages' => array(
+                                  Regex::NOT_MATCH => 'Non match: ^[1-9][.]?[025]?[05]?$',
+                              )
+                          )
                     )
-                ) 
+                )
             ),
             'propertyTaxes' => array(
                 'required' => true,
                 'filters' => $text_filters,
                 'validators' => array(
                     array('name' => 'Regex',
-                        'options' => array(
-                            'pattern' => $pat1,
-                            'messages' => array(
-                                Regex::NOT_MATCH => 'Non match: '.trim($pat1, '/')
-                            )
-                        )
+                          'options' => array(
+                              'pattern' => $pat1,
+                              'messages' => array(
+                                  Regex::NOT_MATCH => 'Non match: '.trim($pat1, '/')
+                              )
+                          )
                     )
                 )
             ),
@@ -136,12 +135,12 @@ class InfoFieldset extends Fieldset implements InputFilterProviderInterface{
                 'filters' => $text_filters,
                 'validators' => array(
                     array('name' => 'Regex',
-                        'options' => array(
-                            'pattern' => $pat1,
-                            'messages' => array(
-                                Regex::NOT_MATCH => 'Non match: '.trim($pat1, '/')
-                            )
-                        )
+                          'options' => array(
+                              'pattern' => $pat1,
+                              'messages' => array(
+                                  Regex::NOT_MATCH => 'Non match: '.trim($pat1, '/')
+                              )
+                          )
                     )
                 )
             ),
@@ -150,15 +149,22 @@ class InfoFieldset extends Fieldset implements InputFilterProviderInterface{
                 'filters' => $text_filters,
                 'validators' => array(
                     array('name' => 'Regex',
-                        'options' => array(
-                            'pattern' => '/^[1-2](0|[8-9])([0-9]{2})*$/',
-                            'messages' => array(
-                                Regex::NOT_MATCH => 'Non match: ^[1-2](0|[8-9])([0-9]{2})$',
-                            )
-                        )
+                          'options' => array(
+                              'pattern' => '/^[1-2](0|[8-9])([0-9]{2})*$/',
+                              'messages' => array(
+                                  Regex::NOT_MATCH => 'Non match: ^[1-2](0|[8-9])([0-9]{2})$',
+                              )
+                          )
                     )
                 )
             )
         );
+    }
+
+    /**
+     * @return array
+     */
+    public function getInputFilterSpecification(){
+        return self::getInputFilterConfig();
     }
 }

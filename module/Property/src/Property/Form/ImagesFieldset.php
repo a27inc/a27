@@ -63,7 +63,7 @@ class ImagesFieldset extends Fieldset implements InputFilterProviderInterface{
     /**
      * @return array
      */
-    public function getInputFilterSpecification(){
+    public static function getInputFilterConfig() {
         $text_filters = array(
             array('name' => 'StringTrim'),
             array('name' => 'StripTags')
@@ -75,12 +75,12 @@ class ImagesFieldset extends Fieldset implements InputFilterProviderInterface{
                 'filters' => $text_filters,
                 'validators' => array(
                     array('name' => 'Regex',
-                        'options' => array(
-                            'pattern' => '/^(?!0)[0-9]{1,11}$/',
-                            'messages' => array(
-                                Regex::NOT_MATCH => 'Non match: ^(?!0)[0-9]{1,11}$',
-                            )
-                        )
+                          'options' => array(
+                              'pattern' => '/^(?!0)[0-9]{1,11}$/',
+                              'messages' => array(
+                                  Regex::NOT_MATCH => 'Non match: ^(?!0)[0-9]{1,11}$',
+                              )
+                          )
                     )
                 )
             ),
@@ -88,25 +88,25 @@ class ImagesFieldset extends Fieldset implements InputFilterProviderInterface{
                 'required' => false,
                 'validators' => array(
                     array('name' => 'filesize',
-                        'options' => array(
-                            'max' => '400kB')),
+                          'options' => array(
+                              'max' => '400kB')),
                     array('name' => 'filemimetype',
-                        'options' => array(
-                            'mimeType' => 'image/jpg, image/jpeg')),        
+                          'options' => array(
+                              'mimeType' => 'image/jpg, image/jpeg')),
                     array('name' => 'fileimagesize',
-                        'options' => array(
-                            'maxWidth' => 1024,
-                            'maxHeight' => 768)),    
+                          'options' => array(
+                              'maxWidth' => 1024,
+                              'maxHeight' => 768)),
                     array('name' => 'fileextension',
-                        'options' => array(
-                            'extension' => 'jpg'))
+                          'options' => array(
+                              'extension' => 'jpg'))
                 ),
                 'filters' => array(
                     array('name' => 'filerenameupload',
-                        'options' => array(
-                            'target' => 'public/images/property/temp',
-                            'randomize' => true,
-                            'use_upload_extension' => true))
+                          'options' => array(
+                              'target' => 'public/images/property/temp',
+                              'randomize' => true,
+                              'use_upload_extension' => true))
                 )
             ),
             'file' => array(
@@ -114,12 +114,12 @@ class ImagesFieldset extends Fieldset implements InputFilterProviderInterface{
                 'filters' => $text_filters,
                 'validators' => array(
                     array('name' => 'Regex',
-                        'options' => array(
-                            'pattern' => '/^(property|temp)_[a-z0-9]{13}\.jpg$/',
-                            'messages' => array(
-                                Regex::NOT_MATCH => 'Non match: ^(property|temp)_[a-z0-9]{13}\.jpg$',
-                            )
-                        )
+                          'options' => array(
+                              'pattern' => '/^(property|temp)_[a-z0-9]{13}\.jpg$/',
+                              'messages' => array(
+                                  Regex::NOT_MATCH => 'Non match: ^(property|temp)_[a-z0-9]{13}\.jpg$',
+                              )
+                          )
                     )
                 )
             ),
@@ -128,12 +128,12 @@ class ImagesFieldset extends Fieldset implements InputFilterProviderInterface{
                 'filters' => $text_filters,
                 'validators' => array(
                     array('name' => 'Regex',
-                        'options' => array(
-                            'pattern' => '/^[- a-zA-Z0-9]{1,32}$/',
-                            'messages' => array(
-                                Regex::NOT_MATCH => 'Non match: ^[- a-zA-Z0-9]{1,32}$',
-                            )
-                        )
+                          'options' => array(
+                              'pattern' => '/^[- a-zA-Z0-9]{1,32}$/',
+                              'messages' => array(
+                                  Regex::NOT_MATCH => 'Non match: ^[- a-zA-Z0-9]{1,32}$',
+                              )
+                          )
                     )
                 )
             ),
@@ -142,15 +142,22 @@ class ImagesFieldset extends Fieldset implements InputFilterProviderInterface{
                 'filters' => $text_filters,
                 'validators' => array(
                     array('name' => 'Regex',
-                        'options' => array(
-                            'pattern' => '/^[-+,.?"\/\'!&*() a-zA-Z0-9]{1,64}$/',
-                            'messages' => array(
-                                Regex::NOT_MATCH => 'Non match: ^[-+,.?"/\'!&*() a-zA-Z0-9]{1,64}$',
-                            )
-                        )
+                          'options' => array(
+                              'pattern' => '/^[-+,.?"\/\'!&*() a-zA-Z0-9]{1,64}$/',
+                              'messages' => array(
+                                  Regex::NOT_MATCH => 'Non match: ^[-+,.?"/\'!&*() a-zA-Z0-9]{1,64}$',
+                              )
+                          )
                     )
                 )
             )
         );
+    }
+
+    /**
+     * @return array
+     */
+    public function getInputFilterSpecification(){
+        return self::getInputFilterConfig();
     }
 }

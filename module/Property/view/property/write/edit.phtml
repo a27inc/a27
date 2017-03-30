@@ -52,7 +52,7 @@
             var value = $(this).val();
             $($(this).attr('data-toggle')+'[data-toggle-values]').each(function(){
                 var values = $(this).attr('data-toggle-values').split(',');
-                for(i=0; i<values.length; i++){
+                for(var i=0; i<values.length; i++){
                     if(value == values[i])
                         $(this).prop('disabled', false).show();
                 }
