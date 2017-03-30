@@ -14,7 +14,7 @@ class Allocation extends ModelAbstract{
 			->on('user_id')
 			->prefix()
 			->number('id')
-			->string('displayName')
+			->string('display_name')
 			->string('email');
 
 		$this->join('allocation_categories')
