@@ -48,7 +48,7 @@ class PropertyService extends ServiceAbstract{
     public function findAll($where = null, $includeImages = false){
         $this->getImagesByProperty();
         $model = $this->getModel('Property/Property');
-        $result = $model->listQuery($where);
+        $result = $model->openList($where);
         if ($includeImages) {
             $images = $this->getImagesByProperty();
             foreach ($result as $property) {
@@ -279,7 +279,7 @@ class PropertyService extends ServiceAbstract{
 
     public function getExtraOptions() {
         $model = $this->getModel('Property/Extra');
-        $extras = $model->listQuery();
+        $extras = $model->openList();
         $options = array(
             'extra' => array(),
             'extraType' => array());

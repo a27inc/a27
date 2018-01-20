@@ -50,17 +50,17 @@ class UserService extends ServiceAbstract{
 
     public function findAllUsers($where = null){
         $model = $this->getModel('SiteUser/User');
-        return $model->listQuery($where);
+        return $model->openList($where);
     }
 
     public function findAllRoles($where = null){
         $model = $this->getModel('SiteUser/Role');
-        return $model->listQuery($where);
+        return $model->openList($where);
     }
 
     public function findAllPermissions($where = null){
         $model = $this->getModel('SiteUser/Permission');
-        return $model->listQuery($where);
+        return $model->openList($where);
     }
 
     public function saveUser(User $entity){

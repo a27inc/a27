@@ -14,8 +14,8 @@ class LandlordService extends ServiceAbstract{
 
     public function findAll($where = NULL){
         $model = $this->getModel('Landlord/Tenant');
-        //die(var_dump($model->listQuery($where)));
-        return $model->listQuery($where);
+        //die(var_dump($model->openList($where)));
+        return $model->openList($where);
     }
 
     public function saveTenant(Tenant $entity){

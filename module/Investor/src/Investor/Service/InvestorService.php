@@ -35,18 +35,18 @@ class InvestorService extends ServiceAbstract{
 
     public function findAllAllocations($where = NULL){
         $model = $this->getModel('Investor/Allocation');
-        //die(var_dump($model->listQuery($where)));
-        return $model->listQuery($where);
+        //die(var_dump($model->openList($where)));
+        return $model->openList($where);
     }
 
     public function findAllCategories($where = NULL){
         $model = $this->getModel('Investor/Category');
-        return $model->listQuery($where);
+        return $model->openList($where);
     }
 
     public function findAllInvestors($where = NULL){
         $model = $this->getModel('Investor/Investor');
-        return $model->listQuery($where);
+        return $model->openList($where);
     }
 
     public function saveAllocation(Allocation $entity){

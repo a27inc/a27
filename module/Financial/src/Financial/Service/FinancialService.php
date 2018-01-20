@@ -55,17 +55,19 @@ class FinancialService extends ServiceAbstract{
 
     public function getCategories($where = null){
         $model = $this->getModel('Financial/Category');
-        return $model->listQuery($where);
+        return $model->openList($where);
     }
 
     public function getExpenses($where = null){
         $model = $this->getModel('Financial/Expense');
-        return $model->listQuery($where);
+        $model->orderDesc('dateFiled');
+        return $model->openList($where);
     }
 
     public function getIncomes($where = null){
         $model = $this->getModel('Financial/Income');
-        return $model->listQuery($where);
+        $model->orderDesc('dateFiled');
+        return $model->openList($where);
     }
 
     public function saveCategory(Category $entity){

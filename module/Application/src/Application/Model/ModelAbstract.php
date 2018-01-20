@@ -68,6 +68,11 @@ abstract class ModelAbstract implements AdapterAwareInterface{
 	 */
 	protected $_fields = array();
 	/**
+	 * All ORDER BY fields
+	 * @var array
+	 */
+	protected $_order = array();
+	/**
 	 * The last field that we added, so that we have context for any follow up calls to act on that field
 	 * @var null
 	 */
@@ -130,6 +135,7 @@ abstract class ModelAbstract implements AdapterAwareInterface{
 		$this->_defaults = array(
 			'visibility' => static::MODE_ALL
 		);
+		$this->_init();
 	}
 
 	public function debug($debug = true) {
@@ -234,7 +240,6 @@ abstract class ModelAbstract implements AdapterAwareInterface{
 		$key = ($b) ? $a : $this->_pk;
 
 		if (!$select = $this->openSelect) {
-			$this->_init();
 			
 			if (!$key) {
 				$key = $this->_pk;
@@ -264,7 +269,9 @@ abstract class ModelAbstract implements AdapterAwareInterface{
 	protected function execute($select) {
 		$sql = new Sql($this->dbAdapter);
 		$statement = $sql->prepareStatementForSqlObject($select);
-		//die(var_dump($sql->buildSqlString($select)));
+		if ($this->debugMode) {
+            var_dump($sql->buildSqlString($select));
+        }
 		try {
 			$result = $statement->execute();
 		}
@@ -314,15 +321,20 @@ abstract class ModelAbstract implements AdapterAwareInterface{
      * @throws \Exception if query has errors
      * @return ModelAbstract
      */
-    public function listQuery($where = false) {
+    public function openList($where = false) {
 		// Instantiate the model
         $this->_mode = static::MODE_LIST_QUERY;
         $this->_beforeListQuery();
 
-
+        // set where
         $select = $this->getOpenSelect();
         if ($where) {
             $select->where($where);
+        }
+
+        // set order
+        foreach ($this->_order as $order) {
+            $select->order($order);
         }
         $select->limit(1000);
         
@@ -335,7 +347,7 @@ abstract class ModelAbstract implements AdapterAwareInterface{
 			return array();
 		}
 		if ($this->debugMode) {
-			die(var_dump($this->getHydrator(), $this->getEntity()));
+			die(var_dump($this->_order, $this->getHydrator(), $this->getEntity()));
 		}
 		$list = $this->getHydrator()->hydrate($data, $this->getEntity());
 		return is_array($list) ? $list : array($list);
@@ -346,6 +358,28 @@ abstract class ModelAbstract implements AdapterAwareInterface{
         $data = $this->getHydrator()->extract($entity);
         die(var_dump($data, 'ModelAbstract save'));
         $this->_afterSave();
+    }
+
+    /**
+     * @param string $field
+     * @return $this
+     */
+    public function orderAsc($field) {
+        if ($field = $this->getDatabaseFieldString($field)) {
+            $this->_order[] = [$field => 'ASC'];
+        }
+        return $this;
+    }
+
+    /**
+     * @param $field
+     * @return $this
+     */
+    public function orderDesc($field) {
+        if ($field = $this->getDatabaseFieldString($field)) {
+            $this->_order[] = [$field => 'DESC'];
+        }
+        return $this;
     }
 
 	/**
@@ -524,6 +558,17 @@ abstract class ModelAbstract implements AdapterAwareInterface{
 		$this->_lastField = $field->friendlyName;
 		return $this;
 	}
+
+    /**
+     * @param string $field friendly name
+     * @return string
+     */
+    private function getDatabaseFieldString($field) {
+	    if (isset($this->_fields[$field]) && $field = $this->_fields[$field]) {
+	        return ($field->joinTable ?: 't') . '.' . $field->databaseField;
+        }
+        return '';
+    }
 
 	/**
 	 * Set the visibility of the last join or field
