@@ -58,6 +58,7 @@ class IncomesTable extends AbstractTableGateway{
             'rate_id'       => $income->rate_id,
             'amount'        => $income->amount,
             'date_filed'    => $income->date_filed,
+            'tax_year'      => $income->tax_year,
             'date_from'     => $income->date_from,
             'date_to'       => $income->date_to,
             'description'   => $income->description,

@@ -53,7 +53,7 @@ class FinancialController extends AbstractActionController implements FinancialS
     public function incomeAction(){
         if(!$this->isGranted('view_income'))
             return $this->view->setTemplate('error/403');
-  
+
         return new ViewModel(array(
             'incomes' => $this->service->getIncomes()
         ));
@@ -72,13 +72,24 @@ class FinancialController extends AbstractActionController implements FinancialS
             if($form->isValid()){
                 $to = $form->get('reportfieldset')->get('dateTo')->getValue();
                 $from = $form->get('reportfieldset')->get('dateFrom')->getValue();
-                $exp_where = 't.date_filed BETWEEN ? AND ? OR ? BETWEEN t.date_from AND t.date_to OR ? BETWEEN t.date_from AND t.date_to';
-                $inc_where = 't.date_filed BETWEEN ? AND ? OR ? BETWEEN t.date_from AND t.date_to OR ? BETWEEN t.date_from AND t.date_to';
+                $taxYear = $form->get('reportfieldset')->get('taxYear')->getValue();
+                if ($taxYear > 0) {
+                    $where = [
+                        't.tax_year = ?' => [
+                            $taxYear
+                        ]
+                    ];
+                }
+                else {
+                    $where = [
+                        't.date_filed BETWEEN ? AND ? OR ? BETWEEN t.date_from AND t.date_to OR ? BETWEEN t.date_from AND t.date_to' => [
+                            $from, $to, $from, $to
+                        ]
+                    ];
+                }
                 $return = array(
-                    'expenses' => $this->service->getExpenses(array(
-                        $exp_where => array($from, $to, $from, $to))),
-                    'incomes' => $this->service->getIncomes(array(
-                        $inc_where => array($from, $to, $from, $to))),
+                    'expenses' => $this->service->getExpenses($where),
+                    'incomes' => $this->service->getIncomes($where),
                     'from' => $from,
                     'to' => $to
                 );

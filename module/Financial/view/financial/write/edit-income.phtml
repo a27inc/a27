@@ -19,3 +19,14 @@
 		echo $this->form()->closeTag(); ?>
 	</div>
 </div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('input[name="incomefieldset[dateFiled]"]').on('change', function() {
+            var year = $(this).val().substring(0,4);
+            if (year > 0) {
+                $('select[name="incomefieldset[taxYear]"]').val(year);
+            }
+        });
+    });
+</script>

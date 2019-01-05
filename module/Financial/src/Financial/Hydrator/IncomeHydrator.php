@@ -29,6 +29,7 @@ class IncomeHydrator extends HydratorAbstract{
             'rate'      => $namingMap,
             'authorId'  => $underscore,
             'dateFiled' => $underscore,
+            'taxYear'   => $underscore,
             'dateFrom'  => $underscore,
             'dateTo'    => $underscore
         ]); 

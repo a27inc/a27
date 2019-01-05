@@ -10,6 +10,13 @@ use Zend\Validator\Between;
 
 class ExpenseFieldset extends Fieldset implements InputFilterProviderInterface{
 	public function init(){
+        $years = [
+            0 => 'Select Tax Year'
+        ];
+        for ($year = 2014; $year <= date('Y'); $year++) {
+            $years[$year] = $year;
+        }
+
         $this->add([
             'name' => 'id',
             'type' => 'Hidden']);
@@ -40,6 +47,14 @@ class ExpenseFieldset extends Fieldset implements InputFilterProviderInterface{
                 'min' => '2014-01-01',
                 'max' => '2020-01-01',
                 'step' => '1']]);
+        $this->add([
+            'type' => 'Zend\Form\Element\Select',
+            'name' => 'taxYear',
+            'options' => [
+                'label' => 'Tax Year: ',
+                'value_options' => $years],
+            'attributes' => [
+                'value' => date('Y')]]);
         /*$this->add([
             'type' => 'Zend\Form\Element\Date',
             'name' => 'date_from',

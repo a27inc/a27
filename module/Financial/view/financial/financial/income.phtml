@@ -18,6 +18,7 @@
         <th>Category</th>
         <th>Amount</th>
         <th>Date</th>
+        <th>TaxYear</th>
         <th>Description</th>
         <th>Action</th>
     </thead>
@@ -28,6 +29,7 @@
         echo '<td>'.$this->escapeHtml($i->category->getDisplayName()).'</td>';
         echo '<td>'.$this->escapeHtml($i->getAmount()).'</td>';
         echo '<td>'.$this->escapeHtml($i->getDates()).'</td>';
+        echo '<td>'.$this->escapeHtml($i->getTaxYear()).'</td>';
         echo '<td>'.$this->escapeHtml($i->getDescription()).'</td>';
         echo '<td>
                 <a href="'.$this->url('financial/income/edit', array('id' => $i->getId())).'">'.

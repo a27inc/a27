@@ -10,6 +10,7 @@ class Expense extends ModelAbstract{
 	public $rate_id;
 	public $amount;
     public $date_filed;
+    public $tax_year;
     public $date_from;
     public $date_to;
 	public $description;
@@ -23,6 +24,7 @@ class Expense extends ModelAbstract{
             ->number('author_id')
 			->string('amount')
 			->string('date_filed')
+			->number('tax_year')
 			->string('date_from')
 			->string('date_to')
 			->string('description')
@@ -70,6 +72,7 @@ class Expense extends ModelAbstract{
 		$this->rate_id  	= (!empty($data['rate_id'])) ? $data['rate_id'] : null;
 		$this->amount  		= (!empty($data['amount'])) ? $data['amount'] : null;
         $this->date_filed   = (!empty($data['date_filed'])) ? $data['date_filed'] : null;
+        $this->tax_year     = (!empty($data['tax_year'])) ? $data['tax_year'] : null;
         $this->date_from    = (!empty($data['date_from'])) ? $data['date_from'] : null;
         $this->date_to      = (!empty($data['date_to'])) ? $data['date_to'] : null;
 		$this->description  = (!empty($data['description'])) ? $data['description'] : null;

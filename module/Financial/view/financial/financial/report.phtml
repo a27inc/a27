@@ -15,6 +15,7 @@
 
 <div class="row">
     <div class="col-sm-5">
+        <h4>Select tax year or enter date range</h4>
         <?php $form->setAttribute('action', $this->url());
         $form->prepare();
         $form->get('submit')->setValue('Generate Report');
@@ -151,3 +152,15 @@ foreach($expenses as $e){
 </div></div>
 
 <?php endif; ?>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('select[name="reportfieldset[taxYear]"]').on('change', function() {
+            var year = $(this).val();
+            if (year > 0) {
+                $('input[name="reportfieldset[dateFrom]"]').val(year + '-01-01');
+                $('input[name="reportfieldset[dateTo]"]').val(year + '-12-31');
+            }
+        });
+    });
+</script>

@@ -60,6 +60,7 @@ class ExpensesTable extends AbstractTableGateway{
             'rate_id'       => $expense->rate_id,
             'amount'        => $expense->amount,
             'date_filed'    => $expense->date_filed,
+            'tax_year'      => $expense->tax_year,
             'date_from'     => $expense->date_from,
             'date_to'       => $expense->date_to,
             'description'   => $expense->description,

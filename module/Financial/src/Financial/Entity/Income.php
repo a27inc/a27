@@ -42,6 +42,11 @@ class Income extends Financial{
     /**
      * @var string
      */
+    public $taxYear;
+
+    /**
+     * @var string
+     */
     public $dateFrom;
 
     /**
@@ -157,6 +162,13 @@ class Income extends Financial{
      */
     public function getDateFiled(){
         return $this->dateFiled;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTaxYear(){
+        return $this->taxYear;
     }
 
     /**

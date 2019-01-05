@@ -10,6 +10,13 @@ use Zend\Validator\Regex;
 
 class IncomeFieldset extends Fieldset implements InputFilterProviderInterface{
 	public function init(){
+        $years = [
+            0 => 'Select Tax Year'
+        ];
+        for ($year = 2014; $year <= date('Y'); $year++) {
+            $years[$year] = $year;
+        }
+        
         $this->add([
             'name' => 'id',
             'type' => 'Hidden']);
@@ -37,6 +44,14 @@ class IncomeFieldset extends Fieldset implements InputFilterProviderInterface{
                 'label' => 'Date: '],
             'attributes' => [
                 'value' => date('Y-m-d')]]);
+        $this->add([
+            'type' => 'Zend\Form\Element\Select',
+            'name' => 'taxYear',
+            'options' => [
+                'label' => 'Tax Year: ',
+                'value_options' => $years],
+            'attributes' => [
+                'value' => date('Y')]]);
         /*$this->add([
             'type' => 'Zend\Form\Element\Date',
             'name' => 'date_from',

@@ -9,6 +9,22 @@ class ReportFieldset extends Fieldset implements InputFilterProviderInterface{
     public function __construct($name = 'report'){
         parent::__construct($name);
 
+        $years = [
+            0 => 'Select Tax Year'
+        ];
+        for ($year = 2014; $year <= date('Y'); $year++) {
+            $years[$year] = $year;
+        }
+
+        $this->add([
+            'type' => 'Select',
+            'name' => 'taxYear',
+            'options' => [
+                'label' => 'Tax Year: ',
+                'value_options' => $years
+            ]
+        ]);
+
          $this->add([
             'type' => 'Date',
             'name' => 'dateFrom',
@@ -65,6 +81,9 @@ class ReportFieldset extends Fieldset implements InputFilterProviderInterface{
         ];
 
         return [
+            'taxYear' => [
+                'required' => false
+            ],
             'dateFrom' => [
                 'required' => true,
                 'filters' => $text_filters,
