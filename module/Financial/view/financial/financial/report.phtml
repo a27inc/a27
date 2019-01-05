@@ -99,6 +99,9 @@ foreach($expenses as $e){
     <div id="data<?php echo $id; ?>" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading<?php echo $id; ?>">
     <?php foreach($i['itemized'] as $i): $pid = $i->property->getId(); ?>
         <div class="panel-body">
+            <p class="pull-right">
+                <a target="_blank" href="<?php echo $this->url('financial/income/edit', ['id' => $i->getId()]); ?>">View</a>
+            </p>
             <?php if($i->getDateFrom()) 
                 $i->amount = isset($by_property[$pid]['income'][$k]['total'])
                     ? $by_property[$pid]['income'][$k]['total'] 
@@ -134,6 +137,9 @@ foreach($expenses as $e){
     <div id="data<?php echo $id; ?>" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading<?php echo $id; ?>">
     <?php foreach($i['itemized'] as $i): $pid = $i->property->getId(); ?>
         <div class="panel-body">
+            <p class="pull-right">
+                <a target="_blank" href="<?php echo $this->url('financial/expense/edit', ['id' => $i->getId()]); ?>">View</a>
+            </p>
             <?php if($i->getDateFrom()) 
                 $i->amount = isset($by_property[$pid]['expense'][$k]['total'])
                     ? $by_property[$pid]['expense'][$k]['total'] 
